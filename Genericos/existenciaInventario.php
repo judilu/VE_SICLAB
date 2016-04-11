@@ -1,0 +1,80 @@
+<div>
+	<h5>Resumen de inventario actual</h5>
+	<table>
+        <thead>
+          <tr>
+              <th data-field="id">Código</th>
+              <th data-field="name">Descripcion</th>
+              <th data-field="price">Existencia</th>
+              <th data-field="date">Caducidad</th>
+              <th data-field="price">Prom. Uso Diario</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>P001</td>
+            <td>Cautin</td>
+            <td>20</td>
+            <td>NA</td>
+            <td>5</td>
+          </tr>
+          <tr>
+            <td>P002</td>
+            <td>Taladro</td>
+            <td>15</td>
+            <td>NA</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>P003</td>
+            <td>Multimetro</td>
+            <td>5</td>
+            <td>NA</td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>P001</td>
+            <td>Cautin</td>
+            <td>20</td>
+            <td>NA</td>
+            <td>5</td>
+          </tr>
+          <tr>
+            <td>P002</td>
+            <td>Taladro</td>
+            <td>15</td>
+            <td>NA</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>P003</td>
+            <td>Multimetro</td>
+            <td>5</td>
+            <td>NA</td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>P001</td>
+            <td>Cautin</td>
+            <td>20</td>
+            <td>NA</td>
+            <td>5</td>
+          </tr>
+          <tr>
+            <td>P002</td>
+            <td>Taladro</td>
+            <td>15</td>
+            <td>NA</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>P003</td>
+            <td>Multimetro</td>
+            <td>5</td>
+            <td>NA</td>
+            <td>0</td>
+          </tr>
+        </tbody>
+      </table>
+</div>
