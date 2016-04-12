@@ -260,10 +260,11 @@ function agregarArt ()
 {
 	$cveArt 	= GetSQLValueString($_POST['artCve'],"text");
 	$nomArt 	= $_POST['artNom'];
+	$num 		= GetSQLValueString($_POST['num'],"int");
 	$respuesta	= true;
 	$renglones	= "";
 	$renglones .= "<tr id=".$cveArt.">";
-	$renglones .= "<td class='col s2'><input type='number' min='1' max='20' value='1'></td>";
+	$renglones .= "<td class='col s2'>".$num."</td>";
 	$renglones .= "<td class='col s8'>".$nomArt."</td>";
 	$renglones .= "<td class='col s2'><a name =".$cveArt."class='btnEliminarArt btn-floating btn-large waves-effect waves-light red darken-1'><i class='material-icons'>delete</i></a></td>";
 	$renglones .= "</tr>";
@@ -271,23 +272,12 @@ function agregarArt ()
 						'renglones' => $renglones);
 	print json_encode($arrayJSON);
 }
-function nuevaSol1(){
-	$respuesta	= false;
-	$conexion 	= conectaBDSICLAB();
- 	$consulta = sprintf("select * from lbcalendarizaciones limit 1");
-	$res 	  = mysql_query($consulta);
-	if($row = mysql_fetch_array($res))
-	{	
-		$respuesta 	= true;
-	}
-	$arrayJSON = array('respuesta' => $respuesta);
-	print json_encode($arrayJSON);
-}
 function nuevaSol()
 {
 	//insertar en lbsolicitudes
 	session_start();
 	$respuesta	= false;
+	$respuesta2	= false;
 	$cveDep 	= GetSQLValueString("0000","text"); //preparado para cuando se
 	$periodo 	= GetSQLValueString(periodoActual(),"text");
 	$fe 		= GetSQLValueString($_POST['fe'],"text");
@@ -304,6 +294,9 @@ function nuevaSol()
 	$cant 		= GetSQLValueString($_POST['cant'],"int");
 	$estatus  	= GetSQLValueString("V","text");
 	$b 			= GetSQLValueString(" ","text");
+	$art        = $_POST["art"];
+	$num        = $_POST["num"];
+	$n 			= GetSQLValueString($_POST['n'],"int");
 	$conexion 	= conectaBDSICLAB();
 	$consulta 	= sprintf("insert into lbsolicitudlaboratorios values(%s,%s,%s,%s,%s,%s,%s,%s,%d,%d,%s,%s,%s,%s,%s)",$cveDep,$periodo,$b,$fe,$fs,$hs,$lab,$uso,$prac,$clave,$firma,$mat,$gp,$cant,$estatus);
 	$res 		= mysql_query($consulta);
@@ -311,7 +304,24 @@ function nuevaSol()
 	{
 		$respuesta = true; 
 	}
-	$arrayJSON = array('respuesta' => $respuesta);
+	$sol = existeSolLab($cveDep,$periodo,$fe,$fs,$hs,$lab,$prac,$mat,$gp,$clave);
+	$porArt = explode(",",$art);
+	$porNum = explode(",",$num);
+	var_dump($porNum);
+	if($sol != 0)
+	{
+		for ($i=0; $i <$n; $i++) 
+		{ 
+			$consulta2 	= sprintf("insert into lbasignaarticulospracticas values(%s,%d,%d)",$porArt,$porNum,$sol);
+			$res2 		= mysql_query($consulta);
+			if(mysql_affected_rows()>0)
+			{
+				$respuesta2 = true; 
+			}
+		}	
+	}
+	$arrayJSON = array('respuesta' => $respuesta,
+						'respuesta2' => $respuesta2);
 	print json_encode($arrayJSON);
 }
 //Menú principal

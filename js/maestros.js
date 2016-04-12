@@ -3,6 +3,7 @@ var inicioMaestro = function ()
 	$('ul.tabs').tabs();
 	$('select').material_select(); //agregado
 	var articulosAgregados = new Array();
+	var numArticulos = new Array();
 	//eventos menu Solicitudes
 	//Empieza función salir del sistema
 	var salir = function()
@@ -50,8 +51,7 @@ var inicioMaestro = function ()
 				solAceptadas();
 				swal("OK..!","Aún sigues en el sistema", "error");
 			} 
-		}
-		);
+		});
 	}//Termina función salir del sistema
 	//Empieza función de solicitudes Aceptadas
 	var solAceptadas = function()
@@ -81,14 +81,13 @@ var inicioMaestro = function ()
 			},
 			error: function(xhr, ajaxOptions,x){
 				console.log("Error de conexión sol aceptadas");
-				console.log(xhr);	
 			}
 		});
 		$("#sAceptadasMaestro").show("slow");
 		$("#tbSolAceptadas a").on("click",practicaRealizada);	
 	}//Termina función de solicitudes Aceptadas
 	//Empieza función para liberar una solicitud realizada a aceptadas
-	var practicaRealizada = function(evt)
+	var practicaRealizada = function()
 	{
 		//contenido dinamico
 		var realid = $(this).attr("name");
@@ -200,6 +199,7 @@ var inicioMaestro = function ()
     var elegirMaterial = function()
     {
     	articulosAgregados = Array();
+    	numArticulos = Array();
     	$("#nuevaMaestro").hide();
     	$("#eleccionMaterial").show("slow");
        //limpiar tabla de agregarMaterial
@@ -211,11 +211,13 @@ var inicioMaestro = function ()
     	//aquiEmpieza todo
     	var artCve = $("#cmbMaterialCat" ).val();
     	var artNom = $("#cmbMaterialCat option:selected").text();
+    	var num    = $("#txtNumArt").val(); 	
+    	numArticulos.push(num);
     	articulosAgregados.push(artCve);
-    	console.log(articulosAgregados);
     	var parametros = "opc=agregarArt1"+
     						"&artCve="+artCve+
     						"&artNom="+artNom+
+    						"&num="+num+
     						"&id="+Math.random();
     	$.ajax({
     		cache:false,
@@ -355,12 +357,9 @@ var inicioMaestro = function ()
     }//fin función eliminar solicitud
     var altaNuevaSol = function()
     {
-    	//carrito
-    	console.log(articulosAgregados);
-    	//fin carrito
     	//insertar una nueva solicitud
     	// cadena.substring(índice donde inicia recordando que el primero es cero,indice - 1)
-	    	if(($("#cmbMateria").val())!= null && ($("#cmbHoraMat").val())!= null && ($("#txtFechaS").val())!= "" && ($("#cmbPractica").val())!= null && ($("#cmbHoraPract").val())!= null && ($("#txtCantAlumnos").val())!= "" && ($("#textarea1").val())!= "" && articulosAgregados != "" )
+	    	if(($("#cmbMateria").val())!= null && ($("#cmbHoraMat").val())!= null && ($("#txtFechaS").val())!= "" && ($("#cmbPractica").val())!= null && ($("#cmbHoraPract").val())!= null && ($("#txtCantAlumnos").val())!= "" && ($("#textarea1").val())!= "" && articulosAgregados != "" && numArticulos != "")
 	    	{
 		    	var f  = new Date();
 		    	var dd = f.getDate();
@@ -381,8 +380,9 @@ var inicioMaestro = function ()
 		        var gp  = $("#cmbHoraMat option:selected").text();
 		        var gpo = parseInt(gp.substring(0,2))//segun la hora se saca el grupo
 		        var cant = $("#txtCantAlumnos").val();
-		        var art  = "";
+		        var n = (($("#tbMaterialSol tr").length)-1);
 		        //var con  = ($("#tbMaterialSol tr").length);
+		        console.log(n);
 		        var parametros = "opc=nuevaSol1"+
 		                     		"&fe="+fe+
 		                     		"&fs="+fs+
@@ -393,6 +393,9 @@ var inicioMaestro = function ()
 		                     		"&mat="+mat+
 		                     		"&gpo="+gpo+
 		                     		"&cant="+cant+
+		                     		"&art="+articulosAgregados+
+		                     		"&num="+numArticulos+
+		                     		"&n="+n+
 		                     		"&id="+Math.random();
 		                     $.ajax({
 		                     	cache:false,
@@ -401,11 +404,19 @@ var inicioMaestro = function ()
 		                     	url:'../data/maestros.php',
 		                     	data: parametros,
 		                     	success: function(response){
-		                     		if(response.respuesta == true)
+		                     		if(response.respuesta == true && response.respuesta2 == true)
 		                     		{
+		                     			$("#cmbMateria").val("");
+										$("#cmbHoraMat").val("");
+										$("#txtFechaS").val("");
+										$("#cmbPractica").val("");
+										$("#cmbHoraPract").val("");
+										$("#txtCantAlumnos").val("");
+										$("#textarea1").val("");
+										articulosAgregados = Array();
+										numArticulos = Array();
 		                     			swal("La solicitud fue creada con éxito!", "Da clic en el botón OK!", "success");
-		                     			//Limpiar campos
-		                     			
+		                     			//Limpiar campos			
 		                     		}
 		                     		else
 		                     		{

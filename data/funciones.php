@@ -147,6 +147,30 @@ function grupo($mat,$per,$pdo,$hor)
 		return "";
 	}
 }
+function existeSolLab($dep,$pdo,$fce,$fcs,$hrs,$lab,$pra,$mat,$gpo,$usu)
+{
+	$d              = $dep;
+	$periodo 		= $pdo;
+	$fe  			= $fce;
+	$fs 			= $fcs;
+	$h 				= $hrs;
+	$l 				= $lab;
+	$p 				= $pra;
+	$m 				= $mat;
+	$g 				= $gpo;
+	$u     			= $usu;	
+	$conexion 		= conectaBDSICLAB();
+	$consulta 		= sprintf("select claveSolicitud from lbsolicitudlaboratorios where claveDependencia =%s and PDOCVE =%s and fechaEnvio =%s and  fechaSolicitud =%s and horaSolicitud =%s and claveLaboratorio =%s and clavePractica =%d and MATCVE =%s and GPOCVE =%s and claveUsuario =%s",$d,$periodo,$fe,$fs,$h,$l,$p,$m,$g,$u);
+	$res			= mysql_query($consulta);
+	if($row = mysql_fetch_array($res))
+	{
+		return $row["claveSolicitud"];
+	}
+	else
+	{
+		return "";
+	}
+}
 //Menú principal
 $opc = $_POST["opc"];
 switch ($opc)

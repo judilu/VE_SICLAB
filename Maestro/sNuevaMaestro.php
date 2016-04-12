@@ -57,7 +57,7 @@
 						<label>Hora de la práctica</label>
 					</div>
 					<div class="input-field col s2">
-						<input id="txtCantAlumnos" type="number" class="validate">
+						<input id="txtCantAlumnos" type="number" min="1" max="45" value="1"class="validate">
 						<label for="txtCantAlumnos">Cant. de alumnos</label>
 					</div>
 				</div>
@@ -93,7 +93,7 @@
 			<div class="row">
 				<div class="col s12">
 					<div class="row">
-						<div class="input-field col s4 offset-s1">
+						<div class="input-field col s6 offset-s1">
 							<select id="cmbMaterialCat">
 								<option value="" disabled selected>Seleccione el material</option>
 								<option value="110">ALUMINIO</option>
@@ -101,6 +101,10 @@
 								<option value="120">AMPERIMETRO</option>
 							</select>
 							<label>Materiales</label>
+						</div>
+						<div class="input-field col s2">
+							<input id="txtNumArt" type="number" min="1" max="20" value="1"class="validate">
+							<label for="txtNumArt">Cant. de articulos</label>
 						</div>
 						<div class="col s3">
 							<a id="btnAgregarArt" class="waves-effect waves-light btn amber darken-2"><i class="material-icons left">add</i>Agregar</a>
@@ -118,7 +122,7 @@
 								</thead>
 								<tbody id="bodyArt">
 									<!-- <tr>
-										<td class="col s2"><input type="number" min="1" max="20" value="1"></td>
+										<td class="col s2">3</td>
 										<td class="col s8">Osciloscopio</td>
 										<td class="col s2"><a name = 1 class="btnEliminarArt btn-floating btn-large waves-effect waves-light red darken-1"><i class="material-icons">delete</i></a></td>";
 									</tr> -->
