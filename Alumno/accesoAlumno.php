@@ -105,9 +105,9 @@
 				</div>
 				<div class="row">
 					<div class="col s6 offset-s3">
-						<a class="btn waves-effect waves-light blue darken-3" type="submit" name="action" id="btnPractica">Datos práctica
+						<a class="btn waves-effect waves-light blue darken-3" type="submit" name="action" id="btnPracticaAlumnos">Datos práctica
 						</a>
-						<a class="waves-effect waves-light btn red darken-1" id="btnCancelar">Cancelar</a>
+						<a class="waves-effect waves-light btn red darken-1" id="btnCancelarEntrada">Cancelar</a>
 					</div>
 				</div>
 			</form>

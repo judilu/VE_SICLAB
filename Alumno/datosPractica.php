@@ -9,7 +9,7 @@
 						<option value="" disabled selected>Selecciona la materia</option>
 						<?php						
 						$conexion		= conectaBDSIE();
-						$consulta 		= sprintf("select MATCVE, MATNCO from DMATER");
+						$consulta 		= sprintf("select MATCVE, MATNCO from DMATER GROUP BY MATCVE");
 						$res 			= mysql_query($consulta);
 						while($row = mysql_fetch_array($res))
 						{
@@ -22,12 +22,12 @@
 					<select id="cmbMaestroPractica">
 						<option value="" disabled selected>Selecciona el maestro</option>
 						<!--<?php						
-						$conexion		= conectaBDSIE();
-						$consulta 		= sprintf("select p.PERCVE,p.PERNOM,p.PERAPE from DPERSO p INNER JOIN DGRUPO g on p.PERCVE=g.PERCVE inner JOIN DMATER m on g.MATCVE=m.MATCVE GROUP BY p.PERCVE");
-						$res 			= mysql_query($consulta);
-						while($row = mysql_fetch_array($res))
+						//$conexion		= conectaBDSIE();
+						//$consulta 		= sprintf("select p.PERCVE,p.PERNOM,p.PERAPE from DPERSO p INNER JOIN DGRUPO g on p.PERCVE=g.PERCVE inner JOIN DMATER m on g.MATCVE=m.MATCVE GROUP BY p.PERCVE");
+						//$res 			= mysql_query($consulta);
+						//while($row = mysql_fetch_array($res))
 						{
-							echo '<option value="'.$row["PERCVE"].'">'.$row["PERAPE"."PERNOM"].'</option>';
+							//echo '<option value="'.$row["PERCVE"].'">'.$row["PERAPE"."PERNOM"].'</option>';
 						}?>-->
 					</select>
 					<label>Nombre de la materia</label>
