@@ -304,22 +304,11 @@ function nuevaSol()
 	{
 		$respuesta = true; 
 	}
+	//funcion
 	$sol = existeSolLab($cveDep,$periodo,$fe,$fs,$hs,$lab,$prac,$mat,$gp,$clave);
 	$porArt = explode(",",$art);
 	$porNum = explode(",",$num);
-	var_dump($porNum);
-	if($sol != 0)
-	{
-		for ($i=0; $i <$n; $i++) 
-		{ 
-			$consulta2 	= sprintf("insert into lbasignaarticulospracticas values(%s,%d,%d)",$porArt,$porNum,$sol);
-			$res2 		= mysql_query($consulta);
-			if(mysql_affected_rows()>0)
-			{
-				$respuesta2 = true; 
-			}
-		}	
-	}
+	$respuesta2 = detalleArt($n,$sol,$porArt,$porNum);
 	$arrayJSON = array('respuesta' => $respuesta,
 						'respuesta2' => $respuesta2);
 	print json_encode($arrayJSON);

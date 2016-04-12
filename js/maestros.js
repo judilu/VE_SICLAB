@@ -210,6 +210,7 @@ var inicioMaestro = function ()
     {
     	//aquiEmpieza todo
     	var artCve = $("#cmbMaterialCat" ).val();
+    	console.log(artCve);
     	var artNom = $("#cmbMaterialCat option:selected").text();
     	var num    = $("#txtNumArt").val(); 	
     	numArticulos.push(num);
@@ -382,7 +383,6 @@ var inicioMaestro = function ()
 		        var cant = $("#txtCantAlumnos").val();
 		        var n = (($("#tbMaterialSol tr").length)-1);
 		        //var con  = ($("#tbMaterialSol tr").length);
-		        console.log(n);
 		        var parametros = "opc=nuevaSol1"+
 		                     		"&fe="+fe+
 		                     		"&fs="+fs+
@@ -424,6 +424,7 @@ var inicioMaestro = function ()
 		                     		}
 		                     	},
 		                     	error: function(xhr, ajaxOptions,x){
+		                     		console.log(xhr);
 		                     		console.log("Error de conexión articulo");
 		                     	}
 		                     });
