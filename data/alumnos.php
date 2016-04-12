@@ -27,7 +27,7 @@ function consultaAlumno(){
 //select CARNOM from DCARRE INNER JOIN DCALUM ON DCALUM.CARCVE=DCARRE.CARCVE WHERE DCALUM.ALUCTR='11170876'
 function consultaCarrera(){
 	$respuesta		= false;
-	$nControl			= GetSQLValueString($_POST["nControl"],"text");
+	$nControl		= GetSQLValueString($_POST["nControl"],"text");
 	$CARNOM 		= "";
 	$CALNPE			="";
 	$conexion 		= conectaBDSIE();
@@ -45,6 +45,35 @@ function consultaCarrera(){
 						);
 	print json_encode($arrayJSON);
 }
+function consultaMaestroPractica()
+{
+	$periodo 		= "'2161'";//periodoActual();
+	$claveMateria	= GetSQLValueString($_POST["claveMateria"],"text");				
+	$conexion		= conectaBDSIE();
+	$respuesta 		= false;
+	$cveMaestro 	= "";
+	$opcionMaestro 	= "";
+	$Li 			= "";
+	$con 			= "";
+	$cmbMaestrosPrac= array(); 
+	$consulta 		= sprintf("select p.PERCVE,p.PERNOM,p.PERAPE from DPERSO p INNER JOIN DGRUPO g on p.PERCVE=g.PERCVE inner JOIN DMATER m on g.MATCVE=m.MATCVE where g.PDOCVE=%s and m.MATCVE=%s GROUP BY p.PERCVE",$periodo,$claveMateria);
+	$res 			= mysql_query($consulta);
+
+	while($row = mysql_fetch_array($res))
+	{
+		$cmbMaestrosPrac[] = $row;
+		$respuesta = true;
+		$con++;
+	}
+	for ($i=0; $i < $con ; $i++)
+	{ 
+		$opcionMaestro 	.='<option value="'.$cmbMaestrosPrac[$i]["PERCVE"].'">'.$cmbMaestrosPrac[$i]["PERNOM"].$cmbMaestrosPrac[$i]["PERAPE"].'</option>';
+		$Li 	.='<li class><span>'.$cmbMaestrosPrac[$i]["PERNOM"].$cmbMaestrosPrac[$i]["PERAPE"].'</span></li>';
+	}
+	$arrayJSON = array('respuesta' => $respuesta, 'opcionMaestro' => $opcionMaestro, 
+						'li' => $Li);
+	print json_encode($arrayJSON);
+}
 //Menú principal
 $opc = $_POST["opc"];
 switch ($opc){
@@ -53,6 +82,9 @@ switch ($opc){
 	break;
 	case 'consultaCarrera':
 		consultaCarrera();
+	break;
+	case 'consultaMaestro':
+		consultaMaestroPractica();
 	break;
 } 
 ?>

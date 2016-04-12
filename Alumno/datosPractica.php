@@ -1,5 +1,6 @@
 <div id="datosPractica2">
 	<?php require_once('../data/conexion.php');?>
+	<!--<?php //require_once('../data/funciones.php');?>-->
 	<h5>Datos de la práctica</h5>
 	<div class="row">
 		<div class="col s12">
@@ -7,28 +8,26 @@
 				<div class="input-field col s5">
 					<select id="cmbMateriaAlumno">
 						<option value="" disabled selected>Selecciona la materia</option>
-						<?php						
-						$conexion		= conectaBDSIE();
-						$consulta 		= sprintf("select MATCVE, MATNCO from DMATER GROUP BY MATCVE");
-						$res 			= mysql_query($consulta);
-						while($row = mysql_fetch_array($res))
-						{
-							echo '<option value="'.$row["MATCVE"].'">'.$row["MATNCO"].'</option>';
-						}?>
+						<?php			
+						 	$periodo 		= '2161';//periodoActual();			
+							$conexion		= conectaBDSIE();
+							$consulta 		= sprintf("select m.MATCVE, m.MATNCO 
+														from DMATER m 
+														inner join DGRUPO g on m.MATCVE=g.MATCVE 
+														where g.PDOCVE=%s 
+														GROUP BY m.MATCVE",$periodo);
+							$res 			= mysql_query($consulta);
+							while($row = mysql_fetch_array($res))
+							{
+								echo '<option value="'.$row["MATCVE"].'">'.$row["MATNCO"].'</option>';
+							}
+						?>
 					</select>
 					<label>Nombre del maestro</label>
 				</div>
-				<div class="input-field col s5 offset-s1">
+				<div class="input-field col s5 offset-s1 cMaestro">
 					<select id="cmbMaestroPractica">
 						<option value="" disabled selected>Selecciona el maestro</option>
-						<!--<?php						
-						//$conexion		= conectaBDSIE();
-						//$consulta 		= sprintf("select p.PERCVE,p.PERNOM,p.PERAPE from DPERSO p INNER JOIN DGRUPO g on p.PERCVE=g.PERCVE inner JOIN DMATER m on g.MATCVE=m.MATCVE GROUP BY p.PERCVE");
-						//$res 			= mysql_query($consulta);
-						//while($row = mysql_fetch_array($res))
-						{
-							//echo '<option value="'.$row["PERCVE"].'">'.$row["PERAPE"."PERNOM"].'</option>';
-						}?>-->
 					</select>
 					<label>Nombre de la materia</label>
 				</div>
