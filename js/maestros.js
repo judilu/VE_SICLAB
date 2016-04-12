@@ -74,7 +74,7 @@ var inicioMaestro = function ()
 				{
 					$("#tbSolAceptadas").html(" ");
 					$("#tbSolAceptadas").append(response.renglones);
-					//$("#tbSolAceptadas a").on("click",practicaRealizada);
+					$("#tbSolAceptadas a").on("click",practicaRealizada);
 				}
 				else
 					sweetAlert("No hay solicitudes..!", "Debe crear una solicitud antes", "error");
@@ -84,7 +84,6 @@ var inicioMaestro = function ()
 			}
 		});
 		$("#sAceptadasMaestro").show("slow");
-		$("#tbSolAceptadas a").on("click",practicaRealizada);	
 	}//Termina función de solicitudes Aceptadas
 	//Empieza función para liberar una solicitud realizada a aceptadas
 	var practicaRealizada = function()
@@ -103,6 +102,7 @@ var inicioMaestro = function ()
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					solAceptadas();
 					swal("Practica realizada..!", "Buen trabajo..!", "success");
 				}
 				else
