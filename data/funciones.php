@@ -168,8 +168,32 @@ function existeSolLab($dep,$pdo,$fce,$fcs,$hrs,$lab,$pra,$mat,$gpo,$usu)
 	}
 	else
 	{
-		return "";
+		return 0;
 	}
+}
+function detalleArt($nu,$so,$art,$num)
+{
+	$n 			= GetSQLValueString($nu,"int");
+	$sol 		= GetSQLValueString($so,"int");;
+	$porArt 	= $art;
+	$porNum 	= $num;
+	$cant 		= 0;
+	$respuesta 	= false;
+	if($sol != 0)
+	{
+		for ($i=0; $i <$n; $i++) 
+		{ 
+			$cant 		= (int)($porNum[$i]);
+			$conexion 	= conectaBDSICLAB();
+			$consulta 	= sprintf("insert into lbasignaarticulospracticas values('%s',%d,%d)",$porArt[$i],$sol,$cant);
+			$res 		= mysql_query($consulta);
+			if(mysql_affected_rows()>0)
+			{
+				$respuesta = true; 
+			}
+		}	
+	}
+	return $respuesta;
 }
 //Menú principal
 $opc = $_POST["opc"];
