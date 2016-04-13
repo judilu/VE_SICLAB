@@ -206,14 +206,20 @@ var inicioMaestro = function ()
 			success: function(response){
 				if(response.respuesta == true)
 				{
-					$('select').material_select();
 					$("#cmbMateria").html(" ");
-					$("#cmbMateria").append(response.combo);
+					//$("#cmbMateria").append(response.combo);
+					for (var i = 0; i < response.contador; i++) 
+					{
+						$("#cmbMateria").append($("<option></option>").attr("value",response.claveMat[i]).text(response.nombreMat[i]));
+					}
+					$("cmbMateria").trigger('contentChanged');
+					$('select').material_select();
 				}
 				else
 					console.log("hola no entro");
 			},
 			error: function(xhr, ajaxOptions,x){
+				console.log(xhr);
 				console.log("Error de conexión combomat");	
 			}
 		});
@@ -461,6 +467,10 @@ var inicioMaestro = function ()
 	    		sweetAlert("Error", "Debe llenar todos los campos!", "error");
 	    	}
     }
+    var comboHoraMat = function()
+    {
+    	alert("cambi");
+    }
 	//eventos menu Reportes
 	var listaAsistencia = function()
 	{
@@ -486,6 +496,8 @@ var inicioMaestro = function ()
 	$("#tbSolRealizadas").on("click","#btnPracticaRealizada",practicaRealizada);
 	$("#btnSolicitudesRealizadas").on("click",solRealizadas);
 	$("#btnNuevaSolicitud").on("click",solNueva);
+	//eventos de los combos
+	$("#cmbMateria").on("change",comboHoraMat);//dddddd
 	$("#btnElegirMaterial").on("click",elegirMaterial);
 	$("#btnFinalizarNS").on("click",altaNuevaSol);
 	$("#btnRegresar").on("click",solNueva);

@@ -317,15 +317,36 @@ function comboMat ()
 {
 	session_start();
 	$clave  		= GetSQLValueString(($_SESSION['nombre']),"int");
+	$maestro 		= claveMaestro($clave);
 	$respuesta 		= false;
-	$cmbMaterias 	= array();
-	$materias 		= materias($clave);
-	if($materias !="")
+	$periodo 		= periodoActual();
+	$con 			= 0;
+	$combomat 		= array();
+	$claveMat 		= "";
+	$nombreMat		= "";
+	$conexion		= conectaBDSIE();
+	$consulta		= sprintf("select m.MATCVE, m.MATNCO from DMATER m inner join DGRUPO g on m.MATCVE = g.MATCVE where g.PERCVE =%d and g.PDOCVE =%s and g.GRUBAS = ' ' and g.INSNUM > 0",$maestro,$periodo);
+	$res 			= mysql_query($consulta);
+	if($res)
 	{
-		$cmbMaterias[] .='<option value="'.$row["MATCVE"].'">'.$row["MATNCO"].'</option>';
-		$respuesta = true;
+		while($row = mysql_fetch_array($res))
+		{
+			$combomat[] = $row;
+			$respuesta = true;
+			$con++;
+		}
+		for ($i=0; $i < $con ; $i++)
+		{ 
+			$claveMat[] 	=$combomat[$i]["MATCVE"];
+			$nombreMat[] 	=$combomat[$i]["MATNCO"];
+		}
 	}
-	var_dump($clave);
+	$arrayJSON = array('respuesta' => $respuesta,
+						 'claveMat' => $claveMat, 
+						'nombreMat' => $nombreMat, 
+						'contador' => $con);
+	print json_encode($arrayJSON);
+
 }
 //Menú principal
 $opc = $_POST["opc"];

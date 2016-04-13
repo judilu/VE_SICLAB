@@ -52,7 +52,8 @@ function materias ($clave)
 	{
 		while($row = mysql_fetch_array($res))
 		{
-			$materias[$row["MATCVE"]] =$row["MATNCO"];
+			//$materias[$row["MATCVE"]] =$row["MATNCO"];
+			$materias = $row;
 		}
 		return $materias;
 	}
