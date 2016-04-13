@@ -185,7 +185,7 @@ function detalleArt($nu,$so,$art,$num)
 		{ 
 			$cant 		= (int)($porNum[$i]);
 			$conexion 	= conectaBDSICLAB();
-			$consulta 	= sprintf("insert into lbasignaarticulospracticas values('%s',%d,%d)",$porArt[$i],$sol,$cant);
+			$consulta 	= sprintf("insert into lbasignaarticulospracticas values('%s',%d,%d,'V')",$porArt[$i],$sol,$cant);
 			$res 		= mysql_query($consulta);
 			if(mysql_affected_rows()>0)
 			{

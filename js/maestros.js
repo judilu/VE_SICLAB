@@ -406,15 +406,24 @@ var inicioMaestro = function ()
 		                     	success: function(response){
 		                     		if(response.respuesta == true && response.respuesta2 == true)
 		                     		{
-		                     			$("#cmbMateria").val("");
+		                     			$('#cmbMateria').material_select();
+		                     			//$("#cmbMateria").val("");
+		                     			//$("#cmbMateria option:selected").text("Seleccione la materia");
 										$("#cmbHoraMat").val("");
-										$("#txtFechaS").val("");
+										$("#cmbHoraMat option:selected").text("Seleccione la hora");
+										$("#txtFechaS").val("dd/mm/aaaa");
 										$("#cmbPractica").val("");
+										$("#cmbPractica option:selected").text("Seleccione la práctica");
 										$("#cmbHoraPract").val("");
+										$("#cmbHoraPract option:selected").text("Seleccione la hora");
 										$("#txtCantAlumnos").val("");
 										$("#textarea1").val("");
+										$("#txtNumArt").val("1");
+										$("#cmbMaterialCat").val("");
+										$("#cmbMaterialCat").text("");
 										articulosAgregados = Array();
 										numArticulos = Array();
+										$("#bodyArt").html("");
 		                     			swal("La solicitud fue creada con éxito!", "Da clic en el botón OK!", "success");
 		                     			//Limpiar campos			
 		                     		}
