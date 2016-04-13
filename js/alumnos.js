@@ -14,104 +14,104 @@ var inicio = function()
 	}
 	var uno= function()
 	{
-			$("#txtNControl").val($("#txtNControl").val()+1);
-			str=$("#txtNControl").val();
-			if(str.length==8)
-			{
-				consultaAlumno(str);
-			}
-			
+		$("#txtNControl").val($("#txtNControl").val()+1);
+		str=$("#txtNControl").val();
+		if(str.length==8)
+		{
+			consultaAlumno(str);
+		}
+
 	}
 	var dos= function()
 	{
-			$("#txtNControl").val($("#txtNControl").val()+2);
-			str=$("#txtNControl").val();
-			if(str.length==8)
-			{
-				consultaAlumno(str);
-			}
+		$("#txtNControl").val($("#txtNControl").val()+2);
+		str=$("#txtNControl").val();
+		if(str.length==8)
+		{
+			consultaAlumno(str);
+		}
 	}
 	var tres= function()
 	{
-			$("#txtNControl").val($("#txtNControl").val()+3);
-			str=$("#txtNControl").val();
-			if(str.length==8)
-			{
-				consultaAlumno(str);
-			}
+		$("#txtNControl").val($("#txtNControl").val()+3);
+		str=$("#txtNControl").val();
+		if(str.length==8)
+		{
+			consultaAlumno(str);
+		}
 	}
 	var cuatro= function()
 	{
-			$("#txtNControl").val($("#txtNControl").val()+4);
-			str=$("#txtNControl").val();
-			if(str.length==8)
-			{
-				consultaAlumno(str);
-			}
+		$("#txtNControl").val($("#txtNControl").val()+4);
+		str=$("#txtNControl").val();
+		if(str.length==8)
+		{
+			consultaAlumno(str);
+		}
 	}
 	var cinco= function()
 	{
-			$("#txtNControl").val($("#txtNControl").val()+5);
-			str=$("#txtNControl").val();
-			if(str.length==8)
-			{
-				consultaAlumno(str);
-			}
+		$("#txtNControl").val($("#txtNControl").val()+5);
+		str=$("#txtNControl").val();
+		if(str.length==8)
+		{
+			consultaAlumno(str);
+		}
 	}
 	var seis= function()
 	{
-			$("#txtNControl").val($("#txtNControl").val()+6);
-			str=$("#txtNControl").val();
-			if(str.length==8)
-			{
-				consultaAlumno(str);
-			}
+		$("#txtNControl").val($("#txtNControl").val()+6);
+		str=$("#txtNControl").val();
+		if(str.length==8)
+		{
+			consultaAlumno(str);
+		}
 	}
 	var siete= function()
 	{
-			$("#txtNControl").val($("#txtNControl").val()+7);
-			str=$("#txtNControl").val();
-			if(str.length==8)
-			{
-				consultaAlumno(str);
-			}
+		$("#txtNControl").val($("#txtNControl").val()+7);
+		str=$("#txtNControl").val();
+		if(str.length==8)
+		{
+			consultaAlumno(str);
+		}
 	}
 	var ocho= function()
 	{
-			$("#txtNControl").val($("#txtNControl").val()+8);
-			str=$("#txtNControl").val();
-			if(str.length==8)
-			{
-				consultaAlumno(str);
-			}
+		$("#txtNControl").val($("#txtNControl").val()+8);
+		str=$("#txtNControl").val();
+		if(str.length==8)
+		{
+			consultaAlumno(str);
+		}
 	}
 	var nueve= function()
 	{
-			$("#txtNControl").val($("#txtNControl").val()+9);
-			str=$("#txtNControl").val();
-			if(str.length==8)
-			{
-				consultaAlumno(str);
-			}
+		$("#txtNControl").val($("#txtNControl").val()+9);
+		str=$("#txtNControl").val();
+		if(str.length==8)
+		{
+			consultaAlumno(str);
+		}
 	}
 	var cero= function()
 	{
-			$("#txtNControl").val($("#txtNControl").val()+0);
-			str=$("#txtNControl").val();
-			if(str.length==8)
-			{
-				consultaAlumno(str);
+		$("#txtNControl").val($("#txtNControl").val()+0);
+		str=$("#txtNControl").val();
+		if(str.length==8)
+		{
+			consultaAlumno(str);
 
-			}
+		}
 	}
 	var ma= function()
 	{
 		if($("#txtNControl").val()=="")
 			$("#txtNControl").val("MA");
-			else
-					{
-						sweetAlert("Error", "El prefijo MA solo puede ir al inicio.", "error");
-					}
+		else
+		{
+			sweetAlert("Error", "El prefijo MA solo puede ir al inicio.", "error");
+		}
 	}
 	var del= function()
 	{
@@ -129,95 +129,100 @@ var inicio = function()
 	var consultaAlumno = function(str)
 	{
 		var parametros = "opc=consultaAlumno"+
-    			"&nControl="+str+
-    			"&id="+Math.random();
-    			$.ajax({
-    				cache:false,
-    				type: "POST",
-    				dataType: "json",
-    				url:"../data/alumnos.php",
-    				data: parametros,
-    				success: function(response)
-    				{
-    					if(response.respuesta)
-    					{
-   							document.getElementById('txtNombre').focus()
-    						$("#txtNombre").val(response.ALUAPP+" "+ response.ALUAPM+ response.ALUNOM);	
-    						consultaCarrera(str);
-    					}
-    					else
-    					{
-    						sweetAlert("NO ENCONTRADO", "", "error");
-    					}
-    				},
-    				error: function(xhr, ajaxOptions,x)
-    				{
-    					console.log("Error de conexión");
-    				}
-    			});
+		"&nControl="+str+
+		"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/alumnos.php",
+			data: parametros,
+			success: function(response)
+			{
+				if(response.respuesta)
+				{
+					document.getElementById('txtNombre').focus()
+					$("#txtNombre").val(response.ALUAPP+" "+ response.ALUAPM+ response.ALUNOM);	
+					consultaCarrera(str);
+				}
+				else
+				{
+					sweetAlert("NO ENCONTRADO", "", "error");
+				}
+			},
+			error: function(xhr, ajaxOptions,x)
+			{
+				console.log("Error de conexión");
+			}
+		});
 	}
 
 	var consultaCarrera = function(str)
 	{
 		var parametros = "opc=consultaCarrera"+
-    			"&nControl="+str+
-    			"&id="+Math.random();
-    			$.ajax({
-    				cache:false,
-    				type: "POST",
-    				dataType: "json",
-    				url:"../data/alumnos.php",
-    				data: parametros,
-    				success: function(response)
-    				{
-    					if(response.respuesta)
-    					{
-   							document.getElementById('txtCarrera').focus();
-    						$("#txtCarrera").val(response.CARNOM);
-    						document.getElementById('txtSemestre').focus();	
-    						$("#txtSemestre").val(response.CALNPE);
-    					}
-    					else
-    					{
-    						sweetAlert("NO ENCONTRADO", "", "error");
-    					}
-    				},
-    				error: function(xhr, ajaxOptions,x)
-    				{
-    					console.log("Error de conexión");
-    				}
-    			});
+		"&nControl="+str+
+		"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/alumnos.php",
+			data: parametros,
+			success: function(response)
+			{
+				if(response.respuesta)
+				{
+					document.getElementById('txtCarrera').focus();
+					$("#txtCarrera").val(response.CARNOM);
+					document.getElementById('txtSemestre').focus();	
+					$("#txtSemestre").val(response.CALNPE);
+				}
+				else
+				{
+					sweetAlert("NO ENCONTRADO", "", "error");
+				}
+			},
+			error: function(xhr, ajaxOptions,x)
+			{
+				console.log("Error de conexión");
+			}
+		});
 	}
 	var maestroPractica = function()
 	{
 		claveMateria = $("#cmbMateriaAlumno").val();
-		alert(claveMateria);
 		var parametros = "opc=consultaMaestro"+
-    			"&claveMateria="+claveMateria+
-    			"&id="+Math.random();
-    			$.ajax({
-    				cache:false,
-    				type: "POST",
-    				dataType: "json",
-    				url:"../data/alumnos.php",
-    				data: parametros,
-    				success: function(response)
-    				{
-    					if(response.respuesta)
-    					{
-   							$("#cmbMaestroPractica").append(response.opcionMaestro);
-   							$(".cMaestro ul").append(response.li);
-    					}
-    					else
-    					{
-    						sweetAlert("NO ENCONTRADO", "", "error");
-    					}
-    				},
-    				error: function(xhr, ajaxOptions,x)
-    				{
-    					console.log("Error de conexión");
-    				}
-    			});
+		"&claveMateria="+claveMateria+
+		"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/alumnos.php",
+			data: parametros,
+			success: function(response)
+			{
+				if(response.respuesta)
+				{
+					alert("entra aqui ");
+   							//$("#cmbMaestroPractica").append(response.opcionMaestro);
+   							$('#cmbMaestroPractica').append('<option value="0">SELECCIONAR...</option>');
+   							for (i=0; i < response.opcionMaestro.length; i++)
+   							{
+   								$(".cMaestro ul").append('<li class>'+response.nombreMaestro[i]+'</li>');
+   								$('#cmbMaestroPractica').append('<option value='+response.opcionMaestro[i]+'>'+response.nombreMaestro[i]+'</option>');
+   							}
+   				}
+   				else
+   				{
+   					sweetAlert("NO ENCONTRADO", "", "error");
+   				}
+   			},
+   			error: function(xhr, ajaxOptions,x)
+   			{
+   				console.log("Error de conexión");
+   			}
+   		});
 	}
 	var numMaestro = function()
 	{

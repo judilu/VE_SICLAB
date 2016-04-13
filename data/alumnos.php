@@ -53,10 +53,14 @@ function consultaMaestroPractica()
 	$respuesta 		= false;
 	$cveMaestro 	= "";
 	$opcionMaestro 	= "";
-	$Li 			= "";
+	$nombreMaestro	= "";
 	$con 			= "";
 	$cmbMaestrosPrac= array(); 
-	$consulta 		= sprintf("select p.PERCVE,p.PERNOM,p.PERAPE from DPERSO p INNER JOIN DGRUPO g on p.PERCVE=g.PERCVE inner JOIN DMATER m on g.MATCVE=m.MATCVE where g.PDOCVE=%s and m.MATCVE=%s GROUP BY p.PERCVE",$periodo,$claveMateria);
+	$consulta 		= sprintf("select p.PERCVE,p.PERNOM,p.PERAPE 
+						from DPERSO p 
+						INNER JOIN DGRUPO g on p.PERCVE=g.PERCVE 
+						inner JOIN DMATER m on g.MATCVE=m.MATCVE 
+						where g.PDOCVE=%s and m.MATCVE=%s GROUP BY p.PERCVE",$periodo,$claveMateria);
 	$res 			= mysql_query($consulta);
 
 	while($row = mysql_fetch_array($res))
@@ -67,11 +71,11 @@ function consultaMaestroPractica()
 	}
 	for ($i=0; $i < $con ; $i++)
 	{ 
-		$opcionMaestro 	.='<option value="'.$cmbMaestrosPrac[$i]["PERCVE"].'">'.$cmbMaestrosPrac[$i]["PERNOM"].$cmbMaestrosPrac[$i]["PERAPE"].'</option>';
-		$Li 	.='<li class><span>'.$cmbMaestrosPrac[$i]["PERNOM"].$cmbMaestrosPrac[$i]["PERAPE"].'</span></li>';
+		$opcionMaestro[] 	=$cmbMaestrosPrac[$i]["PERCVE"];
+		$nombreMaestro[] 	=$cmbMaestrosPrac[$i]["PERNOM"]." ".$cmbMaestrosPrac[$i]["PERAPE"];
 	}
 	$arrayJSON = array('respuesta' => $respuesta, 'opcionMaestro' => $opcionMaestro, 
-						'li' => $Li);
+						'nombreMaestro' => $nombreMaestro, 'contador' => $con);
 	print json_encode($arrayJSON);
 }
 //Menú principal
