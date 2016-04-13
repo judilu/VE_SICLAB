@@ -53,6 +53,7 @@ function consultaMateriasAlumno()
 	$respuesta 		= false;
 	$contador 		= "";
 	$cmbMaterias 	= array();
+	$cmbMateriasNom	= array();
 	$consulta 		= sprintf("select m.MATCVE, m.MATNCO 
 						from DMATER m 
 						inner join DGRUPO g on m.MATCVE=g.MATCVE 
@@ -62,12 +63,14 @@ function consultaMateriasAlumno()
 	$res 			= mysql_query($consulta);
 		while($row = mysql_fetch_array($res))
 		{
-			$cmbMaterias[] .='<option value="'.$row["MATCVE"].'">'.$row["MATNCO"].'</option>';
+			$cmbMaterias[] 		=$row["MATCVE"];
+			$cmbMateriasNom[] 	=$row["MATNCO"];
 			$contador ++;
 			$respuesta = true;
 		}
 	$arrayJSON = array('respuesta' => $respuesta, 
 						'cmbMaterias' => $cmbMaterias, 
+						'cmbMateriasNom' => $cmbMateriasNom, 
 						'contador' => $contador);
 	print json_encode($arrayJSON);
 }

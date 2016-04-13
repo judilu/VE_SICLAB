@@ -4,11 +4,13 @@ var inicio = function()
 
 	var practicaAlumnos = function()
 	{
-		$("#accesoAlumno").hide();
-		$("#datosPracticas").show("slow");
-		var numeroControl = $("#txtNControl").val();
-		/*if (($("#txtNControl").val())!="") 
+		if(($("#txtNControl").val())!="" && ($("#txtNombre").val())!="") 
 		{
+			$("#accesoAlumno").hide();
+			$("#datosPracticas").show("slow");
+			
+			var numeroControl = $("#txtNControl").val();
+			
 			var parametros = "opc=consultaMatAlumno"+
 			"&numeroControl="+numeroControl+
 			"&id="+Math.random();
@@ -22,23 +24,28 @@ var inicio = function()
 			{
 				if(response.respuesta)
 				{
+					$('select').material_select();
+					$("select").empty().html(' ');
 					for (var i = 0; i < response.contador; i++) 
 					{
-   						$('selectMateria.name').append(response.cmbMaterias[i]);
+						$("#cmbMateriasAlumnos").append($("<option></option>").attr("value",response.cmbMaterias[i]).text(response.cmbMateriasNom[i]));
 					}
-					alert("bien");
    				}
    				else
    				{
-   					sweetAlert("NO ENCONTRADO", "", "error");
+   					sweetAlert("No hay materias disponibles", "", "error");
    				}
    			},
    			error: function(xhr, ajaxOptions,x)
    			{
-   				console.log("Error de conexión");
+   				console.log("Error de conexión datos practica");
    			}
    		});
-		}*/
+		}
+		else
+		{
+			sweetAlert("Número de contro incorrecto", "", "error");
+		}
 	}
 	var materialPractica = function()
 	{
