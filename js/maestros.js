@@ -194,6 +194,29 @@ var inicioMaestro = function ()
 		$("#eleccionMaterial").hide();
 		$("#sNuevaMaestro").show("slow");
 		$("#nuevaMaestro").show("slow");
+		//modificación combo
+		var parametros = "opc=comboMat1"+
+		"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/maestros.php",
+			data: parametros,
+			success: function(response){
+				if(response.respuesta == true)
+				{
+					$('select').material_select();
+					$("#cmbMateria").html(" ");
+					$("#cmbMateria").append(response.combo);
+				}
+				else
+					console.log("hola no entro");
+			},
+			error: function(xhr, ajaxOptions,x){
+				console.log("Error de conexión combomat");	
+			}
+		});
     }//Termina función de crear nueva solicitud
     //Empieza función de elegir material
     var elegirMaterial = function()

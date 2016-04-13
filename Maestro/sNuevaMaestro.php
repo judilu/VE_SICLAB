@@ -7,14 +7,14 @@
 					<div class="input-field col s8">
 						<select id="cmbMateria">
 							<option value="" disabled selected>Seleccione la materia</option>
-							<?php						
+							<!--<?php						
 							$conexion		= conectaBDSIE();
 							$consulta 		= sprintf("select m.MATCVE, m.MATNCO from DMATER m inner join DGRUPO g on m.MATCVE = g.MATCVE where g.PERCVE = 920 and g.PDOCVE ='2161' and g.GRUBAS = ' ' and g.INSNUM > 0");
 							$res 			= mysql_query($consulta);
-							while($row = mysql_fetch_array($res))
+							//while($row = mysql_fetch_array($res))
 							{
-								echo '<option value="'.$row["MATCVE"].'">'.$row["MATNCO"].'</option>';
-							}?>
+								//echo '<option value="'.$row["MATCVE"].'">'.$row["MATNCO"].'</option>';
+							}?> -->
 						</select>
 						<label>Materia</label>
 					</div>

@@ -313,6 +313,20 @@ function nuevaSol()
 						'respuesta2' => $respuesta2);
 	print json_encode($arrayJSON);
 }
+function comboMat ()
+{
+	session_start();
+	$clave  		= GetSQLValueString(($_SESSION['nombre']),"int");
+	$respuesta 		= false;
+	$cmbMaterias 	= array();
+	$materias 		= materias($clave);
+	if($materias !="")
+	{
+		$cmbMaterias[] .='<option value="'.$row["MATCVE"].'">'.$row["MATNCO"].'</option>';
+		$respuesta = true;
+	}
+	var_dump($clave);
+}
 //Menú principal
 $opc = $_POST["opc"];
 switch ($opc){
@@ -342,6 +356,9 @@ switch ($opc){
 		break;
 	case 'nuevaSol1':
 		nuevaSol();
+		break;
+	case 'comboMat1':
+		comboMat();
 		break;
 } 
 ?>
