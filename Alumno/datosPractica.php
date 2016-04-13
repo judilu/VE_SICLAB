@@ -6,24 +6,9 @@
 		<div class="col s12">
 			<div class="row">
 				<div class="input-field col s5">
-					<select id="cmbMateriaAlumno">
-						<option value="" disabled selected>Selecciona la materia</option>
-						<?php			
-						 	$periodo 		= '2161';//periodoActual();			
-							$conexion		= conectaBDSIE();
-							$consulta 		= sprintf("select m.MATCVE, m.MATNCO 
-														from DMATER m 
-														inner join DGRUPO g on m.MATCVE=g.MATCVE 
-														where g.PDOCVE=%s 
-														GROUP BY m.MATCVE",$periodo);
-							$res 			= mysql_query($consulta);
-							while($row = mysql_fetch_array($res))
-							{
-								echo '<option value="'.$row["MATCVE"].'">'.$row["MATNCO"].'</option>';
-							}
-						?>
+					<select name="select" id="cmbMaterias">
+					  
 					</select>
-					<label>Nombre del maestro</label>
 				</div>
 				<div class="input-field col s5 offset-s1 cMaestro">
 					<select id="cmbMaestroPractica">

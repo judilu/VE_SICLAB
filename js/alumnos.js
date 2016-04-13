@@ -6,6 +6,38 @@ var inicio = function()
 		$("#accesoAlumno").hide();
 		$("#datosPracticas").show("slow");
 		var numeroControl = $("#txtNControl").val();
+		alert(numeroControl);
+		if (($("#txtNControl").val())!="") 
+		{
+			var parametros = "opc=consultaMatAlumno"+
+			"&numeroControl="+numeroControl+
+			"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/alumnos.php",
+			data: parametros,
+			success: function(response)
+			{
+				if(response.respuesta)
+				{
+					for (var i = 0; i < cmbMaterias.length; i++) 
+					{
+   						$('#cmbMaterias').append(response.cmbMaterias[i]);
+					}
+   				}
+   				else
+   				{
+   					sweetAlert("NO ENCONTRADO", "", "error");
+   				}
+   			},
+   			error: function(xhr, ajaxOptions,x)
+   			{
+   				console.log("Error de conexión");
+   			}
+   		});
+		}
 	}
 	var materialPractica = function()
 	{
@@ -190,7 +222,7 @@ var inicio = function()
 	}
 	var maestroPractica = function()
 	{
-		claveMateria = $("#cmbMateriaAlumno").val();
+		var claveMateria = $("#cmbMateriaAlumno").val();
 		var parametros = "opc=consultaMaestro"+
 		"&claveMateria="+claveMateria+
 		"&id="+Math.random();

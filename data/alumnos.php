@@ -45,6 +45,28 @@ function consultaCarrera(){
 						);
 	print json_encode($arrayJSON);
 }
+function consultaMateriasAlumno()
+{
+	$numControl 	= GetSQLValueString($_POST["numeroControl"],"text");
+	$periodo 		= '2161';//periodoActual();	
+	$conexion		= conectaBDSIE();
+	$respuesta 		= false;
+	$cmbMaterias 	= array();
+	$consulta 		= sprintf("select m.MATCVE, m.MATNCO 
+						from DMATER m 
+						inner join DGRUPO g on m.MATCVE=g.MATCVE 
+						INNER JOIN DLISTA l ON g.MATCVE=l.MATCVE 
+						where g.PDOCVE=%s and l.ALUCTR=%s 
+							GROUP BY m.MATCVE",$periodo,$numControl);
+	$res 			= mysql_query($consulta);
+		while($row = mysql_fetch_array($res))
+		{
+			$cmbMaterias[] .='<option value="'.$row["MATCVE"].'">'.$row["MATNCO"].'</option>';
+			$respuesta = true;
+		}
+	$arrayJSON = array('respuesta' => $respuesta, 'cmbMaterias' => $cmbMaterias);
+	print json_encode($arrayJSON);
+}
 function consultaMaestroPractica()
 {
 	$periodo 		= "'2161'";//periodoActual();
@@ -89,6 +111,9 @@ switch ($opc){
 	break;
 	case 'consultaMaestro':
 		consultaMaestroPractica();
+	break;
+	case 'consultaMatAlumno';
+		consultaMateriasAlumno();
 	break;
 } 
 ?>
