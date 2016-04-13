@@ -690,7 +690,7 @@ function peticionesPendientesArt()
 			$renglones .= "<td>".$rows[$c]["DEPCVE"]."</td>";
 			$renglones .= "<td>".$rows[$c]["nombreArticulo"]."</td>";
 			$renglones .= "<td>".$rows[$c]["cantidad"]."</td>";
-			$renglones .= "<td><a name = '".$rows[$c]["clavePedido"]."' class='btn-floating btn-large waves-effect  green darken-2' id='btnAceptaPeticion'><i class='material-icons'>done</i></a></td>";
+			$renglones .= "<td><a name ='".$rows[$c]["clavePedido"]."'class='btn-floating btn-large waves-effect green darken-2' id='btnAceptaPeticionArt'><i class='material-icons'>done</i></a></td>";
 			$renglones .= "</tbody>";
 			$respuesta = true;
 		}
@@ -701,6 +701,27 @@ function peticionesPendientesArt()
 	}
 	$arrayJSON = array('respuesta' => $respuesta,
 		'renglones' => $renglones);
+	print json_encode($arrayJSON);
+}
+function aceptaPeticionArticulos()
+{
+	$respuesta 	= false;
+	session_start();
+	if(!empty($_SESSION['nombre']))
+	{
+		$responsable 	= $_SESSION['nombre'];
+		$clavePedido 	= GetSQLValueString($_POST["clavePedido"],"text");
+		$conexion 		= conectaBDSICLAB();
+		$consulta		= sprintf("update lbpedidos set estatus='A' where clavePedido=%s",$clavePedido,$responsable);
+		$res 			= mysql_query($consulta);
+		if(mysql_affected_rows()>0)
+				$respuesta = true;
+	}
+	else
+	{
+		//salir();
+	}
+	$arrayJSON = array('respuesta' => $respuesta);
 	print json_encode($arrayJSON);
 }
 function prestamosPendientes()
@@ -1207,6 +1228,9 @@ switch ($opc){
 	break;
 	case 'eliminaPrestamoPendiente1':
 	eliminaPrestamoPendiente();
+	break;
+	case 'aceptaPeticionArticulos1':
+	aceptaPeticionArticulos();
 	break;
 	case 'prestamosProceso1':
 	prestamosProceso();

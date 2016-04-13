@@ -24,7 +24,7 @@ function consultaAlumno(){
 						);
 	print json_encode($arrayJSON);
 }
-//select CARNOM from DCARRE INNER JOIN DCALUM ON DCALUM.CARCVE=DCARRE.CARCVE WHERE DCALUM.ALUCTR='11170876'
+
 function consultaCarrera(){
 	$respuesta		= false;
 	$nControl		= GetSQLValueString($_POST["nControl"],"text");
@@ -51,6 +51,7 @@ function consultaMateriasAlumno()
 	$periodo 		= '2161';//periodoActual();	
 	$conexion		= conectaBDSIE();
 	$respuesta 		= false;
+	$contador 		= "";
 	$cmbMaterias 	= array();
 	$consulta 		= sprintf("select m.MATCVE, m.MATNCO 
 						from DMATER m 
@@ -62,9 +63,12 @@ function consultaMateriasAlumno()
 		while($row = mysql_fetch_array($res))
 		{
 			$cmbMaterias[] .='<option value="'.$row["MATCVE"].'">'.$row["MATNCO"].'</option>';
+			$contador ++;
 			$respuesta = true;
 		}
-	$arrayJSON = array('respuesta' => $respuesta, 'cmbMaterias' => $cmbMaterias);
+	$arrayJSON = array('respuesta' => $respuesta, 
+						'cmbMaterias' => $cmbMaterias, 
+						'contador' => $contador);
 	print json_encode($arrayJSON);
 }
 function consultaMaestroPractica()
