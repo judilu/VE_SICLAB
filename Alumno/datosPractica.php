@@ -1,20 +1,27 @@
 <div id="datosPractica2">
 	<?php require_once('../data/conexion.php');?>
-	<!--<?php //require_once('../data/funciones.php');?>-->
+	<!--<?php //require_once('../data/alumnos.php');?>-->
 	<h5>Datos de la práctica</h5>
 	<div class="row">
 		<div class="col s12">
 			<div class="row">
 				<div class="input-field col s5">
-					<select name="select" id="cmbMaterias">
-					  
-					</select>
-				</div>
-				<div class="input-field col s5 offset-s1 cMaestro">
-					<select id="cmbMaestroPractica">
-						<option value="" disabled selected>Selecciona el maestro</option>
+					<select>
+						<option value="" disabled selected>Selecciona la materia</option>
+						<option value="1">Option 1</option>
+						<option value="2">Option 2</option>
+						<option value="3">Option 3</option>
 					</select>
 					<label>Nombre de la materia</label>
+				</div>
+				<div class="input-field col s5 offset-s1">
+					<select>
+						<option value="" disabled selected>Selecciona el maestro</option>
+						<option value="1">Option 1</option>
+						<option value="2">Option 2</option>
+						<option value="3">Option 3</option>
+					</select>
+					<label>Nombre del maestro</label>
 				</div>
 			</div>
 			<div class="row">
@@ -42,7 +49,7 @@
 					<a class="btn waves-effect waves-light amber darken-2" type="submit" name="action" id="btnMaterialAlumno">Elegir material</a>
 					<a class="btn waves-effect waves-light green darken-2" type="submit" name="action" id="btnEntrar">Entrar</a>
 				</div>
-			</div>
+			</div>-->
 		</div>
 	</div>  
 </div>

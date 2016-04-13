@@ -1,4 +1,3 @@
- //document.write("<script type='text/javascript' src='../js/usuarios.js'></script>");
  var inicio = function()
  {
  	$('ul.tabs').tabs();
@@ -71,8 +70,8 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
-					$("#tabSolPendientesAlumnos").html("");
-					$("#tabSolPendientesAlumnos").html(response.renglones);
+					$("#tabSolPendientesAlumnos").append("");
+					$("#tabSolPendientesAlumnos").append(response.renglones);
 					$("#tabSolPendientesAlumnos #btnAtenderPrestamo").on("click",atenderPrestamoMaterial);
 					//$("#tabSolPendientesAlumnos #btnEliminarprestamo").on("click",verMas);
 				}
@@ -90,10 +89,10 @@
 	}
 	var atenderPrestamoMaterial = function()
 	{
+		$(this).closest('tr').remove();
 		articulosPrestados = Array();
 		$("#solicitudesPendientes2").hide("slow");
 		var clavePrestamo= $(this).attr('name');
-		$(this).closest("tr").remove()
 		var parametros 	= "opc=atenderPrestamo1"+"&clavePrestamo="+clavePrestamo+"&id="+Math.random();
 		$.ajax({
 			cache:false,
@@ -107,7 +106,7 @@
 					$("#txtcodigoBarrasPrestamo").val("");
 					$("#tbListaMaterialPrestamo").html("");
 					$("#bodyArtSolicitados").html("");
-					$("#tbListaMaterialPrestamo").html(response.renglones);
+					$("#tbListaMaterialPrestamo").append(response.renglones);
 					$("#txtnombreAlumnoPrestamo").val(response.nombre);
 				}
 				else
@@ -229,7 +228,7 @@
 				if(response.respuesta == true)
 				{
 					$("#tabSolProcesoAlumnos").html("");
-					$("#tabSolProcesoAlumnos").html(response.renglones);
+					$("#tabSolProcesoAlumnos").append(response.renglones);
 					$("#tabSolProcesoAlumnos #btnDevolucionMaterial").on("click",devolucionPrestamo);
 					//$("#tabSolPendientesAlumnos #btnEliminarprestamo").on("click",verMas);
 				}
@@ -260,7 +259,7 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
-					$("#tabListaSanciones").html(response.renglones);
+					$("#tabListaSanciones").append(response.renglones);
 					$("#tabListaSanciones #btnQuitaSancion").on("click",quitaSancion);
 				}
 				else
@@ -366,7 +365,7 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
-					$("#tbListaArticulosDevolucion").html(response.renglones);
+					$("#tbListaArticulosDevolucion").append(response.renglones);
 					$("#txtClavePrestamoDevolucion").val(response.clavePrestamo);
 					//$("#tbListaArticulosDevolucion #btnDevolverArt").on("click",aceptarSolicitudLab);
 					//$("#tbListaArticulosDevolucion #btnAplicaSancion").on("click",aceptarSolicitudLab);
@@ -543,7 +542,7 @@
 				if(response.respuesta == true)
 				{
 					$("#tbPendientesLab").html("");
-					$("#tbPendientesLab").html(response.renglones);
+					$("#tbPendientesLab").append(response.renglones);
 					$("#tbPendientesLab #btnCalendarizado").on("click",aceptarSolicitudLab);
 					$("#tbPendientesLab #btnVerMas").on("click",verMas);
 					$("#tbPendientesLab #btnEliminarSolLab").on("click",eliminarSolLab);
@@ -574,7 +573,7 @@
 				if(response.respuesta == true)
 				{
 					$("#tbAceptadasLab").html("");
-					$("#tbAceptadasLab").html(response.renglones);
+					$("#tbAceptadasLab").append(response.renglones);
 					$("#tbAceptadasLab a").on("click",verMas2);
 				}
 				else
@@ -608,7 +607,7 @@
 					$("#txtHora1").val(response.hora);
 					$("#txtMaestro1").val(response.maestro);
 					$("#txtPractica1").val(response.practica);
-					$("#tbMaterialesPendientesLab").html(response.renglones);
+					$("#tbMaterialesPendientesLab").append(response.renglones);
 				}
 				else
 				{
@@ -643,7 +642,7 @@
 					$("#txtHora2").val(response.horaAsignada);
 					$("#txtMaestro2").val(response.maestro);
 					$("#txtPractica2").val(response.practica);
-					$("#tbMaterialesAceptadasLab").html(response.renglones);
+					$("#tbMaterialesAceptadasLab").append(response.renglones);
 				}
 				else
 				{
@@ -677,7 +676,7 @@
 				if(response.respuesta == true)
 				{
 					$("#tbInventario").html("");
-					$("#tbInventario").html(response.renglones);
+					$("#tbInventario").append(response.renglones);
 				}
 				else
 					sweetAlert("No hay artículos..!", " ", "error");
@@ -892,7 +891,7 @@
 				if(response.respuesta == true)
 				{
 					$("#tbArticulosMtto").html("");
-					$("#tbArticulosMtto").html(response.renglones);
+					$("#tbArticulosMtto").append(response.renglones);
 				}
 				else
 				{
@@ -1025,14 +1024,49 @@
 				if(response.respuesta == true)
 				{
 					$("#tbPeticionArticulos").html("");
-					$("#tbPeticionArticulos").html(response.renglones);
+					$("#tbPeticionArticulos").append(response.renglones);
+					$("#tbPeticionArticulos #btnAceptaPeticionArt").on("click",aceptarPeticionArt);
 				}
+				else
+					{
+						sweetAlert("Error", "No hay peticiones de articulos!", "error");
+					}
 			},
 			error: function(xhr, ajaxOptions,x){
 				alert("Error de conexión peticiones pendientes");
 			}
 		});
+
 		$("#peticionesPendientes").show("slow");
+	}
+	var aceptarPeticionArt = function()
+	{
+		var clavePedido = $(this).attr('name');
+		$(this).closest('tr').remove();
+		var parametros= "opc=aceptaPeticionArticulos1"
+							+"&clavePedido="+clavePedido
+							+"&id="+Math.random();
+			$.ajax({
+				cache:false,
+				type: "POST",
+				dataType: "json",
+				url:'../data/genericos.php',
+				data: parametros,
+				success: function(response){
+					if(response.respuesta == true)
+					{
+						swal("Solicitud aceptada!", "Da clic en el botón OK!", "success");
+						peticionesPendientesArt();
+					}
+					else
+					{
+						sweetAlert("Error", "No se pudo aceptar la solicitud!", "error");
+					}
+				},
+				error: function(xhr, ajaxOptions,x){
+					sweetAlert("Error", "Error de conexión aceptar petición artículo", "error");
+				}
+			});
 	}
 	var peticionesArticulos = function()
 	{

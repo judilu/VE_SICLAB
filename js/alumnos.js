@@ -1,13 +1,13 @@
 var inicio = function()
 {
 	$('select').material_select();
+
 	var practicaAlumnos = function()
 	{
 		$("#accesoAlumno").hide();
 		$("#datosPracticas").show("slow");
 		var numeroControl = $("#txtNControl").val();
-		alert(numeroControl);
-		if (($("#txtNControl").val())!="") 
+		/*if (($("#txtNControl").val())!="") 
 		{
 			var parametros = "opc=consultaMatAlumno"+
 			"&numeroControl="+numeroControl+
@@ -22,10 +22,11 @@ var inicio = function()
 			{
 				if(response.respuesta)
 				{
-					for (var i = 0; i < cmbMaterias.length; i++) 
+					for (var i = 0; i < response.contador; i++) 
 					{
-   						$('#cmbMaterias').append(response.cmbMaterias[i]);
+   						$('selectMateria.name').append(response.cmbMaterias[i]);
 					}
+					alert("bien");
    				}
    				else
    				{
@@ -37,7 +38,7 @@ var inicio = function()
    				console.log("Error de conexión");
    			}
    		});
-		}
+		}*/
 	}
 	var materialPractica = function()
 	{
@@ -278,8 +279,8 @@ var inicio = function()
 	$("#btnMA").on("click",ma);
 	$("#btnDel").on("click",del);
 	//selects
-	$("#cmbMateriaAlumno").on("change",maestroPractica);
-	$("#cmbMaestroPractica").on("change",numMaestro);
+	//$("#cmbMateriaAlumno").on("change",maestroPractica);
+	//$("#cmbMaestroPractica").on("change",numMaestro);
 
 	//$("#btnCancelarEntrada").on("click",consultaAlumno);
 }
