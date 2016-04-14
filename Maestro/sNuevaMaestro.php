@@ -4,85 +4,55 @@
 			<h5>Nueva solicitud</h5>
 			<div class="col s12">
 				<div class="row">
-					<div class="input-field col s8">
+					<div class="input-field col s6">
 						<select id="cmbMateria">
-							<!--<option value="" disabled selected>Seleccione la materia</option>
-							<?php						
-							$conexion		= conectaBDSIE();
-							//$consulta 		= sprintf("select m.MATCVE, m.MATNCO from DMATER m inner join DGRUPO g on m.MATCVE = g.MATCVE where g.PERCVE = 920 and g.PDOCVE ='2161' and g.GRUBAS = ' ' and g.INSNUM > 0");
-							//$res 			= mysql_query($consulta);
-							//while($row = mysql_fetch_array($res))
-							{
-								//echo '<option value="'.$row["MATCVE"].'">'.$row["MATNCO"].'</option>';
-							}?> -->
+
 						</select>
 						<label>Materia</label>
 					</div>
-					<div class="input-field col s2">
+					<div class="input-field col s3">
 						<select id="cmbHoraMat">
-							<!--<option value="" disabled selected>Seleccione la hora</option>
-							<option value="1">10:00</option>
-							<option value="2">01:00</option>
-							<option value="3">15:00</option> -->
+							
 						</select>
 						<label>Hora de la materia</label>
 					</div>
-					<div class="input-field col s2">
+					<div class="input-field col s3">
 						<input id= "txtFechaS" placeholder= " " type="date" class="datepicker">
 						<label class="active" for="txtFechaS">Fecha práctica</label>
 					</div>
 				</div>
 				<div class="row">
-					<div class="input-field col s8">
+					<div class="input-field col s6">
 						<select id="cmbPractica">
-							<!-- <option value="" disabled selected>Seleccione la práctica</option>
-							<?php		
-							//$conexion		= conectaBDSICLAB();
-							//$consulta 		= sprintf("select clavePractica, tituloPractica from lbpracticas WHERE estatus = 'V'");
-							//$res 			= mysql_query($consulta);
-							//while($row = mysql_fetch_array($res))
-							{
-							//	echo '<option value="'.$row["clavePractica"].'">'.$row["tituloPractica"].'</option>';
-							}?> -->
+							
 						</select>
 						<label>Práctica</label>
 					</div>
-					<div class="input-field col s2">
-						<select id="cmbHoraPract">
-							<!-- <option value="" disabled selected>Seleccione la hora</option>
-							<option value="1">12:30</option>
-							<option value="2">01:00</option>
-							<option value="3">15:00</option> -->
-						</select>
-						<label>Hora de la práctica</label>
-					</div>
-					<div class="input-field col s2">
-						<input id="txtCantAlumnos" type="number" min="1" max="45" value="1"class="validate">
-						<label for="txtCantAlumnos">Cant. de alumnos</label>
-					</div>
-				</div>
-				<div class="row">
-					<div class="input-field col s8">
+					<div class="input-field col s6">
 						<select id="cmbLaboratorio">
-							<!-- <option value="" disabled selected>Seleccione el laboratorio</option>
-							<?php		
-							//$conexion		= conectaBDSICLAB();
-							//$consulta 		= sprintf("select claveLaboratorio, nombreLaboratorio from lblaboratorios");
-							//$res 			= mysql_query($consulta);
-							//while($row = mysql_fetch_array($res))
-							{
-							//	echo '<option value="'.$row["claveLaboratorio"].'">'.$row["nombreLaboratorio"].'</option>';
-							}?> -->
+							
 						</select>
 						<label>Laboratorio</label>
 					</div>
 				</div>
 				<div class="row">
+					<div class="input-field col s3">
+						<select id="cmbHoraPract">
+							
+						</select>
+						<label>Hora de la práctica</label>
+					</div>
+					<div class="input-field col s2 offset-s1">
+						<input id="txtCantAlumnos" type="number" min="1" value="1"class="validate">
+						<label for="txtCantAlumnos">Cant. de alumnos</label>
+					</div>
 					<div class="input-field col s6">
 						<textarea id="textarea1" class="materialize-textarea"></textarea>
 						<label for="textarea1">Motivo de uso</label>
 					</div>
-					<div class="col s4 offset-s1">
+				</div>
+				<div class="row">
+					<div class="col s4 offset-s9">
 						<a class="waves-effect waves-light btn amber darken-2" id="btnElegirMaterial">Elegir material</a>
 					</div>
 				</div>
@@ -95,10 +65,10 @@
 					<div class="row">
 						<div class="input-field col s6 offset-s1">
 							<select id="cmbMaterialCat">
-								<option value="" disabled selected>Seleccione el material</option>
+								<!-- <option value="" disabled selected>Seleccione el material</option>
 								<option value="110">ALUMINIO</option>
 								<option value="115">AMONIACO</option>
-								<option value="120">AMPERIMETRO</option>
+								<option value="120">AMPERIMETRO</option> -->
 							</select>
 							<label>Materiales</label>
 						</div>

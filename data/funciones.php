@@ -39,54 +39,6 @@ function nomMat ($claves)
 		return "";
 	}
 }
-//trae todas las materias de ese maestro
-/*function materias ($clave)
-{	
-	$maestro		= $clave;
-	$periodo 		= periodoActual();
-	$materias 		= array();
-	$conexion		= conectaBDSIE();
-	$consulta		= sprintf("select m.MATCVE, m.MATNCO from DMATER m inner join DGRUPO g on m.MATCVE = g.MATCVE where g.PERCVE =%d and g.PDOCVE =%s and g.GRUBAS = ' ' and g.INSNUM > 0",$maestro,$periodo);
-	$res 			= mysql_query($consulta);
-	if($res)
-	{
-		while($row = mysql_fetch_array($res))
-		{
-			//$materias[$row["MATCVE"]] =$row["MATNCO"];
-			$materias = $row;
-		}
-		return $materias;
-	}
-	else
-	{
-		return " ";
-	}
-}*/
-/*function nomPractica ($clave)
-{
-	$clavePractica 	= $clave;
-	$conexion		= conectaBDSICLAB();
-	$consulta		= sprintf("select tituloPractica from lbpracticas where clavePractica = %d",$clavePractica);
-	$res 			= mysql_query($consulta);
-	if($row = mysql_fetch_array($res))
-	{
-		$respuesta = true;
-		return  $row["tituloPractica"];
-
-	}
-}*/
-/*function nomLab ($clave)
-{
-	$claveLab 	= $clave;
-	$conexion	= conectaBDSICLAB();
-	$consulta	= sprintf("select nombreLaboratorio from lblaboratorios where claveLaboratorio =%s",$claveLab);
-	$res 		= mysql_query($consulta);
-	if($row = mysql_fetch_array($res))
-	{
-		$respuesta = true;
-		return  $row["nombreLaboratorio"];
-	}
-}*/
 function existeCal ($clave)
 {
 	$claveCal	= $clave;
@@ -321,18 +273,49 @@ function comboHoraPrac()
 	$respuesta 		= false;
 	$comboHrAp 		= "";
 	$comboHrC 		= "";
+	$capacidad 		= 0;
 	$conexion		= conectaBDSICLAB();
-	$consulta		= sprintf("select horaApertura, horaCierre from lblaboratorios where claveLaboratorio = 'CCDS'",$laboratorio);
+	$consulta		= sprintf("select horaApertura, horaCierre, capacidad from lblaboratorios where claveLaboratorio =%s",$laboratorio);
 	$res 			= mysql_query($consulta);
 	if($row = mysql_fetch_array($res))
 	{
 			$comboHrAp  = $row["horaApertura"];
 			$comboHrC 	= $row["horaCierre"];
+			$capacidad  = (int)($row["capacidad"]);
 			$respuesta = true;
 	}
 	$arrayJSON = array('respuesta' => $respuesta,
 						'horaApertura' => $comboHrAp, 
-						'horaCierre' => $comboHrC);
+						'horaCierre' => $comboHrC,
+						'capacidad' => $capacidad);
+	print json_encode($arrayJSON);
+}
+function comboEleArt()
+{
+	$laboratorio 		= GetSQLValueString($_POST["laboratorio"],"text");
+	$respuesta 		= false;
+	$comboEleArt 	= array();
+	$comboCveArt 	= "";
+	$comboNomArt 	= "";
+	$con 			= 0;
+	$conexion		= conectaBDSICLAB();
+	$consulta		= sprintf("select c.claveArticulo, c.nombreArticulo from lbarticuloscat c inner join lbarticulos a on a.claveArticulo = c.claveArticulo inner join lbasignaarticulos aa on aa.indentificadorArticulo = a.identificadorArticulo where aa.claveLaboratorio =%s and a.estatus = 'V'",$laboratorio);
+	$res 			= mysql_query($consulta);
+	while($row = mysql_fetch_array($res))
+	{
+			$comboEleArt[]  = $row;
+			$respuesta = true;
+			$con++;
+	}
+	for ($i=0; $i < $con ; $i++)
+	{ 
+		$comboCveArt[] 	=$comboEleArt[$i]["claveArticulo"];
+		$comboNomArt[] 	=$comboEleArt[$i]["nombreArticulo"];
+	}
+	$arrayJSON = array('respuesta' => $respuesta,
+						'comboCveArt' => $comboCveArt, 
+						'comboNomArt' => $comboNomArt, 
+						'con' => $con);
 	print json_encode($arrayJSON);
 }
 //Menú principal
@@ -356,6 +339,9 @@ switch ($opc)
 		break;
 	case 'comboHoraPrac1':
 		comboHoraPrac();
+		break;
+	case 'comboEleArt1':
+		comboEleArt();
 		break;
 }	 
 ?>

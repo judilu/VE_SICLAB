@@ -230,8 +230,41 @@ var inicioMaestro = function ()
     {
     	articulosAgregados = Array();
     	numArticulos = Array();
+    	var laboratorio = $("#cmbLaboratorio").val();
     	$("#nuevaMaestro").hide();
     	$("#eleccionMaterial").show("slow");
+    	//llenar el combo de materiales
+    	var laboratorio = $("#cmbLaboratorio").val();
+    	var parametros = "opc=comboEleArt1"+
+    						"&laboratorio="+laboratorio+
+							"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/funciones.php",
+			data: parametros,
+			success: function(response){
+				if(response.respuesta == true)
+				{
+					$("#cmbMaterialCat").html(" ");
+					$("#cmbMaterialCat").html("<option value='' disabled selected>Seleccione el material</option>");
+					for (var i = 0; i < response.con; i++) 
+					{
+						$("#cmbMaterialCat").append($("<option></option>").attr("value",response.comboCveArt[i]).text(response.comboNomArt[i]));
+					}
+					$("cmbMaterialCat").trigger('contentChanged');
+					$('select').material_select();
+				}
+				else
+					console.log("hola no entro");
+			},
+			error: function(xhr, ajaxOptions,x){
+				console.log(xhr);
+				console.log("Error de conexión combomat");	
+			}
+		});
+    	$
        //limpiar tabla de agregarMaterial
        $("#bodyArt").html(" "); 
     }//Termina función de elegir material
@@ -592,10 +625,10 @@ var inicioMaestro = function ()
 					$("#cmbHoraPract").html("<option value='' disabled selected>Seleccione la hora</option>");	
 					(((response.horaApertura).length)<4) ? (hi=(response.horaApertura).substring(0,1)) : (hi=(response.horaApertura).substring(0,2));
 					hii = parseInt(hi);
-					console.log(hii);
 					(((response.horaCierre).length)<4) ? (hf=(response.horaCierre).substring(0,1)) : (hf=(response.horaCierre).substring(0,2));
 					hff = parseInt(hf);
-					console.log(hff);
+					//modificando capacidad segun el laboratorio
+					$("#txtCantAlumnos").attr("max",response.capacidad)
 					for (var i = hii; i <= hff; i++) 
 					{
 						$("#cmbHoraPract").append($("<option></option>").attr("value",i).text(i+":00"));
@@ -641,7 +674,7 @@ var inicioMaestro = function ()
 	$("#cmbMateria").on("change",comboHoraMat);
 	$("#cmbHoraMat").on("change",comboPract);
 	$("#cmbPractica").on("change",comboLab);
-	$("#cmbLaboratorio").on("change",comboHoraPrac)
+	$("#cmbLaboratorio").on("change",comboHoraPrac);
 	//dddddd
 	$("#btnElegirMaterial").on("click",elegirMaterial);
 	$("#btnFinalizarNS").on("click",altaNuevaSol);
