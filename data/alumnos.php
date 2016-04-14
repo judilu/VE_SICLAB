@@ -6,9 +6,24 @@ function usuario ()
 	session_start();
 	$_SESSION['nombre'] = GetSQLValueString($_POST['clave1'],"int");
 }
+function claveUsuario($clavePersona)
+{
+	$clavePer 		= $clavePersona;
+	$conexion 		= conectaBDSICLAB();
+	$consulta 		= sprintf("select claveUsuario from lbusuarios where PERCVE = %d",$clavePer);
+	$res			= mysql_query($consulta);
+	if($row = mysql_fetch_array($res))
+	{
+		return (int)($row["claveUsuario"]);
+	}
+	else
+	{
+		return 0;
+	}
+}
 function consultaAlumno(){
 	$respuesta		= false;
-	$nControl			= GetSQLValueString($_POST["nControl"],"text");
+	$nControl		= GetSQLValueString($_POST["nControl"],"text");
 	$ALUAPP 		= "";
 	$ALUAPM			="";
 	$ALUNOM			="";
@@ -121,7 +136,8 @@ function consultaMaestroPractica()
 }
 function consultaPractica()
 {
-	$claveMaestro	= GetSQLValueString($_POST["claveMaestro"],"text");				
+	$claveMaestro	= GetSQLValueString($_POST["claveMaestro"],"int");	
+	$claveUsu 		= claveUsuario($claveMaestro);			
 	$resp 	 		= false;
 	$periodo 		= periodoActual();
 	$contador		= 0;
@@ -133,7 +149,7 @@ function consultaPractica()
 							from lbpracticas p  
 							INNER JOIN lbsolicitudlaboratorios sl on p.clavePractica=sl.clavePractica 
 							INNER JOIN lbcalendarizaciones c on sl.claveSolicitud=c.claveSolicitud 
-								WHERE sl.PDOCVE =%s and sl.claveUsuario =%s",$periodo,$claveMaestro);
+								WHERE sl.PDOCVE =%s and sl.claveUsuario =%s",$periodo,$claveUsu);
 	$res 			= mysql_query($consulta);
 	if($res)
 			{
@@ -155,7 +171,7 @@ function consultaPractica()
 }
 function consultaHoraPractica()
 {
-	$clavePractica	= GetSQLValueString($_POST["clavePractica"],"text");				
+	$claveC 		= GetSQLValueString($_POST["clavePrac"],"int");				
 	$resp 	 		= false;
 	$periodo 		= periodoActual();
 	$contador		= 0;
@@ -165,7 +181,7 @@ function consultaHoraPractica()
 	$conexion		= conectaBDSICLAB();
 	$consulta 		= sprintf("select horaAsignada,claveCalendarizacion 
 								from lbcalendarizaciones  
-								WHERE sl.PDOCVE =%s and c.claveCalendarizacion=%s",$periodo,$clavePractica);
+								WHERE PDOCVE =%s and claveCalendarizacion=%s",$periodo,$claveC);
 	$res 			= mysql_query($consulta);
 	if($res)
 			{
@@ -185,6 +201,31 @@ function consultaHoraPractica()
 						'contador' => $contador);
 	print json_encode($arrayJSON);
 }
+function guardaEntrada()
+{
+	$respuesta 		= false;
+	session_start();
+	if(!empty($_SESSION['nombre']))
+	{
+		$periodo 		= periodoActual();
+		$claveCal		= GetSQLValueString($_POST["claveCal"],"text");
+		$fecha 			= GetSQLValueString($_POST["fecha"],"text");
+		$hora 			= GetSQLValueString($_POST["hora"],"text");
+		$numControl 	= GetSQLValueString($_POST["nControl"],"text");
+		$conexion 		= conectaBDSICLAB();
+		$consulta  		= sprintf("insert into lbentradasalumnos values(%s,%s,%s,%s,%s)",$periodo,$numControl,$fecha,$hora,$claveCal);
+		$res 	 	=  mysql_query($consulta);
+			if(mysql_affected_rows()>0)
+			$respuesta = true; 
+	}
+	else
+	{
+		//salir();
+	}
+	$arrayJSON = array('respuesta' => $respuesta);
+		print json_encode($arrayJSON);
+}
+
 //Menú principal
 $opc = $_POST["opc"];
 switch ($opc){
@@ -205,6 +246,12 @@ switch ($opc){
 	break;
 	case 'consultaHoraPractica':
 		consultaHoraPractica();
+	break;
+	case 'guardaEntrada':
+		guardaEntrada();
+	break;
+	case 'consultaNomAlumno':
+		consultaAlumno();
 	break;
 } 
 ?>

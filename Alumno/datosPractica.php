@@ -1,10 +1,19 @@
 <div id="datosPractica2">
 	<?php require_once('../data/conexion.php');?>
-	<!--<?php //require_once('../data/alumnos.php');?>-->
 	<h5>Datos de la práctica</h5>
 	<div class="row">
 		<div class="col s12">
-			<div class="row cMat">
+			<div class="row">
+				<div class="input-field col s2">
+					<input id="txtNControlAlu" placeholder="" type="text" class="validate" disabled>
+					<label active for="txtNControlAlu">Número control</label>
+				</div>
+				<div class="input-field col s4">
+					<input id="txtNombreAlu" placeholder="" type="text" class="validate" disabled>
+					<label active for="txtNombreAlu">Nombre del alumno</label>
+				</div>
+			</div>
+			<div class="row">
 				<div class="input-field col s5">
 					<select id="cmbMateriasAlumnos">
 						<option value="" disabled selected>Selecciona la materia</option>
@@ -35,7 +44,7 @@
 			<div class="row">
 				<div class="input-field">
 					<a class="btn waves-effect waves-light amber darken-2" type="submit" name="action" id="btnMaterialAlumno">Elegir material</a>
-					<a class="btn waves-effect waves-light green darken-2" type="submit" name="action" id="btnEntrar">Entrar</a>
+					<a class="btn waves-effect waves-light green darken-2" type="submit" name="action" id="btnEntradaAlumno">Entrar</a>
 				</div>
 			</div>
 		</div>
