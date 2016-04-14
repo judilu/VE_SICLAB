@@ -201,13 +201,14 @@ var inicioMaestro = function ()
 			cache:false,
 			type: "POST",
 			dataType: "json",
-			url:"../data/maestros.php",
+			url:"../data/funciones.php",
 			data: parametros,
 			success: function(response){
 				if(response.respuesta == true)
 				{
 					$("#cmbMateria").html(" ");
 					//$("#cmbMateria").append(response.combo);
+					$("#cmbMateria").html("<option value='' disabled selected>Seleccione la materia</option>");
 					for (var i = 0; i < response.contador; i++) 
 					{
 						$("#cmbMateria").append($("<option></option>").attr("value",response.claveMat[i]).text(response.nombreMat[i]));
@@ -239,7 +240,6 @@ var inicioMaestro = function ()
     {
     	//aquiEmpieza todo
     	var artCve = $("#cmbMaterialCat" ).val();
-    	console.log(artCve);
     	var artNom = $("#cmbMaterialCat option:selected").text();
     	var num    = $("#txtNumArt").val(); 	
     	numArticulos.push(num);
@@ -469,7 +469,148 @@ var inicioMaestro = function ()
     }
     var comboHoraMat = function()
     {
-    	alert("cambi");
+    	var hh = "";
+    	var materia = $("#cmbMateria").val();
+    	var parametros = "opc=comboMatHr1"+
+    						"&materia="+materia+
+							"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/funciones.php",
+			data: parametros,
+			success: function(response){
+				if(response.respuesta == true)
+				{
+					$("#cmbHoraMat").html(" ");
+					$("#cmbHoraMat").html("<option value='' disabled selected>Seleccione la hora</option>");	
+					for (var i = 0; i < response.cont; i++) 
+					{
+						//arreglar la hora
+						hh = ((response.comboHr[i]).substring(0,2)+":00");
+						$("#cmbHoraMat").append($("<option></option>").attr("value",response.cont).text(hh));
+					}
+					$("cmbHoraMat").trigger('contentChanged');
+					$('select').material_select();
+				}
+				else
+					console.log("hola no entro");
+			},
+			error: function(xhr, ajaxOptions,x){
+				console.log(xhr);
+				console.log("Error de conexión combomat");	
+			}
+		});
+    }
+    var comboPract = function()
+    {
+    	var materia = $("#cmbMateria").val();
+    	var parametros = "opc=comboPract1"+
+    						"&materia="+materia+
+							"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/funciones.php",
+			data: parametros,
+			success: function(response){
+				if(response.respuesta == true)
+				{
+					$("#cmbPractica").html(" ");
+					$("#cmbPractica").html("<option value='' disabled selected>Seleccione la práctica</option>");	
+					for (var i = 0; i < response.con; i++) 
+					{
+						$("#cmbPractica").append($("<option></option>").attr("value",response.comboCvePrac[i]).text(response.comboTitPrac[i]));
+					}
+					$("cmbPractica").trigger('contentChanged');
+					$('select').material_select();
+				}
+				else
+					console.log("hola no entro practica");
+			},
+			error: function(xhr, ajaxOptions,x){
+				console.log(xhr);
+				console.log("Error de conexión comboPrac");	
+			}
+		});
+    }
+    var comboLab = function()
+    {
+    	var practica   = $("#cmbPractica").val();
+    	var parametros = "opc=comboLab1"+
+    						"&practica="+practica+
+							"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/funciones.php",
+			data: parametros,
+			success: function(response){
+				if(response.respuesta == true)
+				{
+					$("#cmbLaboratorio").html(" ");
+					$("#cmbLaboratorio").html("<option value='' disabled selected>Seleccione el laboratorio</option>");	
+					for (var i = 0; i < response.con; i++) 
+					{
+						$("#cmbLaboratorio").append($("<option></option>").attr("value",response.comboCveLab[i]).text(response.comboNomLab[i]));
+					}
+					$("cmbLaboratorio").trigger('contentChanged');
+					$('select').material_select();
+				}
+				else
+					console.log("hola no entro practica");
+			},
+			error: function(xhr, ajaxOptions,x){
+				console.log(xhr);
+				console.log("Error de conexión comboPrac");	
+			}
+		});
+    }
+    var comboHoraPrac = function()
+    {
+    	var laboratorio   = $("#cmbLaboratorio").val();
+    	var parametros 	  = "opc=comboHoraPrac1"+
+    						"&laboratorio="+laboratorio+
+							"&id="+Math.random();
+		var hi = "";
+		var hii = 0;
+		var hf = "";
+		var fff = 0;
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/funciones.php",
+			data: parametros,
+			success: function(response){
+				if(response.respuesta == true)
+				{
+					$("#cmbHoraPract").html(" ");
+					$("#cmbHoraPract").html("<option value='' disabled selected>Seleccione la hora</option>");	
+					(((response.horaApertura).length)<4) ? (hi=(response.horaApertura).substring(0,1)) : (hi=(response.horaApertura).substring(0,2));
+					hii = parseInt(hi);
+					console.log(hii);
+					(((response.horaCierre).length)<4) ? (hf=(response.horaCierre).substring(0,1)) : (hf=(response.horaCierre).substring(0,2));
+					hff = parseInt(hf);
+					console.log(hff);
+					for (var i = hii; i <= hff; i++) 
+					{
+						$("#cmbHoraPract").append($("<option></option>").attr("value",i).text(i+":00"));
+					}
+					$("cmbHoraPract").trigger('contentChanged');
+					$('select').material_select();
+				}
+				else
+					console.log("hola no entro practica");
+			},
+			error: function(xhr, ajaxOptions,x){
+				console.log(xhr);
+				console.log("Error de conexión comboPrac");	
+			}
+		});
     }
 	//eventos menu Reportes
 	var listaAsistencia = function()
@@ -497,7 +638,11 @@ var inicioMaestro = function ()
 	$("#btnSolicitudesRealizadas").on("click",solRealizadas);
 	$("#btnNuevaSolicitud").on("click",solNueva);
 	//eventos de los combos
-	$("#cmbMateria").on("change",comboHoraMat);//dddddd
+	$("#cmbMateria").on("change",comboHoraMat);
+	$("#cmbHoraMat").on("change",comboPract);
+	$("#cmbPractica").on("change",comboLab);
+	$("#cmbLaboratorio").on("change",comboHoraPrac)
+	//dddddd
 	$("#btnElegirMaterial").on("click",elegirMaterial);
 	$("#btnFinalizarNS").on("click",altaNuevaSol);
 	$("#btnRegresar").on("click",solNueva);

@@ -313,40 +313,9 @@ function nuevaSol()
 						'respuesta2' => $respuesta2);
 	print json_encode($arrayJSON);
 }
-function comboMat ()
+function capacidadLab()
 {
-	session_start();
-	$clave  		= GetSQLValueString(($_SESSION['nombre']),"int");
-	$maestro 		= claveMaestro($clave);
-	$respuesta 		= false;
-	$periodo 		= periodoActual();
-	$con 			= 0;
-	$combomat 		= array();
-	$claveMat 		= "";
-	$nombreMat		= "";
-	$conexion		= conectaBDSIE();
-	$consulta		= sprintf("select m.MATCVE, m.MATNCO from DMATER m inner join DGRUPO g on m.MATCVE = g.MATCVE where g.PERCVE =%d and g.PDOCVE =%s and g.GRUBAS = ' ' and g.INSNUM > 0",$maestro,$periodo);
-	$res 			= mysql_query($consulta);
-	if($res)
-	{
-		while($row = mysql_fetch_array($res))
-		{
-			$combomat[] = $row;
-			$respuesta = true;
-			$con++;
-		}
-		for ($i=0; $i < $con ; $i++)
-		{ 
-			$claveMat[] 	=$combomat[$i]["MATCVE"];
-			$nombreMat[] 	=$combomat[$i]["MATNCO"];
-		}
-	}
-	$arrayJSON = array('respuesta' => $respuesta,
-						 'claveMat' => $claveMat, 
-						'nombreMat' => $nombreMat, 
-						'contador' => $con);
-	print json_encode($arrayJSON);
-
+	//$consulta = "SELECT capacidad from lblaboratorios WHERE claveLaboratorio = 'CCDS'"
 }
 //Menú principal
 $opc = $_POST["opc"];
@@ -378,8 +347,8 @@ switch ($opc){
 	case 'nuevaSol1':
 		nuevaSol();
 		break;
-	case 'comboMat1':
-		comboMat();
+	case 'capacidadLab1':
+		capacidadLab();
 		break;
 } 
 ?>

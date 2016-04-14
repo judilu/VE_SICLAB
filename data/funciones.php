@@ -40,7 +40,7 @@ function nomMat ($claves)
 	}
 }
 //trae todas las materias de ese maestro
-function materias ($clave)
+/*function materias ($clave)
 {	
 	$maestro		= $clave;
 	$periodo 		= periodoActual();
@@ -61,8 +61,8 @@ function materias ($clave)
 	{
 		return " ";
 	}
-}
-function nomPractica ($clave)
+}*/
+/*function nomPractica ($clave)
 {
 	$clavePractica 	= $clave;
 	$conexion		= conectaBDSICLAB();
@@ -74,8 +74,8 @@ function nomPractica ($clave)
 		return  $row["tituloPractica"];
 
 	}
-}
-function nomLab ($clave)
+}*/
+/*function nomLab ($clave)
 {
 	$claveLab 	= $clave;
 	$conexion	= conectaBDSICLAB();
@@ -86,7 +86,7 @@ function nomLab ($clave)
 		$respuesta = true;
 		return  $row["nombreLaboratorio"];
 	}
-}
+}*/
 function existeCal ($clave)
 {
 	$claveCal	= $clave;
@@ -196,12 +196,166 @@ function detalleArt($nu,$so,$art,$num)
 	}
 	return $respuesta;
 }
+function comboMat ()
+{
+	session_start();
+	$clave  		= GetSQLValueString(($_SESSION['nombre']),"int");
+	$maestro 		= claveMaestro($clave);
+	$respuesta 		= false;
+	$periodo 		= periodoActual();
+	$con 			= 0;
+	$combomat 		= array();
+	$claveMat 		= "";
+	$nombreMat		= "";
+	$conexion		= conectaBDSIE();
+	$consulta		= sprintf("select m.MATCVE, m.MATNCO from DMATER m inner join DGRUPO g on m.MATCVE = g.MATCVE where g.PERCVE =%d and g.PDOCVE =%s and g.GRUBAS = ' ' and g.INSNUM > 0",$maestro,$periodo);
+	$res 			= mysql_query($consulta);
+	if($res)
+	{
+		while($row = mysql_fetch_array($res))
+		{
+			$combomat[] = $row;
+			$respuesta = true;
+			$con++;
+		}
+		for ($i=0; $i < $con ; $i++)
+		{ 
+			$claveMat[] 	=$combomat[$i]["MATCVE"];
+			$nombreMat[] 	=$combomat[$i]["MATNCO"];
+		}
+	}
+	$arrayJSON = array('respuesta' => $respuesta,
+						 'claveMat' => $claveMat, 
+						'nombreMat' => $nombreMat, 
+						'contador' => $con);
+	print json_encode($arrayJSON);
+
+}
+function comboMatHr ()
+{
+	session_start();
+	$clave  		= GetSQLValueString(($_SESSION['nombre']),"int");
+	$materia 		= GetSQLValueString($_POST["materia"],"text");
+	$maestro 		= GetSQLValueString((claveMaestro($clave)),"int");
+	$periodo 		= periodoActual();
+	$respuesta 		= false;
+	$comboHr 		= "";
+	$comboHrMat     = array();
+	$cont 			= 0;
+	$conexion		= conectaBDSIE();
+	$consulta		= sprintf("select LUNHRA,MARHRA,MIEHRA,JUEHRA,VIEHRA from DGRUPO where MATCVE =%s and PERCVE=%d and PDOCVE =%s",$materia,$maestro,$periodo);
+	$res 			= mysql_query($consulta);
+	if($row = mysql_fetch_array($res))
+	{		
+		$comboHr 	= $row[0].",".$row[1].",".$row[2].",".$row[3].",".$row[4];
+		$comboHrMat = array_unique((explode(",",$comboHr)));
+		$respuesta 	= true;
+		$cont 		= count($comboHrMat);
+	}
+	$arrayJSON = array('respuesta' => $respuesta,
+						 'comboHr' => $comboHrMat,
+						 'cont' => $cont); 
+	print json_encode($arrayJSON);
+
+}
+function comboPract()
+{
+	$materia 		= GetSQLValueString($_POST["materia"],"text");
+	$periodo 		= GetSQLValueString(periodoActual(),"text");
+	$respuesta 		= false;
+	$comboPrac 		= array();
+	$comboCvePrac 	= "";
+	$comboTitPrac 	= "";
+	$con 			= 0;
+	$conexion		= conectaBDSICLAB();
+	$consulta		= sprintf("select p.clavePractica, p.tituloPractica from lbpracticas p inner join lbasignapracticas ap on p.clavePractica = ap.clavePractica where p.estatus = 'V' and ap.MATCVE =%s and ap.PDOCVE =%s",$materia,$periodo);
+	$res 			= mysql_query($consulta);
+	while($row = mysql_fetch_array($res))
+	{
+			$comboPrac[] = $row;
+			$respuesta = true;
+			$con++;
+	}
+	for ($i=0; $i < $con ; $i++)
+	{ 
+		$comboCvePrac[] 	=$comboPrac[$i]["clavePractica"];
+		$comboTitPrac[] 	=$comboPrac[$i]["tituloPractica"];
+	}
+	$arrayJSON = array('respuesta' => $respuesta,
+						'comboCvePrac' => $comboCvePrac, 
+						'comboTitPrac' => $comboTitPrac, 
+						'con' => $con);
+	print json_encode($arrayJSON);	
+}
+function comboLab()
+{
+	$practica 		= GetSQLValueString($_POST["practica"],"int");
+	$respuesta 		= false;
+	$comboLab 		= array();
+	$comboCveLab 	= "";
+	$comboNomLab 	= "";
+	$con 			= 0;
+	$conexion		= conectaBDSICLAB();
+	$consulta		= sprintf("select ap.claveLaboratorio, l.nombreLaboratorio from lbasignapracticas ap inner join lbpracticas p on ap.clavePractica = p.clavePractica inner join lblaboratorios l on ap.claveLaboratorio = l.claveLaboratorio where (l.usoAsignado = '1' or '3') and p.estatus = 'V' and ap.clavePractica=%d",$practica);
+	$res 			= mysql_query($consulta);
+	while($row = mysql_fetch_array($res))
+	{
+			$comboLab[]  = $row;
+			$respuesta = true;
+			$con++;
+	}
+	for ($i=0; $i < $con ; $i++)
+	{ 
+		$comboCveLab[] 	=$comboLab[$i]["claveLaboratorio"];
+		$comboNomLab[] 	=$comboLab[$i]["nombreLaboratorio"];
+	}
+	$arrayJSON = array('respuesta' => $respuesta,
+						'comboCveLab' => $comboCveLab, 
+						'comboNomLab' => $comboNomLab, 
+						'con' => $con);
+	print json_encode($arrayJSON);
+}
+function comboHoraPrac()
+{
+	$laboratorio 	= GetSQLValueString($_POST["laboratorio"],"text");
+	$respuesta 		= false;
+	$comboHrAp 		= "";
+	$comboHrC 		= "";
+	$conexion		= conectaBDSICLAB();
+	$consulta		= sprintf("select horaApertura, horaCierre from lblaboratorios where claveLaboratorio = 'CCDS'",$laboratorio);
+	$res 			= mysql_query($consulta);
+	if($row = mysql_fetch_array($res))
+	{
+			$comboHrAp  = $row["horaApertura"];
+			$comboHrC 	= $row["horaCierre"];
+			$respuesta = true;
+	}
+	$arrayJSON = array('respuesta' => $respuesta,
+						'horaApertura' => $comboHrAp, 
+						'horaCierre' => $comboHrC);
+	print json_encode($arrayJSON);
+}
 //Menú principal
 $opc = $_POST["opc"];
 switch ($opc)
 {
 	case 'salir1':
-	salir();
+		salir();
 	break;
+	case 'comboMat1':
+		comboMat();
+	break;
+	case 'comboMatHr1':
+		comboMatHr();
+		break;
+	case 'comboPract1':
+		comboPract();
+		break;
+	case 'comboLab1':
+		comboLab();
+		break;
+	case 'comboHoraPrac1':
+		comboHoraPrac();
+		break;
 }	 
 ?>

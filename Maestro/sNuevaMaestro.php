@@ -6,8 +6,8 @@
 				<div class="row">
 					<div class="input-field col s8">
 						<select id="cmbMateria">
-							<option value="" disabled selected>Seleccione la materia</option>
-							<!--<?php						
+							<!--<option value="" disabled selected>Seleccione la materia</option>
+							<?php						
 							$conexion		= conectaBDSIE();
 							//$consulta 		= sprintf("select m.MATCVE, m.MATNCO from DMATER m inner join DGRUPO g on m.MATCVE = g.MATCVE where g.PERCVE = 920 and g.PDOCVE ='2161' and g.GRUBAS = ' ' and g.INSNUM > 0");
 							//$res 			= mysql_query($consulta);
@@ -20,10 +20,10 @@
 					</div>
 					<div class="input-field col s2">
 						<select id="cmbHoraMat">
-							<option value="" disabled selected>Seleccione la hora</option>
+							<!--<option value="" disabled selected>Seleccione la hora</option>
 							<option value="1">10:00</option>
 							<option value="2">01:00</option>
-							<option value="3">15:00</option>
+							<option value="3">15:00</option> -->
 						</select>
 						<label>Hora de la materia</label>
 					</div>
@@ -35,24 +35,24 @@
 				<div class="row">
 					<div class="input-field col s8">
 						<select id="cmbPractica">
-							<option value="" disabled selected>Seleccione la práctica</option>
+							<!-- <option value="" disabled selected>Seleccione la práctica</option>
 							<?php		
-							$conexion		= conectaBDSICLAB();
-							$consulta 		= sprintf("select clavePractica, tituloPractica from lbpracticas WHERE estatus = 'V'");
-							$res 			= mysql_query($consulta);
-							while($row = mysql_fetch_array($res))
+							//$conexion		= conectaBDSICLAB();
+							//$consulta 		= sprintf("select clavePractica, tituloPractica from lbpracticas WHERE estatus = 'V'");
+							//$res 			= mysql_query($consulta);
+							//while($row = mysql_fetch_array($res))
 							{
-								echo '<option value="'.$row["clavePractica"].'">'.$row["tituloPractica"].'</option>';
-							}?>
+							//	echo '<option value="'.$row["clavePractica"].'">'.$row["tituloPractica"].'</option>';
+							}?> -->
 						</select>
 						<label>Práctica</label>
 					</div>
 					<div class="input-field col s2">
 						<select id="cmbHoraPract">
-							<option value="" disabled selected>Seleccione la hora</option>
+							<!-- <option value="" disabled selected>Seleccione la hora</option>
 							<option value="1">12:30</option>
 							<option value="2">01:00</option>
-							<option value="3">15:00</option>
+							<option value="3">15:00</option> -->
 						</select>
 						<label>Hora de la práctica</label>
 					</div>
@@ -64,15 +64,15 @@
 				<div class="row">
 					<div class="input-field col s8">
 						<select id="cmbLaboratorio">
-							<option value="" disabled selected>Seleccione el laboratorio</option>
+							<!-- <option value="" disabled selected>Seleccione el laboratorio</option>
 							<?php		
-							$conexion		= conectaBDSICLAB();
-							$consulta 		= sprintf("select claveLaboratorio, nombreLaboratorio from lblaboratorios");
-							$res 			= mysql_query($consulta);
-							while($row = mysql_fetch_array($res))
+							//$conexion		= conectaBDSICLAB();
+							//$consulta 		= sprintf("select claveLaboratorio, nombreLaboratorio from lblaboratorios");
+							//$res 			= mysql_query($consulta);
+							//while($row = mysql_fetch_array($res))
 							{
-								echo '<option value="'.$row["claveLaboratorio"].'">'.$row["nombreLaboratorio"].'</option>';
-							}?>
+							//	echo '<option value="'.$row["claveLaboratorio"].'">'.$row["nombreLaboratorio"].'</option>';
+							}?> -->
 						</select>
 						<label>Laboratorio</label>
 					</div>
