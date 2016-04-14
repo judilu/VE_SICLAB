@@ -201,6 +201,7 @@ function guardaSolicitudLab()
 	session_start();
 	if(!empty($_SESSION['nombre']))
 	{
+		$periodo 		= periodoActual();
 		$clave 			= GetSQLValueString($_POST["clave"],"text");
 		$claveCal		= GetSQLValueString($_POST["claveCal"],"text");
 		$estatus 		= GetSQLValueString($_POST["estatus"],"text");

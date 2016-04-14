@@ -9,6 +9,8 @@ var inicio = function()
 			$("#accesoAlumno").hide();
 			$("#datosPracticas").show("slow");
 			var numeroControl = $("#txtNControl").val();
+			$("#txtNControlAlu").val(numeroControl);
+			$("#txtNombreAlu").val($("#txtNombre").val());
 			var parametros = "opc=consultaMatAlumno"+
 			"&numeroControl="+numeroControl+
 			"&id="+Math.random();
@@ -180,8 +182,8 @@ var inicio = function()
 			{
 				if(response.respuesta)
 				{
-					document.getElementById('txtNombre').focus()
-					$("#txtNombre").val(response.ALUAPP+" "+ response.ALUAPM+ response.ALUNOM);	
+					document.getElementById('txtNombre').focus();
+					$("#txtNombre").val(response.ALUAPP+" "+ response.ALUAPM+" "+response.ALUNOM);	
 					consultaCarrera(str);
 				}
 				else
@@ -215,10 +217,11 @@ var inicio = function()
 					$("#txtCarrera").val(response.CARNOM);
 					document.getElementById('txtSemestre').focus();	
 					$("#txtSemestre").val(response.CALNPE);
+					$("#txtNControl").attr("disabled","disabled");
 				}
 				else
 				{
-					sweetAlert("NO ENCONTRADO", "", "error");
+					sweetAlert("No tienes materias", "", "error");
 				}
 			},
 			error: function(xhr, ajaxOptions,x)
@@ -253,7 +256,7 @@ var inicio = function()
    				}
    				else
    				{
-   					sweetAlert("NO ENCONTRADO", "", "error");
+   					sweetAlert("Maestro incorrecto", "", "error");
    				}
    			},
    			error: function(xhr, ajaxOptions,x)
@@ -288,7 +291,7 @@ var inicio = function()
    				}
    				else
    				{
-   					sweetAlert("NO ENCONTRADO", "", "error");
+   					sweetAlert("No hay practicas asignadas a ese maestro", "", "error");
    				}
    			},
    			error: function(xhr, ajaxOptions,x)
@@ -299,9 +302,9 @@ var inicio = function()
 	}
 	var horarioPractica = function()
 	{
-		var clavePractica 	= $("#cmbNombrePracticas").val();
+		var clavePrac 	 	= $("#cmbNombrePracticas").val();
 		var parametros 		= "opc=consultaHoraPractica"+
-								"&clavePractica="+clavePractica+
+								"&clavePrac="+clavePrac+
 								"&id="+Math.random();
 		$.ajax({
 			cache:false,
@@ -323,7 +326,7 @@ var inicio = function()
    				}
    				else
    				{
-   					sweetAlert("NO ENCONTRADO", "", "error");
+   					sweetAlert("No existe la practica", "", "error");
    				}
    			},
    			error: function(xhr, ajaxOptions,x)
@@ -332,7 +335,58 @@ var inicio = function()
    			}
    		});
 	}
+	var guardaEntradaAlumno = function()
+	{
+		var nc   		= $("#txtNControlAlu").val();
+		var claveCal 	= $("#cmbHorariosPractica").val();
+		//fecha del sistema
+		var f  = new Date();
+		var dd = f.getDate();
+		var mm = (f.getMonth())+1;
+		(dd<10) ? (dd="0"+dd) : dd;
+		(mm<10) ? (mm="0"+mm) : mm;
+		var fe  = (dd+"/"+mm+"/"+f.getFullYear());
+		//hora del sistema
+		var horaActual 				= new Date();
+		var hora 					=horaActual.getHours();
+		var minutos 				=horaActual.getMinutes();
+		var horaEntrada			= hora + ":" + minutos;
 
+		var parametros 	= "opc=guardaEntrada"+
+						"&claveCal="+claveCal+
+						"&nControl="+nc+
+						"&fecha="+fe+
+						"&hora="+horaEntrada+
+						"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/alumnos.php",
+			data: parametros,
+			success: function(response)
+			{
+				if(response.respuesta)
+				{
+   					sweetAlert("Registro de entrada guardado con éxito!", "Da click en el botón OK", "success");
+   				}
+   				else
+   				{
+   					sweetAlert("No se registró la entrada", "", "error");
+   				}
+   			},
+   			error: function(xhr, ajaxOptions,x)
+   			{
+   				console.log("Error de conexión registro de entrada alumnos");
+   			}
+   		});
+	}
+	var cancelaEntrada = function ()
+	{
+		$("#acceso").hide();
+		$("#alumno").show("slow");
+		$("#accesoAlumno").show("slow");
+	}
 	$("#btnPracticaAlumnos").on("click",practicaAlumnos);
 	$("#btnMaterialAlumno").on("click",materialPractica);
 
@@ -353,7 +407,7 @@ var inicio = function()
 	$("#cmbMateriasAlumnos").on("change",maestroPractica);
 	$("#cmbMaestrosMat").on("change",nombrePracticaMaestro);
 	$("#cmbNombrePracticas").on("change",horarioPractica);
-
-	//$("#btnCancelarEntrada").on("click",consultaAlumno);
+	$("#btnEntradaAlumno").on("click",guardaEntradaAlumno);
+	$("#btnCancelarEntrada").on("click",cancelaEntrada);
 }
 $(document).on("ready",inicio);

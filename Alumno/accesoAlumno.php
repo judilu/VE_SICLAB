@@ -39,19 +39,19 @@
 						</div>
 						<div class="row">
 							<div class="input-field col s12">
-								<input id="txtNombre" type="text" class="validate">
+								<input placeholder="" id="txtNombre" type="text" class="validate" disabled>
 								<label for="txtNombre">Nombre</label>
 							</div>
 						</div>
 						<div class="row">
 							<div class="input-field col s12">
-								<input id="txtCarrera" type="text" class="validate">
+								<input placeholder="" id="txtCarrera" type="text" class="validate" disabled>
 								<label for="txtCarrera">Carrera</label>
 							</div>
 						</div>
 						<div class="row">
 							<div class="input-field col s12">
-								<input id="txtSemestre" type="number" class="validate">
+								<input placeholder="" id="txtSemestre" type="number" class="validate" disabled>
 								<label for="txtSemestre">Semestre</label>
 							</div>
 						</div>
