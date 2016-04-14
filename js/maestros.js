@@ -217,7 +217,12 @@ var inicioMaestro = function ()
 					$('select').material_select();
 				}
 				else
-					console.log("hola no entro");
+				{
+					$("#cmbMateria").html(" ");
+					$("#cmbMateria").html("<option value='' disabled selected>Seleccione la materia</option>");
+					$('select').material_select();
+					sweetAlert("No tiene materias", "Es posible que no tenga materias asignadas!", "error");
+				}
 			},
 			error: function(xhr, ajaxOptions,x){
 				console.log(xhr);
@@ -257,7 +262,12 @@ var inicioMaestro = function ()
 					$('select').material_select();
 				}
 				else
-					console.log("hola no entro");
+					{
+						$("#cmbMaterialCat").html(" ");
+						$("#cmbMaterialCat").html("<option value='' disabled selected>Seleccione el material</option>");
+						$('select').material_select();
+						sweetAlert("No existen articulos", "Es posible que no existan articulos en dicho laboratorio!", "error");
+					}
 			},
 			error: function(xhr, ajaxOptions,x){
 				console.log(xhr);
@@ -293,7 +303,46 @@ var inicioMaestro = function ()
     			{
     				$("#bodyArt").append(response.renglones);
 					//$(".btnEliminarArt").on("click",eliminarArt);
+					//formar de nuevo el combo
+					var laboratorio = $("#cmbLaboratorio").val();
+    	var parametros = "opc=comboEleArt1"+
+    						"&laboratorio="+laboratorio+
+							"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/funciones.php",
+			data: parametros,
+			success: function(response){
+				if(response.respuesta == true)
+				{
+					$("#cmbMaterialCat").html(" ");
+					$("#cmbMaterialCat").html("<option value='' disabled selected>Seleccione el material</option>");
+					for (var i = 0; i < response.con; i++) 
+					{
+						if((response.comboCveArt[i])!= artCve)
+						{
+							$("#cmbMaterialCat").append($("<option></option>").attr("value",response.comboCveArt[i]).text(response.comboNomArt[i]));
+						}
+					}
+					$("cmbMaterialCat").trigger('contentChanged');
+					$('select').material_select();
 				}
+				else
+					{
+						$("#cmbMaterialCat").html(" ");
+						$("#cmbMaterialCat").html("<option value='' disabled selected>Seleccione el material</option>");
+						$('select').material_select();
+						sweetAlert("No existen articulos", "Es posible que no existan articulos en dicho laboratorio!", "error");
+					}
+			},
+			error: function(xhr, ajaxOptions,x){
+				console.log(xhr);
+				console.log("Error de conexión combomat");	
+			}
+		});
+				}//termina if
 				else
 					console.log("no hizo nada");
 			},
@@ -421,7 +470,6 @@ var inicioMaestro = function ()
     var altaNuevaSol = function()
     {
     	//insertar una nueva solicitud
-    	// cadena.substring(índice donde inicia recordando que el primero es cero,indice - 1)
 	    	if(($("#cmbMateria").val())!= null && ($("#cmbHoraMat").val())!= null && ($("#txtFechaS").val())!= "" && ($("#cmbPractica").val())!= null && ($("#cmbHoraPract").val())!= null && ($("#txtCantAlumnos").val())!= "" && ($("#textarea1").val())!= "" && articulosAgregados != "" && numArticulos != "")
 	    	{
 		    	var f  = new Date();
@@ -468,20 +516,18 @@ var inicioMaestro = function ()
 		                     	success: function(response){
 		                     		if(response.respuesta == true && response.respuesta2 == true)
 		                     		{
-		                     			//$("#cmbMateria").val("");
-										$("#cmbHoraMat").val("");
-										$("#txtFechaS").val("dd/mm/aaaa");
-										$("#cmbPractica").val("");
-										$("#cmbHoraPract").val("");
-										$("#txtCantAlumnos").val("");
+		                     			//limpiar datos
+										$('select').material_select();
+										$("#txtFechaS").val("dd/mm/aaaa");									
+										$("#txtCantAlumnos").val("1");
 										$("#textarea1").val("");
 										$("#txtNumArt").val("1");
-										$("#cmbMaterialCat").val("");
-										$("#cmbMaterialCat").val("");
 										articulosAgregados = Array();
 										numArticulos = Array();
 										$("#bodyArt").html("");
+										solNueva();
 		                     			swal("La solicitud fue creada con éxito!", "Da clic en el botón OK!", "success");			
+		                     			
 		                     		}
 		                     		else
 		                     		{
@@ -528,7 +574,12 @@ var inicioMaestro = function ()
 					$('select').material_select();
 				}
 				else
-					console.log("hola no entro");
+					{
+						$("#cmbHoraMat").html(" ");
+						$("#cmbHoraMat").html("<option value='' disabled selected>Seleccione la hora</option>");
+						$('select').material_select();
+						sweetAlert("No existen horas", "Es posible que no existan horas para la materia seleccionada", "error");
+					}
 			},
 			error: function(xhr, ajaxOptions,x){
 				console.log(xhr);
@@ -561,7 +612,12 @@ var inicioMaestro = function ()
 					$('select').material_select();
 				}
 				else
-					console.log("hola no entro practica");
+					{
+						$("#cmbPractica").html(" ");
+						$("#cmbPractica").html("<option value='' disabled selected>Seleccione la práctica</option>");	
+						$('select').material_select();
+						sweetAlert("No existen prácticas", "Es posible que no existan prácticas asociadas a dicha materia!", "error");
+					}
 			},
 			error: function(xhr, ajaxOptions,x){
 				console.log(xhr);
@@ -594,9 +650,15 @@ var inicioMaestro = function ()
 					$('select').material_select();
 				}
 				else
-					console.log("hola no entro practica");
+				{
+					$("#cmbLaboratorio").html(" ");
+					$("#cmbLaboratorio").html("<option value='' disabled selected>Seleccione el laboratorio</option>");
+					$('select').material_select();
+					sweetAlert("No existen laboratorio", "Es posible que no existan laboratorios asociados a dicha práctica!", "error");
+				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
 				console.log(xhr);
 				console.log("Error de conexión comboPrac");	
 			}
@@ -637,7 +699,12 @@ var inicioMaestro = function ()
 					$('select').material_select();
 				}
 				else
-					console.log("hola no entro practica");
+					{
+						$("#cmbHoraPract").html(" ");
+						$("#cmbHoraPract").html("<option value='' disabled selected>Seleccione la hora</option>");
+						$('select').material_select();
+						sweetAlert("No existen horas", "Es posible que no existan horas asociados a dicha práctica!", "error");
+					}
 			},
 			error: function(xhr, ajaxOptions,x){
 				console.log(xhr);
