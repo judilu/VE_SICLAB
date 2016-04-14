@@ -8,39 +8,38 @@ var inicio = function()
 		{
 			$("#accesoAlumno").hide();
 			$("#datosPracticas").show("slow");
-			
 			var numeroControl = $("#txtNControl").val();
-			
 			var parametros = "opc=consultaMatAlumno"+
 			"&numeroControl="+numeroControl+
 			"&id="+Math.random();
-		$.ajax({
-			cache:false,
-			type: "POST",
-			dataType: "json",
-			url:"../data/alumnos.php",
-			data: parametros,
-			success: function(response)
-			{
-				if(response.respuesta)
+			$.ajax({
+				cache:false,
+				type: "POST",
+				dataType: "json",
+				url:"../data/alumnos.php",
+				data: parametros,
+				success: function(response)
 				{
-					$('select').material_select();
-					$("select").empty().html(' ');
-					for (var i = 0; i < response.contador; i++) 
+					if(response.respuesta)
 					{
-						$("#cmbMateriasAlumnos").append($("<option></option>").attr("value",response.cmbMaterias[i]).text(response.cmbMateriasNom[i]));
-					}
-   				}
-   				else
-   				{
-   					sweetAlert("No hay materias disponibles", "", "error");
-   				}
-   			},
-   			error: function(xhr, ajaxOptions,x)
-   			{
-   				console.log("Error de conexión datos practica");
-   			}
-   		});
+	       				$("#cmbMateriasAlumnos").html(" ");
+						for (var i = 0; i < response.contador; i++) 
+						{
+							$("#cmbMateriasAlumnos").append($("<option></option>").attr("value",response.claveMateria[i]).text(response.nombreMateria[i]));
+						}
+						$("#cmbMateriasAlumnos").trigger('contentChanged');
+						$('select').material_select();
+	   				}
+	   				else
+	   				{
+	   					sweetAlert("No hay materias disponibles", "", "error");
+	   				}
+	   			},
+	   			error: function(xhr, ajaxOptions,x)
+	   			{
+	   				console.log("Error de conexión datos practica");
+	   			}
+	   		});
 		}
 		else
 		{
@@ -230,7 +229,7 @@ var inicio = function()
 	}
 	var maestroPractica = function()
 	{
-		var claveMateria = $("#cmbMateriaAlumno").val();
+		var claveMateria = $("#cmbMateriasAlumnos").val();
 		var parametros = "opc=consultaMaestro"+
 		"&claveMateria="+claveMateria+
 		"&id="+Math.random();
@@ -244,14 +243,13 @@ var inicio = function()
 			{
 				if(response.respuesta)
 				{
-					alert("entra aqui ");
-   							//$("#cmbMaestroPractica").append(response.opcionMaestro);
-   							$('#cmbMaestroPractica').append('<option value="0">SELECCIONAR...</option>');
-   							for (i=0; i < response.opcionMaestro.length; i++)
-   							{
-   								$(".cMaestro ul").append('<li class>'+response.nombreMaestro[i]+'</li>');
-   								$('#cmbMaestroPractica').append('<option value='+response.opcionMaestro[i]+'>'+response.nombreMaestro[i]+'</option>');
-   							}
+   					$("#cmbMaestrosMat").html(" ");
+						for (var i = 0; i < response.contador; i++) 
+						{
+							$("#cmbMaestrosMat").append($("<option></option>").attr("value",response.claveMaestro[i]).text(response.nombreMaestro[i]));
+						}
+						$("#cmbMaestrosMat").trigger('contentChanged');
+						$('select').material_select();
    				}
    				else
    				{
@@ -264,11 +262,77 @@ var inicio = function()
    			}
    		});
 	}
-	var numMaestro = function()
+	var nombrePracticaMaestro = function()
 	{
-		alert($("#cmbMaestroPractica").val());
+		var claveMaestro = $("#cmbMaestrosMat").val();
+		var parametros = "opc=consultaPracticaNombre"+
+		"&claveMaestro="+claveMaestro+
+		"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/alumnos.php",
+			data: parametros,
+			success: function(response)
+			{
+				if(response.respuesta)
+				{
+   					$("#cmbNombrePracticas").html(" ");
+						for (var i = 0; i < response.contador; i++) 
+						{
+							$("#cmbNombrePracticas").append($("<option></option>").attr("value",response.clavePractica[i]).text(response.nombrePractica[i]));
+						}
+						$("#cmbNombrePracticas").trigger('contentChanged');
+						$('select').material_select();
+   				}
+   				else
+   				{
+   					sweetAlert("NO ENCONTRADO", "", "error");
+   				}
+   			},
+   			error: function(xhr, ajaxOptions,x)
+   			{
+   				console.log("Error de conexión");
+   			}
+   		});
 	}
-	
+	var horarioPractica = function()
+	{
+		var clavePractica 	= $("#cmbNombrePracticas").val();
+		var parametros 		= "opc=consultaHoraPractica"+
+								"&clavePractica="+clavePractica+
+								"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/alumnos.php",
+			data: parametros,
+			success: function(response)
+			{
+				if(response.respuesta)
+				{
+   					$("#cmbHorariosPracticas").html(" ");
+						for (var i = 0; i < response.contador; i++) 
+						{
+							$("#cmbHorariosPractica").append($("<option></option>").attr("value",response.clavePractica[i]).text(response.horaPractica[i]));
+						}
+						$("#cmbHorariosPractica").trigger('contentChanged');
+						$('select').material_select();
+   				}
+   				else
+   				{
+   					sweetAlert("NO ENCONTRADO", "", "error");
+   				}
+   			},
+   			error: function(xhr, ajaxOptions,x)
+   			{
+   				console.log("Error de conexión");
+   			}
+   		});
+	}
+
 	$("#btnPracticaAlumnos").on("click",practicaAlumnos);
 	$("#btnMaterialAlumno").on("click",materialPractica);
 
@@ -286,8 +350,9 @@ var inicio = function()
 	$("#btnMA").on("click",ma);
 	$("#btnDel").on("click",del);
 	//selects
-	//$("#cmbMateriaAlumno").on("change",maestroPractica);
-	//$("#cmbMaestroPractica").on("change",numMaestro);
+	$("#cmbMateriasAlumnos").on("change",maestroPractica);
+	$("#cmbMaestrosMat").on("change",nombrePracticaMaestro);
+	$("#cmbNombrePracticas").on("change",horarioPractica);
 
 	//$("#btnCancelarEntrada").on("click",consultaAlumno);
 }
