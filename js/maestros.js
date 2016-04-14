@@ -287,6 +287,7 @@ var inicioMaestro = function ()
     	var num    = $("#txtNumArt").val(); 	
     	numArticulos.push(num);
     	articulosAgregados.push(artCve);
+    	console.log(articulosAgregados);
     	var parametros = "opc=agregarArt1"+
     						"&artCve="+artCve+
     						"&artNom="+artNom+
@@ -302,10 +303,11 @@ var inicioMaestro = function ()
     			if(response.respuesta == true)
     			{
     				$("#bodyArt").append(response.renglones);
-					//$(".btnEliminarArt").on("click",eliminarArt);
+					$(".btnEliminarArt").on("click",eliminarArt);
 					//formar de nuevo el combo
+					var c = articulosAgregados.length;
 					var laboratorio = $("#cmbLaboratorio").val();
-    	var parametros = "opc=comboEleArt1"+
+    				var parametros = "opc=comboEleArt1"+
     						"&laboratorio="+laboratorio+
 							"&id="+Math.random();
 		$.ajax({
@@ -321,9 +323,12 @@ var inicioMaestro = function ()
 					$("#cmbMaterialCat").html("<option value='' disabled selected>Seleccione el material</option>");
 					for (var i = 0; i < response.con; i++) 
 					{
-						if((response.comboCveArt[i])!= artCve)
+						for (var a =0; a<c ;a++) 
 						{
-							$("#cmbMaterialCat").append($("<option></option>").attr("value",response.comboCveArt[i]).text(response.comboNomArt[i]));
+							if((response.comboCveArt[i])!= articulosAgregados[a])
+							{
+								$("#cmbMaterialCat").append($("<option></option>").attr("value",response.comboCveArt[i]).text(response.comboNomArt[i]));
+							}
 						}
 					}
 					$("cmbMaterialCat").trigger('contentChanged');
@@ -350,14 +355,12 @@ var inicioMaestro = function ()
 				console.log("Error de conexión articuloAgregado");	
 			}
 		});
-		//modifique
-		$(".btnEliminarArt").on("click",eliminarArt);
     }//Termina función agregar articulo
     //Comienza función de eliminar Articulo
     var eliminarArt = function()
     {
     	alert("hola");
-    	console.log($(this).closest("tr"));
+    	console.log($(this).attr("name"));
     }//Termina función de eliminar Articulo
     //Empieza función editar solicitud
     var editarSolicitudLab = function()
