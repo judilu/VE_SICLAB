@@ -318,7 +318,7 @@ var inicioMaestro = function ()
     }//Termina función agregar articulo
     var llenarcomboEleArt = function()
     {
-    	var comboArt 	= "";
+    	var comboArt 	= Array();
     	var comboclaArt = Array();
     	var c 			= articulosAgregados.length;
     	var i 			= 0;
@@ -333,37 +333,39 @@ var inicioMaestro = function ()
 			dataType: "json",
 			url:"../data/funciones.php",
 			data: parametros,
-			success: function(response){
+			success: function(response)
+			{
 				if(response.respuesta == true)
 				{
-					comboclaArt[] = response.comboCveArt;
+					comboclaArt = response.comboCveArt;
 					comboArt 	= response.comboNomArt;
 					//eliminar elementos repetidos
 					for (var r =0; r< c; r++) 
 					{
 						o = (articulosAgregados[r]);
 						i = parseInt((comboclaArt).indexOf(o));
-						comboclaArt = ((comboclaArt).splice(i,1));
-						comboArt 	= ((comboArt).splice(i,1));	
-						console.log(comboclaArt);				
+						comboclaArt = (eliminar(comboclaArt,i));
+						comboArt 	= (eliminar(comboArt,i));				
 					}
+					var con = comboclaArt.length;
 					//termina eliminación
 					$("#cmbMaterialCat").html(" ");
 					$("#cmbMaterialCat").html("<option value='' disabled selected>Seleccione el material</option>");
-					for (var i = 0; i < response.con; i++) 
+					for (var i = 0; i < con; i++) 
 					{
 						$("#cmbMaterialCat").append($("<option></option>").attr("value",comboclaArt[i]).text(comboArt[i]));
 					}
 					$("cmbMaterialCat").trigger('contentChanged');
 					$('select').material_select();
+					console.log(comboclaArt);
 				}
 				else
-					{
-						$("#cmbMaterialCat").html(" ");
-						$("#cmbMaterialCat").html("<option value='' disabled selected>Seleccione el material</option>");
-						$('select').material_select();
-						sweetAlert("No existen articulos", "Es posible que no existan articulos en dicho laboratorio!", "error");
-					}
+				{
+					$("#cmbMaterialCat").html(" ");
+					$("#cmbMaterialCat").html("<option value='' disabled selected>Seleccione el material</option>");
+					$('select').material_select();
+					sweetAlert("No existen articulos", "Es posible que no existan articulos en dicho laboratorio!", "error");
+				}
 			},
 			error: function(xhr, ajaxOptions,x){
 				console.log(xhr);
@@ -371,14 +373,29 @@ var inicioMaestro = function ()
 			}
 		});
     }
+    var eliminar = function(arreglo,posicion,con)
+    {
+    	var ar = arreglo;
+    	var p  = posicion;
+    	var c  = ar.length;
+    	var af = Array();
+    	for (var i=0; i < c; i++) 
+    	{
+    		if(i != posicion)
+    		{
+    			af.push(ar[i]);
+    		}
+    	}
+    	return af;
+    }
     //Comienza función de eliminar Articulo
     var eliminarArt = function()
     {
     	var art = ($(this).attr("name"));
     	var i = articulosAgregados.indexOf(art);
-    	articulos.splice(i,1);
-    	articulosAgregados.splice(i,1);
-    	numArticulos.splice(i,1);
+    	articulos = eliminar(articulos,i);
+    	articulosAgregados = eliminar(articulosAgregados,i);
+    	numArticulos = eliminar(numArticulos,i);
     	//construir tabla
     	var parametros = "opc=construirTbArt1"+
     						"&articulosAgregados="+articulosAgregados+
@@ -394,6 +411,8 @@ var inicioMaestro = function ()
     		success: function(response){
     			if(response.respuesta == true)
     			{
+    				console.log(response.renglones);
+    				$("#bodyArt").html("");
     				$("#bodyArt").append(response.renglones);
 					$(".btnEliminarArt").on("click",eliminarArt);
 					//formar de nuevo el combo
