@@ -313,9 +313,27 @@ function nuevaSol()
 						'respuesta2' => $respuesta2);
 	print json_encode($arrayJSON);
 }
-function capacidadLab()
+function construirTbArt()
 {
-	//$consulta = "SELECT capacidad from lblaboratorios WHERE claveLaboratorio = 'CCDS'"
+	$cveArt 	= $_POST['articulosAgregados'];
+	$nomArt 	= $_POST['articulos'];
+	$num 		= $_POST['numArticulos'];
+	$n 			= count($cveArt);
+	$respuesta 	= false;
+	$renglones 	= "";
+	if($cveArt!= 0)
+	{
+		$respuesta	= true;
+		$renglones	= "";
+		$renglones .= "<tr id=".$cveArt.">";
+		$renglones .= "<td class='col s2'>".$num."</td>";
+		$renglones .= "<td class='col s8'>".$nomArt."</td>";
+		$renglones .= "<td class='col s2'><a name =".$cveArt."class='btnEliminarArt btn-floating btn-large waves-effect waves-light red darken-1'><i class='material-icons'>delete</i></a></td>";
+		$renglones .= "</tr>";
+	}
+	$arrayJSON = array('respuesta' => $respuesta,
+						'renglones' => $renglones);
+	print json_encode($arrayJSON);	
 }
 //Menú principal
 $opc = $_POST["opc"];
@@ -347,8 +365,8 @@ switch ($opc){
 	case 'nuevaSol1':
 		nuevaSol();
 		break;
-	case 'capacidadLab1':
-		capacidadLab();
+	case 'construirTbArt1':
+		construirTbArt();
 		break;
 } 
 ?>

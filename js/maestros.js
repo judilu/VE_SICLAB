@@ -2,6 +2,7 @@ var inicioMaestro = function ()
 {
 	$('ul.tabs').tabs();
 	$('select').material_select(); //agregado
+	var articulos = new Array();
 	var articulosAgregados = new Array();
 	var numArticulos = new Array();
 	//eventos menu Solicitudes
@@ -233,6 +234,7 @@ var inicioMaestro = function ()
     //Empieza función de elegir material
     var elegirMaterial = function()
     {
+    	articulos = Array();
     	articulosAgregados = Array();
     	numArticulos = Array();
     	var laboratorio = $("#cmbLaboratorio").val();
@@ -274,7 +276,6 @@ var inicioMaestro = function ()
 				console.log("Error de conexión combomat");	
 			}
 		});
-    	$
        //limpiar tabla de agregarMaterial
        $("#bodyArt").html(" "); 
     }//Termina función de elegir material
@@ -285,9 +286,9 @@ var inicioMaestro = function ()
     	var artCve = $("#cmbMaterialCat" ).val();
     	var artNom = $("#cmbMaterialCat option:selected").text();
     	var num    = $("#txtNumArt").val(); 	
-    	numArticulos.push(num);
+    	articulos.push(artNom);
     	articulosAgregados.push(artCve);
-    	console.log(articulosAgregados);
+    	numArticulos.push(num);
     	var parametros = "opc=agregarArt1"+
     						"&artCve="+artCve+
     						"&artNom="+artNom+
@@ -302,51 +303,11 @@ var inicioMaestro = function ()
     		success: function(response){
     			if(response.respuesta == true)
     			{
+    				$("#txtNumArt").val("1");
     				$("#bodyArt").append(response.renglones);
 					$(".btnEliminarArt").on("click",eliminarArt);
 					//formar de nuevo el combo
-					var c = articulosAgregados.length;
-					var laboratorio = $("#cmbLaboratorio").val();
-    				var parametros = "opc=comboEleArt1"+
-    						"&laboratorio="+laboratorio+
-							"&id="+Math.random();
-		$.ajax({
-			cache:false,
-			type: "POST",
-			dataType: "json",
-			url:"../data/funciones.php",
-			data: parametros,
-			success: function(response){
-				if(response.respuesta == true)
-				{
-					$("#cmbMaterialCat").html(" ");
-					$("#cmbMaterialCat").html("<option value='' disabled selected>Seleccione el material</option>");
-					for (var i = 0; i < response.con; i++) 
-					{
-						for (var a =0; a<c ;a++) 
-						{
-							if((response.comboCveArt[i])!= articulosAgregados[a])
-							{
-								$("#cmbMaterialCat").append($("<option></option>").attr("value",response.comboCveArt[i]).text(response.comboNomArt[i]));
-							}
-						}
-					}
-					$("cmbMaterialCat").trigger('contentChanged');
-					$('select').material_select();
-				}
-				else
-					{
-						$("#cmbMaterialCat").html(" ");
-						$("#cmbMaterialCat").html("<option value='' disabled selected>Seleccione el material</option>");
-						$('select').material_select();
-						sweetAlert("No existen articulos", "Es posible que no existan articulos en dicho laboratorio!", "error");
-					}
-			},
-			error: function(xhr, ajaxOptions,x){
-				console.log(xhr);
-				console.log("Error de conexión combomat");	
-			}
-		});
+							
 				}//termina if
 				else
 					console.log("no hizo nada");
@@ -359,8 +320,42 @@ var inicioMaestro = function ()
     //Comienza función de eliminar Articulo
     var eliminarArt = function()
     {
-    	alert("hola");
-    	console.log($(this).attr("name"));
+    	var art = ($(this).attr("name"));
+    	var i = articulosAgregados.indexOf(art);
+    	articulos.splice(i,1);
+    	articulosAgregados.splice(i,1);
+    	numArticulos.splice(i,1);
+    	//construir tabla
+    	var parametros = "opc=construirTbArt1"+
+    						"&articulosAgregados="+articulosAgregados+
+    						"&articulos="+articulos+
+    						"&numArticulos="+numArticulos+
+    						"&id="+Math.random();
+		$.ajax({
+    		cache:false,
+    		type: "POST",
+    		dataType: "json",
+    		url:"../data/maestros.php",
+    		data: parametros,
+    		success: function(response){
+    			if(response.respuesta == true)
+    			{
+    				$("#bodyArt").append(response.renglones);
+					$(".btnEliminarArt").on("click",eliminarArt);
+					//formar de nuevo el combo
+				}//termina if
+				else
+				{
+					console.log("no hizo nada");
+					$("#bodyArt").html("");
+				}
+			},
+			error: function(xhr, ajaxOptions,x)
+			{
+				console.log("Error de conexión articuloAgregado");	
+			}
+		});
+    	//termina construcción de tabla
     }//Termina función de eliminar Articulo
     //Empieza función editar solicitud
     var editarSolicitudLab = function()
@@ -473,7 +468,7 @@ var inicioMaestro = function ()
     var altaNuevaSol = function()
     {
     	//insertar una nueva solicitud
-	    	if(($("#cmbMateria").val())!= null && ($("#cmbHoraMat").val())!= null && ($("#txtFechaS").val())!= "" && ($("#cmbPractica").val())!= null && ($("#cmbHoraPract").val())!= null && ($("#txtCantAlumnos").val())!= "" && ($("#textarea1").val())!= "" && articulosAgregados != "" && numArticulos != "")
+	    	if(($("#cmbMateria").val())!= null && ($("#cmbHoraMat").val())!= null && ($("#txtFechaS").val())!= "" && ($("#cmbPractica").val())!= null && ($("#cmbHoraPract").val())!= null && ($("#txtCantAlumnos").val())!= "" && ($("#textarea1").val())!= "" && articulos != "" && articulosAgregados != "" && numArticulos != "")
 	    	{
 		    	var f  = new Date();
 		    	var dd = f.getDate();
@@ -525,6 +520,7 @@ var inicioMaestro = function ()
 										$("#txtCantAlumnos").val("1");
 										$("#textarea1").val("");
 										$("#txtNumArt").val("1");
+										articulos = Array();
 										articulosAgregados = Array();
 										numArticulos = Array();
 										$("#bodyArt").html("");
