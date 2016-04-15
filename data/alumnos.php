@@ -203,7 +203,7 @@ function consultaHoraPractica()
 }
 function guardaEntrada()
 {
-	$respuesta 		= false;
+	$respuesta 		= true;
 	session_start();
 	if(!empty($_SESSION['nombre']))
 	{
@@ -213,10 +213,12 @@ function guardaEntrada()
 		$hora 			= GetSQLValueString($_POST["hora"],"text");
 		$numControl 	= GetSQLValueString($_POST["nControl"],"text");
 		$conexion 		= conectaBDSICLAB();
-		$consulta  		= sprintf("insert into lbentradasalumnos values(%s,%s,%s,%s,%s)",$periodo,$numControl,$fecha,$hora,$claveCal);
-		$res 	 	=  mysql_query($consulta);
+		$query  		= sprintf("insert into lbentradasalumnos values(%s,%s,%s,%s,%s)",$periodo,$numControl,$fecha,$hora,$claveCal);
+		$res 	 	=  mysql_query($query);
 			if(mysql_affected_rows()>0)
-			$respuesta = true; 
+			{
+				$respuesta = true; 
+			}
 	}
 	else
 	{
@@ -247,7 +249,7 @@ switch ($opc){
 	case 'consultaHoraPractica':
 		consultaHoraPractica();
 	break;
-	case 'guardaEntrada':
+	case 'guardaEntrada1':
 		guardaEntrada();
 	break;
 	case 'consultaNomAlumno':

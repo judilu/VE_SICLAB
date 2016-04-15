@@ -2,23 +2,23 @@
 	<div class="row">
 			<div class="col s3">
 				<div class="input-field col s12">
-					<input id="txtNumeroControl" type="text" class="validate">
-					<label for="txtNumeroControl">No. de control</label>
+					<input placeholder="" id="txtNumeroControlPrestamo" type="text" class="validate" disabled>
+					<label for="txtNumeroControlPrestamo">No. de control</label>
 				</div>
 			</div>
 			<div class="col s5">
 				<div class="input-field col s12">
-					<input id="txtNombre" type="text" class="validate">
-					<label for="txtNombre">Nombre</label>
+					<input placeholder="" id="txtNombreAluPrestamo" type="text" class="validate" disabled>
+					<label for="txtNombreAluPrestamo">Nombre</label>
 				</div>
 			</div>
-		<div class="col s2 offset-s1">Fecha: 01/12/2015</div>
+		<!--<div class="col s2 offset-s1">Fecha: 01/12/2015</div>-->
 	</div>
 	<p id="textoMaterial">Por favor, seleccione los articulos y la cantidad de ellos que necesitará para su práctica.</p>
 	<div class="row">
 		<div class="col s10 offset-s1">
-			<table class="responsive-table highlight bordered">
-				<thead>
+			<table class="responsive-table highlight bordered" id="tbEleccionMaterial">
+				<!--<thead>
 					<tr>
 						<th data-field="cantidad">Cantidad</th>
 						<th data-field="descripcion">Descripción</th>
@@ -41,7 +41,7 @@
 						<td>Pasta para soldar</td>
 						<td>3</td>
 					</tr>
-				</tbody>
+				</tbody>-->
 			</table>
 		</div>
 	</div>
