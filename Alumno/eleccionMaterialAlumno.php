@@ -24,24 +24,7 @@
 						<th data-field="descripcion">Descripción</th>
 						<th data-field="disponibles">Disponibles</th>
 					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>
-							<select class="browser-default col s5">
-								<option value="" disabled selected>Cantidad</option>
-								<option value="1">1</option>
-								<option value="2">2</option>
-								<option value="3">3</option>
-								<option value="1">4</option>
-								<option value="2">5</option>
-								<option value="3">6</option>
-							</select>
-						</td >
-						<td>Pasta para soldar</td>
-						<td>3</td>
-					</tr>
-				</tbody>-->
+				</thead>-->
 			</table>
 		</div>
 	</div>
