@@ -52,6 +52,9 @@ var inicio = function()
 	{
 		$("#datosPractica2").hide();
 		$("#materialAlumno").show("slow");
+		$("#txtNumeroControlPrestamo").val($("#txtNControlAlu").val());
+		$("#txtNombreAluPrestamo").val($("#txtNombreAlu").val());
+
 	}
 	var uno= function()
 	{
@@ -352,7 +355,7 @@ var inicio = function()
 		var minutos 				=horaActual.getMinutes();
 		var horaEntrada			= hora + ":" + minutos;
 
-		var parametros 	= "opc=guardaEntrada"+
+		var parametros 	= "opc=guardaEntrada1"+
 						"&claveCal="+claveCal+
 						"&nControl="+nc+
 						"&fecha="+fe+
@@ -369,6 +372,10 @@ var inicio = function()
 				if(response.respuesta)
 				{
    					sweetAlert("Registro de entrada guardado con éxito!", "Da click en el botón OK", "success");
+   					if($("#chbElegirMaterial").is(':checked'))
+   					{
+   						materialPractica();
+   					}
    				}
    				else
    				{
