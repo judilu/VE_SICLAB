@@ -1,6 +1,9 @@
 var inicio = function()
 {
 	$('select').material_select();
+	var articulosSolicitadosAlumnos = new Array();
+	var numeroArticulos = new Array();
+	var nombreArticulos = new Array();
 
 	var practicaAlumnos = function()
 	{
@@ -54,6 +57,40 @@ var inicio = function()
 		$("#materialAlumno").show("slow");
 		$("#txtNumeroControlPrestamo").val($("#txtNControlAlu").val());
 		$("#txtNombreAluPrestamo").val($("#txtNombreAlu").val());
+		var claveCal = $("#cmbHorariosPractica").val();
+
+		var parametros = "opc=consultaMaterialPractica1"+
+		"&claveCal="+claveCal+
+		"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/alumnos.php",
+			data: parametros,
+			success: function(response)
+			{
+				if(response.respuesta)
+				{
+					$("#bodyArtAlumno").append(response.renglones);
+					$("#cmbMaterialesLab").html(" ");
+						for (var i = 0; i < response.contador; i++) 
+						{
+							//$("#cmbMaterialesLab").append($("<option></option>").attr("value",response.claveMaestro[i]).text(response.nombreMaestro[i]));
+						}
+						$("#cmbMaterialesLab").trigger('contentChanged');
+						$('select').material_select();
+				}
+				else
+				{
+					sweetAlert("No hay material asignado para la práctica", "", "error");
+				}
+			},
+			error: function(xhr, ajaxOptions,x)
+			{
+				console.log("Error de conexión");
+			}
+		});
 
 	}
 	var uno= function()
@@ -394,6 +431,87 @@ var inicio = function()
 		$("#alumno").show("slow");
 		$("#accesoAlumno").show("slow");
 	}
+	var agregaArtAlumno = function()
+	{
+		var artCve = $("#cmbMaterialesLab" ).val();
+		var artNom = $("#cmbMaterialesLab option:selected").text();
+    	var numArt    = $("#txtNumArtMat").val(); 	
+
+    	nombreArticulos.push(artNom);
+    	articulosSolicitadosAlumnos.push(artCve);
+    	numeroArticulos.push(numArt);
+    	var parametros = "opc=agregarArtAlu1"+
+    						"&artNom="+artNom+
+    						"&artCve="+artCve+
+    						"&numArt="+numArt+
+    						"&id="+Math.random();
+    	$.ajax({
+    		cache:false,
+    		type: "POST",
+    		dataType: "json",
+    		url:"../data/alumnos.php",
+    		data: parametros,
+    		success: function(response){
+    			if(response.respuesta == true)
+    			{
+    				$("#txtNumArtMat").val("1");
+    				$("#bodyArtAlumno").append(response.renglones);
+					$("#tbEleccionMaterial #btnEliminarArtAlu").on("click",eliminarArtAlumno);
+					//formar de nuevo el combo
+					llenarcomboEleArt();		
+				}
+				else
+					console.log("Error no se seleccionó correctamente el articulo");
+			},
+			error: function(xhr, ajaxOptions,x){
+				console.log("Error de conexión articulo agregado");	
+			}
+		});
+	}
+	var eliminarArtAlumno = function()
+	{
+		/*
+			var eliminarArt = function()
+    {
+    	var art = ($(this).attr("name"));
+    	var i = articulosAgregados.indexOf(art);
+    	articulos.splice(i,1);
+    	articulosAgregados.splice(i,1);
+    	numArticulos.splice(i,1);
+    	//construir tabla
+    	var parametros = "opc=construirTbArt1"+
+    						"&articulosAgregados="+articulosAgregados+
+    						"&articulos="+articulos+
+    						"&numArticulos="+numArticulos+
+    						"&id="+Math.random();
+		$.ajax({
+    		cache:false,
+    		type: "POST",
+    		dataType: "json",
+    		url:"../data/maestros.php",
+    		data: parametros,
+    		success: function(response){
+    			if(response.respuesta == true)
+    			{
+    				$("#bodyArt").append(response.renglones);
+					$(".btnEliminarArt").on("click",eliminarArt);
+					//formar de nuevo el combo
+					llenarcomboEleArt();
+				}//termina if
+				else
+				{
+					console.log("no hizo nada");
+					$("#bodyArt").html("");
+				}
+			},
+			error: function(xhr, ajaxOptions,x)
+			{
+				console.log("Error de conexión articuloAgregado");	
+			}
+		});
+		*/
+	}
+
 	$("#btnPracticaAlumnos").on("click",practicaAlumnos);
 	$("#btnMaterialAlumno").on("click",materialPractica);
 
@@ -416,5 +534,7 @@ var inicio = function()
 	$("#cmbNombrePracticas").on("change",horarioPractica);
 	$("#btnEntradaAlumno").on("click",guardaEntradaAlumno);
 	$("#btnCancelarEntrada").on("click",cancelaEntrada);
+	$("#btnAgregarArtAlu").on("click",agregaArtAlumno);
+
 }
 $(document).on("ready",inicio);

@@ -215,6 +215,7 @@ function guardaEntrada()
 		$conexion 		= conectaBDSICLAB();
 		$query  		= sprintf("insert into lbentradasalumnos values(%s,%s,%s,%s,%s)",$periodo,$numControl,$fecha,$hora,$claveCal);
 		$res 	 	=  mysql_query($query);
+
 			if(mysql_affected_rows()>0)
 			{
 				$respuesta = true; 
@@ -227,7 +228,63 @@ function guardaEntrada()
 	$arrayJSON = array('respuesta' => $respuesta);
 		print json_encode($arrayJSON);
 }
-
+function consultaMaterialPractica()
+{
+	$respuesta 		= false;
+	session_start();
+	if(!empty($_SESSION['nombre']))
+	{
+		$periodo 		= periodoActual();
+		$claveCal		= GetSQLValueString($_POST["claveCal"],"text");
+		$con 			= 0;
+		$rows			= array();
+		$renglones		= "";
+		$materiales 	="";
+		$conexion 		= conectaBDSICLAB();
+		$consulta		= sprintf("");
+		$res 			= mysql_query($consulta);
+		while($row = mysql_fetch_array($res))
+		{
+			$materiales .="'".($row["nombreArticulo"])."',";
+			$rows[]=$row;
+			$respuesta = true;
+			$con++;
+		}
+		$materiales = (rtrim($materiales,","));
+		for($c= 0; $c< $con; $c++)
+		{
+			$renglones .= "<tbody>";
+			$renglones .= "<tr>";
+			$renglones .= "<td>".$rows[$c]["nombreArticulo"]."</td>";
+			$renglones .= "<td>".$rows[$c]["cantidad"]."</td>";
+			$renglones .= "<td><a name = '".$rows[$c]["claveSolicitud"]."' class='btn-floating btn-large waves-effect red darken-1' id='btnEliminarArtAlu'><i class='material-icons'>delete</i></a></td>";
+			$renglones .= "</tr>";
+			$renglones .= "</tbody>";
+			$respuesta = true;
+		}
+	}
+	else
+	{
+		//salir();
+	}
+	$arrayJSON = array('respuesta' => $respuesta);
+		print json_encode($arrayJSON);
+}
+function agregarArtAlumno()
+{
+	$cveArt 	= GetSQLValueString($_POST['artCve'],"text");
+	$numArt 		= GetSQLValueString($_POST['numArt'],"int");
+	$respuesta	= true;
+	$renglones	= "";
+	$renglones .= "<tr id=".$cveArt.">";
+	$renglones .= "<td class='col s2'>".$num."</td>";
+	$renglones .= "<td class='col s8'>".$nomArt."</td>";
+	$renglones .= "<td class='col s2'><a name =".$cveArt."class='btnEliminarArt btn-floating btn-large waves-effect waves-light red darken-1'><i class='material-icons'>delete</i></a></td>";
+	$renglones .= "</tr>";
+	$arrayJSON = array('respuesta' => $respuesta,
+						'renglones' => $renglones);
+	print json_encode($arrayJSON);
+}
 //Menú principal
 $opc = $_POST["opc"];
 switch ($opc){
@@ -254,6 +311,12 @@ switch ($opc){
 	break;
 	case 'consultaNomAlumno':
 		consultaAlumno();
+	break;
+	case 'consultaMaterialPractica1':
+		consultaMaterialPractica();
+	break;
+	case 'agregarArtAlu1':
+		agregarArtAlumno();
 	break;
 } 
 ?>
