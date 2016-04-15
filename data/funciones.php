@@ -299,7 +299,7 @@ function comboEleArt()
 	$comboNomArt 	= "";
 	$con 			= 0;
 	$conexion		= conectaBDSICLAB();
-	$consulta		= sprintf("select c.claveArticulo, c.nombreArticulo from lbarticuloscat c inner join lbarticulos a on a.claveArticulo = c.claveArticulo inner join lbasignaarticulos aa on aa.indentificadorArticulo = a.identificadorArticulo where aa.claveLaboratorio =%s and a.estatus = 'V'",$laboratorio);
+	$consulta		= sprintf("select DISTINCT (c.nombreArticulo), c.claveArticulo from lbarticuloscat c inner join lbarticulos a on a.claveArticulo = c.claveArticulo inner join lbasignaarticulos aa on aa.indentificadorArticulo = a.identificadorArticulo where aa.claveLaboratorio =%s and a.estatus = 'V'",$laboratorio);
 	$res 			= mysql_query($consulta);
 	while($row = mysql_fetch_array($res))
 	{
@@ -316,6 +316,23 @@ function comboEleArt()
 						'comboCveArt' => $comboCveArt, 
 						'comboNomArt' => $comboNomArt, 
 						'con' => $con);
+	print json_encode($arrayJSON);
+}
+function capacidadLab()
+{
+	$laboratorio 	= GetSQLValueString($_POST["laboratorio"],"text");
+	$respuesta 		= false;
+	$capacidad 		= 0;
+	$conexion		= conectaBDSICLAB();
+	$consulta		= sprintf("	select capacidad from lblaboratorios where claveLaboratorio =%s",$laboratorio);
+	$res 			= mysql_query($consulta);
+	if($row = mysql_fetch_array($res))
+	{
+			$capacidad  = (int)($row["capacidad"]);
+			$respuesta = true;
+	}
+	$arrayJSON = array('respuesta' => $respuesta,
+						'capacidad' => $capacidad);
 	print json_encode($arrayJSON);
 }
 //Menú principal
@@ -342,6 +359,9 @@ switch ($opc)
 		break;
 	case 'comboEleArt1':
 		comboEleArt();
+		break;
+	case 'capacidadLab1':
+		capacidadLab();
 		break;
 }	 
 ?>

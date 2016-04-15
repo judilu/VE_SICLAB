@@ -216,6 +216,32 @@ var inicioMaestro = function ()
 					}
 					$("cmbMateria").trigger('contentChanged');
 					$('select').material_select();
+					//limpiar campos
+					//Combo hora materia
+					$("#cmbHoraMat").html(" ");
+					$("#cmbHoraMat").html("<option value='' disabled selected>Seleccione la hora</option>");
+					$('select').material_select();
+					//combo Practica
+					$("#cmbPractica").html(" ");
+					$("#cmbPractica").html("<option value='' disabled selected>Seleccione la práctica</option>");	
+					$('select').material_select();
+					//combo laboratorio
+					$("#cmbLaboratorio").html(" ");
+					$("#cmbLaboratorio").html("<option value='' disabled selected>Seleccione el laboratorio</option>");
+					$('select').material_select();
+					//Combo hora practica
+					$("#cmbHoraPract").html(" ");
+					$("#cmbHoraPract").html("<option value='' disabled selected>Seleccione la hora</option>");
+					$('select').material_select();
+					//txt
+					$("#txtFechaS").val("dd/mm/aaaa");									
+					$("#txtCantAlumnos").val("1");
+					$("#textarea1").val("");
+					$("#txtNumArt").val("1");
+					articulos = Array();
+					articulosAgregados = Array();
+					numArticulos = Array();
+					$("#bodyArt").html("");
 				}
 				else
 				{
@@ -226,7 +252,6 @@ var inicioMaestro = function ()
 				}
 			},
 			error: function(xhr, ajaxOptions,x){
-				console.log(xhr);
 				console.log("Error de conexión combomat");	
 			}
 		});
@@ -271,7 +296,6 @@ var inicioMaestro = function ()
 					}
 			},
 			error: function(xhr, ajaxOptions,x){
-				console.log(xhr);
 				console.log("Error de conexión combomat");	
 			}
 		});
@@ -309,7 +333,7 @@ var inicioMaestro = function ()
 					llenarcomboEleArt();		
 				}//termina if
 				else
-					console.log("no hizo nada");
+					console.log("no agrego articulos");
 			},
 			error: function(xhr, ajaxOptions,x){
 				console.log("Error de conexión articuloAgregado");	
@@ -357,7 +381,6 @@ var inicioMaestro = function ()
 					}
 					$("cmbMaterialCat").trigger('contentChanged');
 					$('select').material_select();
-					console.log(comboclaArt);
 				}
 				else
 				{
@@ -368,7 +391,6 @@ var inicioMaestro = function ()
 				}
 			},
 			error: function(xhr, ajaxOptions,x){
-				console.log(xhr);
 				console.log("Error de conexión combomat");	
 			}
 		});
@@ -411,7 +433,6 @@ var inicioMaestro = function ()
     		success: function(response){
     			if(response.respuesta == true)
     			{
-    				console.log(response.renglones);
     				$("#bodyArt").html("");
     				$("#bodyArt").append(response.renglones);
 					$(".btnEliminarArt").on("click",eliminarArt);
@@ -420,7 +441,7 @@ var inicioMaestro = function ()
 				}//termina if
 				else
 				{
-					console.log("no hizo nada");
+					console.log("no elimino");
 					$("#bodyArt").html("");
 				}
 			},
@@ -544,76 +565,101 @@ var inicioMaestro = function ()
     	//insertar una nueva solicitud
 	    	if(($("#cmbMateria").val())!= null && ($("#cmbHoraMat").val())!= null && ($("#txtFechaS").val())!= "" && ($("#cmbPractica").val())!= null && ($("#cmbHoraPract").val())!= null && ($("#txtCantAlumnos").val())!= "" && ($("#textarea1").val())!= "" && articulos != "" && articulosAgregados != "" && numArticulos != "")
 	    	{
-		    	var f  = new Date();
-		    	var dd = f.getDate();
-		    	var mm = (f.getMonth())+1;
-		    	(dd<10) ? (dd="0"+dd) : dd;
-		    	(mm<10) ? (mm="0"+mm) : mm;
-		    	var fe  = (dd+"/"+mm+"/"+f.getFullYear());
-		    	var ff  = $("#txtFechaS").val();
-		    	var a  = ff.substring(0,4);
-		    	var m  = ff.substring(5,7);
-		    	var d  = ff.substring(8,10);
-		    	var fs = d+"/"+m+"/"+a;
-		    	var hs  = $("#cmbHoraPract option:selected").text();
-		    	var lab = $("#cmbLaboratorio").val();
-		    	var uso = $("#textarea1").val();
-		    	var prac = $("#cmbPractica").val();
-		    	var mat = $("#cmbMateria").val();
-		        var gp  = $("#cmbHoraMat option:selected").text();
-		        var gpo = parseInt(gp.substring(0,2))//segun la hora se saca el grupo
-		        var cant = $("#txtCantAlumnos").val();
-		        var n = (($("#tbMaterialSol tr").length)-1);
-		        //var con  = ($("#tbMaterialSol tr").length);
-		        var parametros = "opc=nuevaSol1"+
-		                     		"&fe="+fe+
-		                     		"&fs="+fs+
-		                     		"&hs="+hs+
-		                     		"&lab="+lab+
-		                     		"&uso="+uso+
-		                     		"&prac="+prac+
-		                     		"&mat="+mat+
-		                     		"&gpo="+gpo+
-		                     		"&cant="+cant+
-		                     		"&art="+articulosAgregados+
-		                     		"&num="+numArticulos+
-		                     		"&n="+n+
-		                     		"&id="+Math.random();
-		                     $.ajax({
-		                     	cache:false,
-		                     	type: "POST",
-		                     	dataType: "json",
-		                     	url:'../data/maestros.php',
-		                     	data: parametros,
-		                     	success: function(response){
-		                     		if(response.respuesta == true && response.respuesta2 == true)
-		                     		{
-		                     			//limpiar datos
-										$('select').material_select();
-										$("#txtFechaS").val("dd/mm/aaaa");									
-										$("#txtCantAlumnos").val("1");
-										$("#textarea1").val("");
-										$("#txtNumArt").val("1");
-										articulos = Array();
-										articulosAgregados = Array();
-										numArticulos = Array();
-										$("#bodyArt").html("");
-										solNueva();
-		                     			swal("La solicitud fue creada con éxito!", "Da clic en el botón OK!", "success");			
-		                     			
-		                     		}
-		                     		else
-		                     		{
-		                     			sweetAlert("Error", "No se pudo crear la solicitud!", "error");
-		                     		}
-		                     	},
-		                     	error: function(xhr, ajaxOptions,x){
-		                     		console.log(xhr);
-		                     		console.log("Error de conexión articulo");
-		                     	}
-		                     });
-
-	    	}
+	    		var res=capacidadLab();
+	    		alert(res);
+	    		if(res)
+	    		{
+			    	var f  = new Date();
+			    	var dd = f.getDate();
+			    	var mm = (f.getMonth())+1;
+			    	(dd<10) ? (dd="0"+dd) : dd;
+			    	(mm<10) ? (mm="0"+mm) : mm;
+			    	var fe  = (dd+"/"+mm+"/"+f.getFullYear());
+			    	var ff  = $("#txtFechaS").val();
+			    	var a  = ff.substring(0,4);
+			    	var m  = ff.substring(5,7);
+			    	var d  = ff.substring(8,10);
+			    	var fs = d+"/"+m+"/"+a;
+			    	var hs  = $("#cmbHoraPract option:selected").text();
+			    	var lab = $("#cmbLaboratorio").val();
+			    	var uso = $("#textarea1").val();
+			    	var prac = $("#cmbPractica").val();
+			    	var mat = $("#cmbMateria").val();
+			        var gp  = $("#cmbHoraMat option:selected").text();
+			        var gpo = parseInt(gp.substring(0,2))//segun la hora se saca el grupo
+			        var cant = $("#txtCantAlumnos").val();
+			        var n = (($("#tbMaterialSol tr").length)-1);
+			        //var con  = ($("#tbMaterialSol tr").length);
+			        var parametros = "opc=nuevaSol1"+
+			                     		"&fe="+fe+
+			                     		"&fs="+fs+
+			                     		"&hs="+hs+
+			                     		"&lab="+lab+
+			                     		"&uso="+uso+
+			                     		"&prac="+prac+
+			                     		"&mat="+mat+
+			                     		"&gpo="+gpo+
+			                     		"&cant="+cant+
+			                     		"&art="+articulosAgregados+
+			                     		"&num="+numArticulos+
+			                     		"&n="+n+
+			                     		"&id="+Math.random();
+			                     $.ajax({
+			                     	cache:false,
+			                     	type: "POST",
+			                     	dataType: "json",
+			                     	url:'../data/maestros.php',
+			                     	data: parametros,
+			                     	success: function(response){
+			                     		if(response.respuesta == true && response.respuesta2 == true)
+			                     		{
+			                     			//limpiar datos
+											$("#txtFechaS").val("dd/mm/aaaa");									
+											$("#txtCantAlumnos").val("1");
+											$("#textarea1").val("");
+											$("#txtNumArt").val("1");
+											articulos = Array();
+											articulosAgregados = Array();
+											numArticulos = Array();
+											$("#bodyArt").html("");
+											//combo materia
+											$("#cmbMateria").html(" ");
+											$("#cmbMateria").html("<option value='' disabled selected>Seleccione la materia</option>");
+											$('select').material_select();
+											//Combo hora materia
+											$("#cmbHoraMat").html(" ");
+											$("#cmbHoraMat").html("<option value='' disabled selected>Seleccione la hora</option>");
+											$('select').material_select();
+											//combo Practica
+											$("#cmbPractica").html(" ");
+											$("#cmbPractica").html("<option value='' disabled selected>Seleccione la práctica</option>");	
+											$('select').material_select();
+											//combo laboratorio
+											$("#cmbLaboratorio").html(" ");
+											$("#cmbLaboratorio").html("<option value='' disabled selected>Seleccione el laboratorio</option>");
+											$('select').material_select();
+											//Combo hora practica
+											$("#cmbHoraPract").html(" ");
+											$("#cmbHoraPract").html("<option value='' disabled selected>Seleccione la hora</option>");
+											$('select').material_select();
+											solNueva();
+			                     			swal("La solicitud fue creada con éxito!", "Da clic en el botón OK!", "success");				
+			                     		}
+			                     		else
+			                     		{
+			                     			sweetAlert("Error", "No se pudo crear la solicitud!", "error");
+			                     		}
+			                     	},
+			                     	error: function(xhr, ajaxOptions,x){
+			                     		console.log("Error de conexión articulo");
+			                     	}
+			                     });
+				}
+				else
+				{
+					sweetAlert("Error", "La capacidad seleccionada es superior a la que permite el laboratorio!", "error");
+				}
+	    	}//Termina if de checar campos vacios
 	    	else
 	    	{
 	    		sweetAlert("Error", "Debe llenar todos los campos!", "error");
@@ -655,10 +701,22 @@ var inicioMaestro = function ()
 					}
 			},
 			error: function(xhr, ajaxOptions,x){
-				console.log(xhr);
 				console.log("Error de conexión combomat");	
 			}
 		});
+		//inicializa los otros combos
+		//combo Practica
+		$("#cmbPractica").html(" ");
+		$("#cmbPractica").html("<option value='' disabled selected>Seleccione la práctica</option>");	
+		$('select').material_select();
+		//combo laboratorio
+		$("#cmbLaboratorio").html(" ");
+		$("#cmbLaboratorio").html("<option value='' disabled selected>Seleccione el laboratorio</option>");
+		$('select').material_select();
+		//Combo hora practica
+		$("#cmbHoraPract").html(" ");
+		$("#cmbHoraPract").html("<option value='' disabled selected>Seleccione la hora</option>");
+		$('select').material_select();
     }
     var comboPract = function()
     {
@@ -693,7 +751,6 @@ var inicioMaestro = function ()
 					}
 			},
 			error: function(xhr, ajaxOptions,x){
-				console.log(xhr);
 				console.log("Error de conexión comboPrac");	
 			}
 		});
@@ -732,7 +789,6 @@ var inicioMaestro = function ()
 			},
 			error: function(xhr, ajaxOptions,x)
 			{
-				console.log(xhr);
 				console.log("Error de conexión comboPrac");	
 			}
 		});
@@ -780,10 +836,47 @@ var inicioMaestro = function ()
 					}
 			},
 			error: function(xhr, ajaxOptions,x){
-				console.log(xhr);
 				console.log("Error de conexión comboPrac");	
 			}
 		});
+    }
+    var capacidadLab = function()
+    {
+    	var laboratorio = $("#cmbLaboratorio").val();
+    	var parametros 	  = "opc=capacidadLab1"+
+    						"&laboratorio="+laboratorio+
+							"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/funciones.php",
+			data: parametros,
+			success: function(response){
+				if(response.respuesta == true)
+				{
+					if(parseInt($("#txtCantAlumnos").val()) <= response.capacidad)
+					{
+						//console.log("entro t");
+						//console.log($("#txtCantAlumnos").val());
+						//console.log(response.capacidad);
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				}
+				else
+				{
+					return false;
+				}
+			},
+			error: function(xhr, ajaxOptions,x){
+				console.log("Error de conexión validar capacidad");	
+			}
+		});
+
     }
 	//eventos menu Reportes
 	var listaAsistencia = function()
