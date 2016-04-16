@@ -7,15 +7,16 @@ var inicio = function()
 
 	var practicaAlumnos = function()
 	{
-		if(($("#txtNControl").val())!="" && ($("#txtNombre").val())!="") 
+		if(($("#txtNControl").val())!=" " && ($("#txtNombre").val())!=" ") 
 		{
 			$("#accesoAlumno").hide();
 			$("#datosPracticas").show("slow");
 			var numeroControl = $("#txtNControl").val();
-			$("#txtNControlAlu").val(numeroControl);
+			$("#txtNControlAlu").val(numeroControl.substr(0,8));
+			var numCtrl 	= $("#txtNControlAlu").val();
 			$("#txtNombreAlu").val($("#txtNombre").val());
 			var parametros = "opc=consultaMatAlumno"+
-			"&numeroControl="+numeroControl+
+			"&numeroControl="+numCtrl+
 			"&id="+Math.random();
 			$.ajax({
 				cache:false,
@@ -73,13 +74,6 @@ var inicio = function()
 				if(response.respuesta)
 				{
 					$("#bodyArtAlumno").append(response.renglones);
-					$("#cmbMaterialesLab").html(" ");
-						for (var i = 0; i < response.contador; i++) 
-						{
-							//$("#cmbMaterialesLab").append($("<option></option>").attr("value",response.claveMaestro[i]).text(response.nombreMaestro[i]));
-						}
-						$("#cmbMaterialesLab").trigger('contentChanged');
-						$('select').material_select();
 				}
 				else
 				{
@@ -390,8 +384,8 @@ var inicio = function()
 		var horaActual 				= new Date();
 		var hora 					=horaActual.getHours();
 		var minutos 				=horaActual.getMinutes();
+		(minutos<10) ? (minutos="0"+minutos) : minutos;
 		var horaEntrada			= hora + ":" + minutos;
-
 		var parametros 	= "opc=guardaEntrada1"+
 						"&claveCal="+claveCal+
 						"&nControl="+nc+
@@ -427,9 +421,15 @@ var inicio = function()
 	}
 	var cancelaEntrada = function ()
 	{
-		$("#acceso").hide();
-		$("#alumno").show("slow");
-		$("#accesoAlumno").show("slow");
+		$("#txtNControl").val().length = 0;
+		$("#txtNControl").val(" ");
+		$("#txtNombre").val(" ");
+		$("#txtCarrera").val(" ");
+		$("#txtSemestre").val(" ");
+		$("#txtNControl").removeAttr("disabled");
+
+		//$("#alumno").show("slow");
+		//$("#accesoAlumno").show("slow");
 	}
 	var agregaArtAlumno = function()
 	{

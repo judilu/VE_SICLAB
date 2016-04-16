@@ -15,15 +15,19 @@
 	</div>
 	<p id="textoMaterial">Por favor, seleccione los articulos y la cantidad de ellos que necesitará para su práctica.</p>
 	<div class="row">
+		<div class="input-field col s2">
+			<input type="checkbox" id="chbElegirOtroMaterial">
+			<label for="chbElegirOtroMaterial">Otro material</label>
+		</div>
 		<div class="input-field col s5 offset-s1">
 			<select id="cmbMaterialesLab">
-				<option value="" disabled selected>Selecciona la materia</option>
+				<option value="" disabled selected>Selecciona el articulo</option>
 			</select>
 			<label>Agregar otro artículo</label>
 		</div>
-		<div class="input-field col s2">
-		<input id="txtNumArtMat" type="number" min="1" max="20" value="1"class="validate">
-			<label for="txtNumArtMat">Cant. de articulos</label>
+		<div class="input-field col s1">
+		<input id="txtNumArtMat" type="number" min="1" max="10" value="1"class="validate">
+			<label for="txtNumArtMat">Cantidad</label>
 		</div>
 		<div class="col s3">
 			<a id="btnAgregarArtAlu" class="waves-effect waves-light btn amber darken-2"><i class="material-icons left">add</i>Agregar</a>
@@ -31,12 +35,12 @@
 	</div>
 	<div class="row">
 		<div class="col s10 offset-s1">
-			<table class="responsive-table highlight bordered" id="tbEleccionMaterial">
+			<table class="bordered" id="tbEleccionMaterial">
 				<thead>
 					<tr>
-						<th data-field="cantidad">Nombre del artículo</th>
-						<th data-field="descripcion">Cantidad</th>
-						<th data-field="disponibles">Acción</th>
+						<th data-field="nombre" class="col s6">Nombre del artículo</th>
+						<th data-field="cantidad" class="col 3">Cantidad</th>
+						<th data-field="accion" class="col s3">Acción</th>
 					</tr>
 				</thead>
 				<tbody id="bodyArtAlumno">

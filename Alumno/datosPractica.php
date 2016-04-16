@@ -43,9 +43,9 @@
 			</div>
 			<div class="row">
 				<div class="input-field col s2">
-				<input type="checkbox" id="chbElegirMaterial">
-				<label for="chbElegirMaterial">Necesito material</label>
-			</div>
+					<input type="checkbox" id="chbElegirMaterial">
+					<label for="chbElegirMaterial">Necesito material</label>
+				</div>
 				<div class="input-field col s5 offset-s1">
 					<!--<a class="btn waves-effect waves-light amber darken-2" type="submit" name="action" id="btnMaterialAlumno">Elegir material</a>-->
 					<a class="btn waves-effect waves-light green darken-2" type="submit" name="action" id="btnEntradaAlumno">Entrar</a>

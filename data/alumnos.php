@@ -203,49 +203,42 @@ function consultaHoraPractica()
 }
 function guardaEntrada()
 {
-	$respuesta 		= true;
+	$respuesta 		= false;
 	session_start();
-	if(!empty($_SESSION['nombre']))
-	{
+	
 		$periodo 		= periodoActual();
 		$claveCal		= GetSQLValueString($_POST["claveCal"],"text");
 		$fecha 			= GetSQLValueString($_POST["fecha"],"text");
 		$hora 			= GetSQLValueString($_POST["hora"],"text");
-		$numControl 	= GetSQLValueString($_POST["nControl"],"text");
+		$numControl 	= GetSQLValueString($_POST["nControl"],"int");
 		$conexion 		= conectaBDSICLAB();
 		$query  		= sprintf("insert into lbentradasalumnos values(%s,%s,%s,%s,%s)",$periodo,$numControl,$fecha,$hora,$claveCal);
 		$res 	 	=  mysql_query($query);
-
 			if(mysql_affected_rows()>0)
-			{
 				$respuesta = true; 
-			}
-	}
-	else
-	{
-		//salir();
-	}
+	
 	$arrayJSON = array('respuesta' => $respuesta);
 		print json_encode($arrayJSON);
 }
 function consultaMaterialPractica()
 {
 	$respuesta 		= false;
-	session_start();
-	if(!empty($_SESSION['nombre']))
-	{
+	
 		$periodo 		= periodoActual();
 		$claveCal		= GetSQLValueString($_POST["claveCal"],"text");
 		$con 			= 0;
 		$rows			= array();
 		$renglones		= "";
-		$materiales 	="";
+		$materiales 	= "";
 		$conexion 		= conectaBDSICLAB();
-		$consulta		= sprintf("");
+		$consulta		= sprintf("select ap.claveArticulo,ac.nombreArticulo,ap.cantidad 
+								from lbasignaarticulospracticas ap 
+								INNER JOIN lbarticuloscat ac on ap.claveArticulo=ac.claveArticulo 
+								WHERE ap.estatus = 'V' and ap.claveSolicitud=%s",$claveCal);
 		$res 			= mysql_query($consulta);
 		while($row = mysql_fetch_array($res))
 		{
-			$materiales .="'".($row["nombreArticulo"])."',";
+			$materiales .="'".($row["claveArticulo"])."',";
 			$rows[]=$row;
 			$respuesta = true;
 			$con++;
@@ -255,19 +248,16 @@ function consultaMaterialPractica()
 		{
 			$renglones .= "<tbody>";
 			$renglones .= "<tr>";
-			$renglones .= "<td>".$rows[$c]["nombreArticulo"]."</td>";
-			$renglones .= "<td>".$rows[$c]["cantidad"]."</td>";
-			$renglones .= "<td><a name = '".$rows[$c]["claveSolicitud"]."' class='btn-floating btn-large waves-effect red darken-1' id='btnEliminarArtAlu'><i class='material-icons'>delete</i></a></td>";
+			$renglones .= "<td class='col s6'>".$rows[$c]["nombreArticulo"]."</td>";
+			$renglones .= "<td class='col s3'>".$rows[$c]["cantidad"]."</td>";
+			$renglones .= "<td class='col s3'><a name = '".$rows[$c]["claveArticulo"]."' class='btn-floating btn-large waves-effect red darken-1' id='btnEliminarArtAlu'><i class='material-icons'>delete</i></a></td>";
 			$renglones .= "</tr>";
 			$renglones .= "</tbody>";
 			$respuesta = true;
 		}
-	}
-	else
-	{
-		//salir();
-	}
-	$arrayJSON = array('respuesta' => $respuesta);
+	$arrayJSON = array('respuesta' => $respuesta, 
+						'renglones' => $renglones, 
+						'contador' => $con);
 		print json_encode($arrayJSON);
 }
 function agregarArtAlumno()
@@ -277,9 +267,9 @@ function agregarArtAlumno()
 	$respuesta	= true;
 	$renglones	= "";
 	$renglones .= "<tr id=".$cveArt.">";
-	$renglones .= "<td class='col s2'>".$num."</td>";
-	$renglones .= "<td class='col s8'>".$nomArt."</td>";
-	$renglones .= "<td class='col s2'><a name =".$cveArt."class='btnEliminarArt btn-floating btn-large waves-effect waves-light red darken-1'><i class='material-icons'>delete</i></a></td>";
+	$renglones .= "<td class='col s6'>".$num."</td>";
+	$renglones .= "<td class='col s3'>".$nomArt."</td>";
+	$renglones .= "<td class='col s3'><a name =".$cveArt."class='btnEliminarArt btn-floating btn-large waves-effect waves-light red darken-1'><i class='material-icons'>delete</i></a></td>";
 	$renglones .= "</tr>";
 	$arrayJSON = array('respuesta' => $respuesta,
 						'renglones' => $renglones);
