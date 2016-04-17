@@ -335,6 +335,23 @@ function capacidadLab()
 						'capacidad' => $capacidad);
 	print json_encode($arrayJSON);
 }
+function valirdarFeHr($f,$h,$lab)
+{
+	$periodo 	 = periodoActual();
+	$fecha 		 = $f;
+	$hora 		 = $h;
+	$laboratorio = $lab;
+	$conexion 	 = conectaBDSICLAB();
+	$consulta 	 = sprintf("select c.claveCalendarizacion from lbcalendarizaciones c inner join lbsolicitudlaboratorios s on c.claveSolicitud = s.claveSolicitud where c.PDOCVE =%s and c.fechaAsignada =%s and c.horaAsignada =%s AND c.estatus = 'NR' AND s.claveLaboratorio =%s",$periodo,$fecha,$hora,$laboratorio);
+	$res 		 = mysql_query($consulta); 
+	$respuesta   = true;
+	//var_dump($consulta);
+	if($row = mysql_fetch_array($res))
+	{
+		$respuesta = false;
+	}
+	return $respuesta;
+}
 //Menú principal
 $opc = $_POST["opc"];
 switch ($opc)

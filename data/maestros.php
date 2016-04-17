@@ -278,6 +278,7 @@ function nuevaSol()
 	session_start();
 	$respuesta	= false;
 	$respuesta2	= false;
+	$respuesta3 = false;
 	$cveDep 	= GetSQLValueString("0000","text"); //preparado para cuando se
 	$periodo 	= GetSQLValueString(periodoActual(),"text");
 	$fe 		= GetSQLValueString($_POST['fe'],"text");
@@ -297,20 +298,26 @@ function nuevaSol()
 	$art        = $_POST["art"];
 	$num        = $_POST["num"];
 	$n 			= GetSQLValueString($_POST['n'],"int");
+	$respuesta3 = valirdarFeHr($fs,$hs,$lab);
+	//var_dump($respuesta3);
 	$conexion 	= conectaBDSICLAB();
-	$consulta 	= sprintf("insert into lbsolicitudlaboratorios values(%s,%s,%s,%s,%s,%s,%s,%s,%d,%d,%s,%s,%s,%s,%s)",$cveDep,$periodo,$b,$fe,$fs,$hs,$lab,$uso,$prac,$clave,$firma,$mat,$gp,$cant,$estatus);
-	$res 		= mysql_query($consulta);
-	if(mysql_affected_rows()>0)
+	if($respuesta3==true)
 	{
-		$respuesta = true; 
+		$consulta 	= sprintf("insert into lbsolicitudlaboratorios values(%s,%s,%s,%s,%s,%s,%s,%s,%d,%d,%s,%s,%s,%s,%s)",$cveDep,$periodo,$b,$fe,$fs,$hs,$lab,$uso,$prac,$clave,$firma,$mat,$gp,$cant,$estatus);
+		$res 		= mysql_query($consulta);
+		if(mysql_affected_rows()>0)
+		{
+			$respuesta = true; 
+		}
+		//funcion
+		$sol = existeSolLab($cveDep,$periodo,$fe,$fs,$hs,$lab,$prac,$mat,$gp,$clave);
+		$porArt = explode(",",$art);
+		$porNum = explode(",",$num);
+		$respuesta2 = detalleArt($n,$sol,$porArt,$porNum);
 	}
-	//funcion
-	$sol = existeSolLab($cveDep,$periodo,$fe,$fs,$hs,$lab,$prac,$mat,$gp,$clave);
-	$porArt = explode(",",$art);
-	$porNum = explode(",",$num);
-	$respuesta2 = detalleArt($n,$sol,$porArt,$porNum);
 	$arrayJSON = array('respuesta' => $respuesta,
-						'respuesta2' => $respuesta2);
+						'respuesta2' => $respuesta2,
+						'respuesta3' => $respuesta3);
 	print json_encode($arrayJSON);
 }
 function construirTbArt()
@@ -321,10 +328,10 @@ function construirTbArt()
 	$n 			= count($cveArt);
 	$respuesta 	= false;
 	$renglones 	= "";
-	//if($cveArt!= 0)
-	//{
-		for ($i=0; $i < $n ; $i++) 
-		{ 
+	for ($i=0; $i < $n ; $i++) 
+	{ 
+		if ($cveArt[$i]!= "") 
+		{
 			$respuesta	= true;
 			$renglones	= "";
 			$renglones .= "<tr id=".$cveArt[$i].">";
@@ -333,7 +340,7 @@ function construirTbArt()
 			$renglones .= "<td class='col s2'><a name ='".$cveArt[$i]."' class='btnEliminarArt btn-floating btn-large waves-effect waves-light red darken-1'><i class='material-icons'>delete</i></a></td>";
 			$renglones .= "</tr>";
 		}
-	//}
+	}
 	$arrayJSON = array('respuesta' => $respuesta,
 						'renglones' => $renglones);
 	print json_encode($arrayJSON);	
