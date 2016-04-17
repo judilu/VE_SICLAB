@@ -225,16 +225,17 @@ function guardaEntrada()
 }
 function insertaPedido($fecha,$hora,$clave,$numCtrl)
 {
-	 
 		$responsable	= "6";
 		$cvePrestamo 	= "0";
 		$periodo 		= periodoActual();
-		$query  		= sprintf("insert into lbprestamos values(%d,%d,%d,%s,%s,%s,%d)",$periodo,$cvePrestamo,$responsable,$numCtrl,$fecha,$hora,$clave);
+		$conexion 		= conectaBDSICLAB();
+		$query  		= sprintf("insert into lbprestamos values(%s,%d,%d,%s,%s,%s,%s)",$periodo,$cvePrestamo,$responsable,$numCtrl,$fecha,$hora,$clave);
 		$res 	 		=  mysql_query($query);
 		if(mysql_affected_rows()>0)
-			{
-				return true; 
-			}
+		{
+			return true; 
+		}
+		return false;
 }
 function consultaMaterialPractica()
 {
@@ -245,13 +246,14 @@ function consultaMaterialPractica()
 		$fecha 			= GetSQLValueString($_POST["fecha"],"text");
 		$hora 			= GetSQLValueString($_POST["hora"],"text");
 		$numeroCtrl		= GetSQLValueString($_POST["nC"],"text");
-
 		if(insertaPedido($fecha,$hora,$claveCal,$numeroCtrl))
 		{
 			$con 			= 0;
 			$rows			= array();
 			$renglones		= "";
 			$materiales 	= "";
+			$cantidad 		= "";
+			$nombre 		= "";
 			$conexion 		= conectaBDSICLAB();
 			$consulta		= sprintf("select ap.claveArticulo,ac.nombreArticulo,ap.cantidad 
 									from lbasignaarticulospracticas ap 
@@ -261,6 +263,8 @@ function consultaMaterialPractica()
 			while($row = mysql_fetch_array($res))
 			{
 				$materiales .="'".($row["claveArticulo"])."',";
+				$cantidad 	.="'".($row["cantidad"])."',";
+				$nombre 	.="'".($row["nombreArticulo"])."',";
 				$rows[]=$row;
 				$respuesta = true;
 				$con++;
@@ -277,7 +281,10 @@ function consultaMaterialPractica()
 			}
 			$arrayJSON = array('respuesta' => $respuesta, 
 						'renglones' => $renglones, 
-						'contador' => $con);
+						'contador' => $con,
+						'materiales' => $materiales,
+						'cantidad' => $cantidad,
+						'nombre' => $nombre);
 		print json_encode($arrayJSON);
 		}
 }
@@ -299,7 +306,7 @@ function agregarArtAlumno()
 }
 function materialesDisponibles()
 {
-	$claveCal 	= GetSQLValueString($_POST['claveCal'],"int");
+	$claveCal 		= GetSQLValueString($_POST['claveCal'],"int");
 	$resp 	 		= false;
 	$contador		= 0;
 	$laboratorio 	= "'CCDM'";
@@ -320,7 +327,7 @@ function materialesDisponibles()
 						on a.claveArticulo=t.claveArticulo  
 						where aa.claveLaboratorio=%s and t.claveSolicitud IS NULL",$claveCal,$laboratorio);
 	$res 			= mysql_query($consulta);
-	if($res)
+		if($res)
 			{
 				while($row = mysql_fetch_array($res))
 				{
@@ -338,6 +345,71 @@ function materialesDisponibles()
 						'contador' => $contador);
 	print json_encode($arrayJSON);
 
+}
+function consultaClavePrestamo($clave,$numCtrl)
+{
+		$responsable	= "6";
+		$periodo 		= periodoActual();
+		$conexion 		= conectaBDSICLAB();
+		$query  		= sprintf("select clavePrestamo 
+						from lbprestamos 
+						where claveCal=%s and ALUCTR=%s and PDOCVE=%s ",$periodo,$clave,$numCtrl);
+		$res 	 		=  mysql_query($query);
+		if($row = mysql_fetch_array($res))
+		{
+			return $row["clavePrestamo"];
+		}
+		return "";
+}
+function guardaSolicitudAlumno()
+{
+	$respuesta 		= false;
+	
+		$periodo 		= periodoActual();
+		$claveCal		= GetSQLValueString($_POST["claveCal"],"int");
+		$numeroCtrl		= GetSQLValueString($_POST["numC"],"text");
+		$clavePrestamo 	= consultaClavePrestamo($claveCal,$numeroCtrl);
+		$listaArt		= $_POST['listaArt'];
+		$cantArt		= $_POST['cantArt'];
+		$arrayArt 		= explode(',',$listaArt); 
+		$arrayCant 		= explode(',',$cantArt); 
+		$cantidad 		= count($arrayArt);
+		for ($i=0; $i < $cantidad ; $i++) { 
+			$conexion 	= conectaBDSICLAB();
+			$consulta	= sprintf(" insert into lbsolicitudarticulos values(%s,%s,%s,%s,%s)",'""',
+									$arrayArt[$i],$clavePrestamo,$arrayCant[$i],'"S"');
+			$res 		= mysql_query($consulta);
+			var_dump($consulta);
+			if(mysql_affected_rows()>0)
+				$respuesta = true;
+		}
+		$arrayJSON = array('respuesta' => $respuesta);
+		print json_encode($arrayJSON);
+		
+}
+function construirTablaArt()
+{
+	$cveArt[] 	= $_POST['articulosSolicitados'];
+	$nomArt[] 	= $_POST['nombreArticulos'];
+	$num[] 		= $_POST['numeroArticulos'];
+	$n 			= count($cveArt);
+	$respuesta 	= false;
+	$renglones 	= "";
+	for ($i=0; $i < $n ; $i++) 
+	{ 
+		if ($cveArt[$i]!= "") 
+		{
+			$respuesta	= true;
+			$renglones	= "";
+			$renglones .= "<td class='col s6'>".$num[$i]."</td>";
+			$renglones .= "<td class='col s3'>".$nomArt[$i]."</td>";
+			$renglones .= "<td class='col s3'><a name ='".$cveArt[$i]."' class='btnEliminarArt btn-floating btn-large waves-effect waves-light red darken-1'><i class='material-icons'>delete</i></a></td>";
+			$renglones .= "</tr>";
+		}
+	}
+	$arrayJSON = array('respuesta' => $respuesta,
+						'renglones' => $renglones);
+	print json_encode($arrayJSON);	
 }
 //Menú principal
 $opc = $_POST["opc"];
@@ -374,6 +446,12 @@ switch ($opc){
 	break;
 	case 'materialesDisponibles1':
 		materialesDisponibles();
+	break;
+	case 'guardaSolicitudAlu':
+		guardaSolicitudAlumno();
+	break;
+	case 'construirTablaArt1':
+		construirTablaArt();
 	break;
 } 
 ?>

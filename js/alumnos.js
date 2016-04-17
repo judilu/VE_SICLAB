@@ -4,6 +4,9 @@ var inicio = function()
 	var articulosSolicitadosAlumnos = new Array();
 	var numeroArticulos = new Array();
 	var nombreArticulos = new Array();
+	var articulosSolicitadosAlumnos1 = new Array();
+	var numeroArticulos1 = new Array();
+	var nombreArticulos1 = new Array();
 
 	var practicaAlumnos = function()
 	{
@@ -54,6 +57,12 @@ var inicio = function()
 	}
 	var materialPractica = function()
 	{
+		articulosSolicitadosAlumnos = new Array();
+		nombreArticulos = new Array();
+		numeroArticulos = new Array();
+		articulosSolicitadosAlumnos1 = new Array();
+		nombreArticulos1 = new Array();
+		numeroArticulos1 = new Array();
 		$("#datosPractica2").hide();
 		$("#materialAlumno").show("slow");
 		$("#txtNumeroControlPrestamo").val($("#txtNControlAlu").val());
@@ -90,6 +99,12 @@ var inicio = function()
 				if(response.respuesta)
 				{
 					$("#bodyArtAlumno").append(response.renglones);
+					articulosSolicitadosAlumnos1 = response.materiales;
+					numeroArticulos1 = response.cantidad;
+					nombreArticulos1 = response.nombre;
+					articulosSolicitadosAlumnos = articulosSolicitadosAlumnos.concat(articulosSolicitadosAlumnos1);
+					numeroArticulos = numeroArticulos.concat(numeroArticulos1);
+					nombreArticulos = nombreArticulos.concat(nombreArticulos1);
 				}
 				else
 				{
@@ -450,17 +465,13 @@ var inicio = function()
 	}
 	var agregaArtAlumno = function()
 	{
-		var artCve = $("#cmbMaterialesLab" ).val();
-		var artNom = $("#cmbMaterialesLab option:selected").text();
-    	var numArt    = $("#txtNumArtMat").val(); 	
-
-    	nombreArticulos.push(artNom);
-    	articulosSolicitadosAlumnos.push(artCve);
-    	numeroArticulos.push(numArt);
+		var articuloCve = $("#cmbMaterialesLab" ).val();
+		var artNom 		= $("#cmbMaterialesLab option:selected").text();
+    	var numArt    	= $("#txtNumArtMat").val(); 	
 
     	var parametros = "opc=agregarArtAlu1"+
     						"&artNom="+artNom+
-    						"&artCve="+artCve+
+    						"&artCve="+articuloCve+
     						"&numArt="+numArt+
     						"&id="+Math.random();
     	$.ajax({
@@ -472,6 +483,10 @@ var inicio = function()
     		success: function(response){
     			if(response.respuesta == true)
     			{
+    				nombreArticulos.push(artNom);
+			    	numeroArticulos.push(numArt);
+    				articulosSolicitadosAlumnos.push(articuloCve);
+			    	
     				$("#txtNumArtMat").val("1");
     				$("#bodyArtAlumno").append(response.renglones);
 					$("#tbEleccionMaterial #btnEliminarArtAlu").on("click",eliminarArtAlumno);
@@ -495,6 +510,111 @@ var inicio = function()
 			$("#btnAgregarArtAlu").show();
 			var parametros = "opc=materialesDisponibles1"+
 							"&claveCal="+claveCal+
+    						"&id="+Math.random();
+			$.ajax({
+	    		cache:false,
+	    		type: "POST",
+	    		dataType: "json",
+	    		url:"../data/alumnos.php",
+	    		data: parametros,
+	    		success: function(response){
+	    			if(response.respuesta == true)
+	    			{
+	    				$("#cmbMaterialesLab").html(" ");
+							for (var i = 0; i < response.contador; i++) 
+							{
+								$("#cmbMaterialesLab").append($("<option></option>").attr("value",response.claveArticulo[i]).text(response.nombreArticulo[i]));
+							}
+							$("#cmbMaterialesLab").trigger('contentChanged');
+							$('select').material_select();
+					}
+					else
+					{
+						sweetAlert("No hay hay mas articulos en el laboratorio", "", "error");
+					}
+				},
+				error: function(xhr, ajaxOptions,x)
+				{
+					console.log("Error de conexión");
+					console.log(xhr)	;
+				}
+			});
+		}
+		else
+		{
+			$("#btnAgregarArtAlu").hide();
+			$("#txtNumArtMat").attr("disabled","disabled");
+			$(".select-dropdown").attr("disabled","disabled");
+			$("#cmbMaterialesLab").attr("disabled","disabled");
+		}
+	}
+	var eliminarArtAlumno = function()
+	{
+
+		$(this).closest('tr').remove();
+    	var artEliminar = ($(this).attr("name"));
+    	var i = articulosSolicitadosAlumnos.indexOf(artEliminar);
+    	nombreArticulos = eliminar(nombreArticulos,i);
+    	articulosSolicitadosAlumnos = eliminar(articulosSolicitadosAlumnos,i);
+    	numeroArticulos = eliminar(numeroArticulos,i);
+
+    	var parametros = "opc=construirTablabArt1"+
+				    	"&articulosSolicitados="+articulosSolicitadosAlumnos+
+				    	"&nombreArticulos="+nombreArticulos+
+				    	"&numeroArticulos="+numeroArticulos+
+				    	"&id="+Math.random();
+    	$.ajax({
+    		cache:false,
+    		type: "POST",
+    		dataType: "json",
+    		url:"../data/alumnos.php",
+    		data: parametros,
+    		success: function(response){
+    			if(response.respuesta == true)
+    			{
+    				$("#bodyArtAlumno").html("");
+    				$("#bodyArtAlumno").append(response.renglones);
+    				$(".btnEliminarArt").on("click",eliminarArtAlumno);
+					//formar de nuevo el combo
+					checkOtroArticulo();
+				}//termina if
+				else
+				{
+					sweetAlert("No se eliminó el articulo", "", "error");
+				}
+			},
+			error: function(xhr, ajaxOptions,x)
+			{
+				console.log("Error de conexión articulo eliminar");	
+			}
+		});
+	}
+	var eliminar = function(arreglo,posicion,con)
+	{
+		var ar = arreglo;
+		var p  = posicion;
+		var c  = ar.length;
+		var af = Array();
+		for (var i=0; i < c; i++) 
+		{
+			if(i != posicion)
+			{
+				af.push(ar[i]);
+			}
+		}
+		return af;
+	}
+	var guardaSolMaterial = function ()
+	{
+		var listaArt 		= articulosSolicitadosAlumnos;
+		var cantArt 		= numeroArticulos;
+		var nc 				=$("#txtNumeroControlPrestamo").val();
+		var claveCal 		= $("#cmbHorariosPractica").val();
+		var parametros = "opc=guardaSolicitudAlu"+
+							"&listaArt="+listaArt+
+							"&cantArt="+cantArt+
+							"&claveCal="+claveCal+
+							"&numC="+nc+
     						"&id="+Math.random();
 		$.ajax({
     		cache:false,
@@ -524,27 +644,6 @@ var inicio = function()
 				console.log(xhr)	;
 			}
 		});
-		}
-		else
-		{
-			$("#btnAgregarArtAlu").hide();
-			$("#txtNumArtMat").attr("disabled","disabled");
-			$(".select-dropdown").attr("disabled","disabled");
-			$("#cmbMaterialesLab").attr("disabled","disabled");
-		}
-	}
-	var eliminarArtAlumno = function()
-	{
-
-		$(this).closest('tr').remove();
-    	var artElminar = ($(this).attr("name"));
-    	var i = articulosSolicitadosAlumnos.indexOf(artElminar);
-    	nombreArticulos = eliminar(nombreArticulosAgregados,i);
-    	articulosAgregados = eliminar(nombreArticulosAgregados,i);
-    	numeroArticulos = eliminar(numeroArticulos,i);
-	}
-	var guardaSolMaterial = function ()
-	{
 
 	}
 
