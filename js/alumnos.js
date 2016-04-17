@@ -433,7 +433,8 @@ var inicio = function()
 	}
 	var agregaArtAlumno = function()
 	{
-		var artCve = $("#cmbMaterialesLab" ).val();
+		alert("presionaste el boton");
+		/*var artCve = $("#cmbMaterialesLab" ).val();
 		var artNom = $("#cmbMaterialesLab option:selected").text();
     	var numArt    = $("#txtNumArtMat").val(); 	
 
@@ -454,19 +455,58 @@ var inicio = function()
     		success: function(response){
     			if(response.respuesta == true)
     			{
-    				$("#txtNumArtMat").val("1");
+    				/*$("#txtNumArtMat").val("1");
     				$("#bodyArtAlumno").append(response.renglones);
 					$("#tbEleccionMaterial #btnEliminarArtAlu").on("click",eliminarArtAlumno);
-					//formar de nuevo el combo
-					llenarcomboEleArt();		
+					alert("kjfhsdakjf");
 				}
 				else
-					console.log("Error no se seleccionó correctamente el articulo");
+					sweetAlert("No se agregó el articulo", "", "error");
 			},
 			error: function(xhr, ajaxOptions,x){
 				console.log("Error de conexión articulo agregado");	
 			}
+		});*/
+	}
+	var checkOtroArticulo = function()
+	{
+		var claveCal = $("#cmbHorariosPractica").val();
+		if ($("#chbElegirOtroMaterial").is(':checked'))
+		{
+			$(".select-dropdown").removeAttr("disabled");
+			$("#txtNumArtMat").removeAttr("disabled");
+			$("#btnAgregarArtAlu").show();
+			var parametros = "opc=materialesDisponibles1"+
+							"&claveCal="+claveCal+
+    						"&id="+Math.random();
+		$.ajax({
+    		cache:false,
+    		type: "POST",
+    		dataType: "json",
+    		url:"../data/alumnos.php",
+    		data: parametros,
+    		success: function(response){
+    			if(response.respuesta == true)
+    			{
+    				
+				}
+				else
+				{
+					sweetAlert("No hay articulos disponibles", "", "error");
+				}
+			},
+			error: function(xhr, ajaxOptions,x)
+			{
+				console.log("Error de conexión");	
+			}
 		});
+		}
+		else
+		{
+			$("#btnAgregarArtAlu").hide();
+			$("#txtNumArtMat").attr("disabled","disabled");
+			$(".select-dropdown").attr("disabled","disabled");
+		}
 	}
 	var eliminarArtAlumno = function()
 	{
@@ -488,7 +528,7 @@ var inicio = function()
     		cache:false,
     		type: "POST",
     		dataType: "json",
-    		url:"../data/maestros.php",
+    		url:"../data/alumnos.php",
     		data: parametros,
     		success: function(response){
     			if(response.respuesta == true)
@@ -529,12 +569,14 @@ var inicio = function()
 	$("#btnMA").on("click",ma);
 	$("#btnDel").on("click",del);
 	//selects
+	$("#chbElegirOtroMaterial").on("change",checkOtroArticulo);
 	$("#cmbMateriasAlumnos").on("change",maestroPractica);
 	$("#cmbMaestrosMat").on("change",nombrePracticaMaestro);
 	$("#cmbNombrePracticas").on("change",horarioPractica);
 	$("#btnEntradaAlumno").on("click",guardaEntradaAlumno);
 	$("#btnCancelarEntrada").on("click",cancelaEntrada);
 	$("#btnAgregarArtAlu").on("click",agregaArtAlumno);
+
 
 }
 $(document).on("ready",inicio);

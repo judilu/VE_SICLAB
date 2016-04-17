@@ -20,17 +20,17 @@
 			<label for="chbElegirOtroMaterial">Otro material</label>
 		</div>
 		<div class="input-field col s5 offset-s1">
-			<select id="cmbMaterialesLab">
+			<select id="cmbMaterialesLab" disabled>
 				<option value="" disabled selected>Selecciona el articulo</option>
 			</select>
 			<label>Agregar otro artículo</label>
 		</div>
 		<div class="input-field col s1">
-		<input id="txtNumArtMat" type="number" min="1" max="10" value="1"class="validate">
+		<input id="txtNumArtMat" type="number" min="1" max="10" value="1"class="validate" disabled>
 			<label for="txtNumArtMat">Cantidad</label>
 		</div>
 		<div class="col s3">
-			<a id="btnAgregarArtAlu" class="waves-effect waves-light btn amber darken-2"><i class="material-icons left">add</i>Agregar</a>
+			<a id="btnAgregarArtAlu" class="waves-effect waves-light btn amber darken-2" style="display:none"><i class="material-icons left">add</i>Agregar</a>
 		</div>
 	</div>
 	<div class="row">
@@ -39,7 +39,7 @@
 				<thead>
 					<tr>
 						<th data-field="nombre" class="col s6">Nombre del artículo</th>
-						<th data-field="cantidad" class="col 3">Cantidad</th>
+						<th data-field="cantidad" class="col s3">Cantidad</th>
 						<th data-field="accion" class="col s3">Acción</th>
 					</tr>
 				</thead>

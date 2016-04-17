@@ -246,13 +246,11 @@ function consultaMaterialPractica()
 		$materiales = (rtrim($materiales,","));
 		for($c= 0; $c< $con; $c++)
 		{
-			$renglones .= "<tbody>";
 			$renglones .= "<tr>";
 			$renglones .= "<td class='col s6'>".$rows[$c]["nombreArticulo"]."</td>";
 			$renglones .= "<td class='col s3'>".$rows[$c]["cantidad"]."</td>";
 			$renglones .= "<td class='col s3'><a name = '".$rows[$c]["claveArticulo"]."' class='btn-floating btn-large waves-effect red darken-1' id='btnEliminarArtAlu'><i class='material-icons'>delete</i></a></td>";
 			$renglones .= "</tr>";
-			$renglones .= "</tbody>";
 			$respuesta = true;
 		}
 	$arrayJSON = array('respuesta' => $respuesta, 
@@ -263,7 +261,8 @@ function consultaMaterialPractica()
 function agregarArtAlumno()
 {
 	$cveArt 	= GetSQLValueString($_POST['artCve'],"text");
-	$numArt 		= GetSQLValueString($_POST['numArt'],"int");
+	$num 	 	= GetSQLValueString($_POST['numArt'],"int");
+	$nomArt 	= GetSQLValueString($_POST['artNom'],"int");
 	$respuesta	= true;
 	$renglones	= "";
 	$renglones .= "<tr id=".$cveArt.">";
@@ -274,6 +273,45 @@ function agregarArtAlumno()
 	$arrayJSON = array('respuesta' => $respuesta,
 						'renglones' => $renglones);
 	print json_encode($arrayJSON);
+}
+function materialesDisponibles()
+{
+	$claveCal 	= GetSQLValueString($_POST['claveCal'],"text");
+	$resp 	 		= false;
+	$contador		= 0;
+	$laboratorio 	= "CCDM";
+	$comboHorario	= array();
+	$clavePractica 	= "";
+	$horaPractica	= "";
+	$conexion		= conectaBDSICLAB();
+	$consulta 		= sprintf("select a.claveArticulo,ac.nombreArticulo 
+						from lbasignaarticulos aa 
+						INNER JOIN lbarticulos a on aa.indentificadorArticulo=a.identificadorArticulo 
+						INNER JOIN lbarticuloscat ac on a.claveArticulo=ac.claveArticulo 
+						LEFT JOIN (
+									select * from lbasignaarticulospracticas aap 
+									where aap.claveSolicitud=(
+										SELECT c.claveSolicitud 
+										from lbcalendarizaciones c 
+										where c.claveCalendarizacion=%S)) as t 
+						on a.claveArticulo=t.claveArticulo  
+						where aa.claveLaboratorio=%s and t.claveSolicitud IS NULL",$claveCal,$laboratorio);
+	$res 			= mysql_query($consulta);
+	if($res)
+			{
+				while($row = mysql_fetch_array($res))
+				{
+					$comboHorario[] 	= $row;
+					$resp 		 		= true;
+					$contador++;
+				}
+				for ($i=0; $i < $contador ; $i++)
+				{ 
+					$clavePractica[] 	=$comboHorario[$i]["claveCalendarizacion"];
+					$horaPractica[] 	=$comboHorario[$i]["horaAsignada"];
+				}
+			}
+
 }
 //Menú principal
 $opc = $_POST["opc"];
@@ -307,6 +345,9 @@ switch ($opc){
 	break;
 	case 'agregarArtAlu1':
 		agregarArtAlumno();
+	break;
+	case 'materialesDisponibles1':
+		materialesDisponibles();
 	break;
 } 
 ?>
