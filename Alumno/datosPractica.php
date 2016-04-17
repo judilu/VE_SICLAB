@@ -29,16 +29,16 @@
 			</div>
 			<div class="row">
 				<div class="input-field col s5">
+					<select id="cmbHorariosPractica">
+						<option value="" disabled selected>Selecciona la hora de la práctica</option>
+					</select>
+					<label>Hora de la práctica</label>
+				</div>
+				<div class="input-field col s5  offset-s1">
 					<select id="cmbNombrePracticas">
 						<option value="" disabled selected>Selecciona la práctica</option>
 					</select>
 					<label>Nombre de la práctica</label>
-				</div>
-				<div class="input-field col s5 offset-s1">
-					<select id="cmbHorariosPractica">
-						<option value="" disabled selected>Selecciona la hora</option>
-					</select>
-					<label>Hora de la práctica</label>
 				</div>
 			</div>
 			<div class="row">

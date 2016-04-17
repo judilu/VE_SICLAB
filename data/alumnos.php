@@ -78,13 +78,11 @@ function consultaMateriasAlumno()
 		$claveMat 		= "";
 		$nombreMat		= "";
 		$conexion		= conectaBDSIE();
-		$consulta 		= sprintf("select m.MATCVE, m.MATNCO 
-						from DMATER m 
-						inner join DGRUPO g on m.MATCVE=g.MATCVE 
-						INNER JOIN DLISTA l ON g.MATCVE=l.MATCVE 
-						where g.PDOCVE=%s and l.ALUCTR=%s 
-							GROUP BY m.MATCVE",$periodo,$numControl);
-	$res 			= mysql_query($consulta);
+		$consulta 		= sprintf("select l.MATCVE,m.MATNCO 
+							FROM DLISTA l 
+							inner join DMATER m on l.MATCVE=m.MATCVE 
+							WHERE l.PDOCVE=%s AND l.ALUCTR=%s",$periodo,$numControl);
+		$res 			= mysql_query($consulta);
 		if($res)
 		{
 			while($row = mysql_fetch_array($res))
@@ -113,11 +111,11 @@ function consultaMaestroPractica()
 	$claveMaestro 	= "";
 	$nombreMaestro	= "";
 	$conexion		= conectaBDSIE();
-	$consulta 		= sprintf("select p.PERCVE,p.PERNOM,p.PERAPE 
-						from DPERSO p 
-						INNER JOIN DGRUPO g on p.PERCVE=g.PERCVE 
-						inner JOIN DMATER m on g.MATCVE=m.MATCVE 
-						where g.PDOCVE=%s and m.MATCVE=%s GROUP BY p.PERCVE",$periodo,$claveMateria);
+	$consulta 		= sprintf("select G.MATCVE,M.MATNCO,G.PERCVE, P.PERNOM,P.PERAPE
+							from DGRUPO G 
+							INNER JOIN DMATER M ON G.MATCVE=M.MATCVE 
+							INNER JOIN DPERSO P ON G.PERCVE=P.PERCVE
+							WHERE G.PDOCVE=%s AND G.MATCVE=%s GROUP BY G.PERCVE",$periodo,$claveMateria);	
 	$res 			= mysql_query($consulta);
 	if($res)
 			{
@@ -130,7 +128,7 @@ function consultaMaestroPractica()
 				for ($i=0; $i < $contador ; $i++)
 				{ 
 					$claveMaestro[] 	=$comboMaestros[$i]["PERCVE"];
-					$nombreMaestro[] 	=$comboMaestros[$i]["PERNOM"].$comboMaestros[$i]["PERAPE"];
+					$nombreMaestro[] 	=$comboMaestros[$i]["PERNOM"]." ".$comboMaestros[$i]["PERAPE"];
 				}
 			}
 	$arrayJSON = array('respuesta' => $resp,'claveMaestro' => $claveMaestro,'nombreMaestro' => $nombreMaestro, 
@@ -139,68 +137,60 @@ function consultaMaestroPractica()
 }
 function consultaPractica()
 {
-	$claveMaestro	= GetSQLValueString($_POST["claveMaestro"],"int");	
-	$claveUsu 		= claveUsuario($claveMaestro);			
+	$claveCal		= GetSQLValueString($_POST["horaPrac"],"int");				
 	$resp 	 		= false;
 	$periodo 		= periodoActual();
 	$contador		= 0;
-	$comboPracticas	= array();
-	$clavePractica 	= "";
 	$nombrePractica	= "";
+	$clavePractica	= "";
 	$conexion		= conectaBDSICLAB();
 	$consulta 		= sprintf("select p.tituloPractica,c.claveCalendarizacion 
 							from lbpracticas p  
 							INNER JOIN lbsolicitudlaboratorios sl on p.clavePractica=sl.clavePractica 
 							INNER JOIN lbcalendarizaciones c on sl.claveSolicitud=c.claveSolicitud 
-								WHERE sl.PDOCVE =%s and sl.claveUsuario =%s",$periodo,$claveUsu);
+							WHERE sl.PDOCVE =%s and c.claveCalendarizacion =%s",$periodo,$claveCal);
 	$res 			= mysql_query($consulta);
-	if($res)
-			{
-				while($row = mysql_fetch_array($res))
-				{
-					$comboPracticas[] 	= $row;
-					$resp 		 		= true;
-					$contador++;
-				}
-				for ($i=0; $i < $contador ; $i++)
-				{ 
-					$clavePractica[] 	=$comboPracticas[$i]["claveCalendarizacion"];
-					$nombrePractica[] 	=$comboPracticas[$i]["tituloPractica"];
-				}
-			}
-	$arrayJSON = array('respuesta' => $resp,'clavePractica' => $clavePractica,'nombrePractica' => $nombrePractica, 
+		while($row = mysql_fetch_array($res))
+		{
+			$nombrePractica 	= $row["tituloPractica"];
+			$clavePractica 		= $row["claveCalendarizacion"];
+			$resp 		 		= true;
+			$contador++;
+		}
+	$arrayJSON = array('respuesta' => $resp,
+						'nombrePractica' => $nombrePractica,
+						'clavePractica' => $clavePractica, 
 						'contador' => $contador);
 	print json_encode($arrayJSON);
 }
 function consultaHoraPractica()
 {
-	$claveC 		= GetSQLValueString($_POST["clavePrac"],"int");				
+	$claveMaestro 	= GetSQLValueString($_POST["claveMaestro"],"int");
+	$fechaActual 	= "'20/03/2016'";//GetSQLValueString($_POST["fecha"],"text");
+	$claveUsu 		= claveUsuario($claveMaestro);				
 	$resp 	 		= false;
 	$periodo 		= periodoActual();
 	$contador		= 0;
-	$comboHorario	= array();
 	$clavePractica 	= "";
 	$horaPractica	= "";
 	$conexion		= conectaBDSICLAB();
-	$consulta 		= sprintf("select horaAsignada,claveCalendarizacion 
-								from lbcalendarizaciones  
-								WHERE PDOCVE =%s and claveCalendarizacion=%s",$periodo,$claveC);
+	$consulta 		= sprintf("select c.horaAsignada,c.claveCalendarizacion 
+							from lbsolicitudlaboratorios sl 
+							inner join lbcalendarizaciones c on sl.claveSolicitud=c.claveSolicitud
+							where sl.PDOCVE=%s 
+								and sl.claveUsuario=%s 
+								and c.fechaAsignada=%s",$periodo,$claveUsu,$fechaActual);
 	$res 			= mysql_query($consulta);
-	if($res)
-			{
-				while($row = mysql_fetch_array($res))
-				{
-					$comboHorario[] 	= $row;
-					$resp 		 		= true;
-					$contador++;
-				}
-				for ($i=0; $i < $contador ; $i++)
-				{ 
-					$clavePractica[] 	=$comboHorario[$i]["claveCalendarizacion"];
-					$horaPractica[] 	=$comboHorario[$i]["horaAsignada"];
-				}
-			}
-	$arrayJSON = array('respuesta' => $resp,'clavePractica' => $clavePractica,'horaPractica' => $horaPractica, 
+		while($row = mysql_fetch_array($res))
+		{
+			$clavePractica 	=$row["claveCalendarizacion"];
+			$horaPractica	=$row["horaAsignada"];
+			$resp 		 		= true;
+			$contador ++;
+		}
+	$arrayJSON = array('respuesta' => $resp,
+						'clavePractica' => $clavePractica,
+						'horaPractica' => $horaPractica, 
 						'contador' => $contador);
 	print json_encode($arrayJSON);
 }
@@ -353,7 +343,7 @@ function consultaClavePrestamo($clave,$numCtrl)
 		$conexion 		= conectaBDSICLAB();
 		$query  		= sprintf("select clavePrestamo 
 						from lbprestamos 
-						where claveCal=%s and ALUCTR=%s and PDOCVE=%s ",$periodo,$clave,$numCtrl);
+						where claveCalendarizacion=%s and ALUCTR=%s and PDOCVE=%s ",$clave,$numCtrl,$periodo);
 		$res 	 		=  mysql_query($query);
 		if($row = mysql_fetch_array($res))
 		{
@@ -376,10 +366,9 @@ function guardaSolicitudAlumno()
 		$cantidad 		= count($arrayArt);
 		for ($i=0; $i < $cantidad ; $i++) { 
 			$conexion 	= conectaBDSICLAB();
-			$consulta	= sprintf(" insert into lbsolicitudarticulos values(%s,%s,%s,%s,%s)",'""',
+			$consulta	= sprintf("insert into lbsolicitudarticulos values(%s,%s,%s,%s,%s)",'""',
 									$arrayArt[$i],$clavePrestamo,$arrayCant[$i],'"S"');
 			$res 		= mysql_query($consulta);
-			var_dump($consulta);
 			if(mysql_affected_rows()>0)
 				$respuesta = true;
 		}

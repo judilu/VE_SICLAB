@@ -333,10 +333,10 @@ var inicio = function()
 	}
 	var nombrePracticaMaestro = function()
 	{
-		var claveMaestro = $("#cmbMaestrosMat").val();
-		var parametros = "opc=consultaPracticaNombre"+
-		"&claveMaestro="+claveMaestro+
-		"&id="+Math.random();
+		var horaPrac 	= $("#cmbHorariosPractica").val();
+		var parametros 	= "opc=consultaPracticaNombre"+
+							"&horaPrac="+horaPrac+
+							"&id="+Math.random();
 		$.ajax({
 			cache:false,
 			type: "POST",
@@ -348,16 +348,13 @@ var inicio = function()
 				if(response.respuesta)
 				{
    					$("#cmbNombrePracticas").html(" ");
-						for (var i = 0; i < response.contador; i++) 
-						{
-							$("#cmbNombrePracticas").append($("<option></option>").attr("value",response.clavePractica[i]).text(response.nombrePractica[i]));
-						}
+						$("#cmbNombrePracticas").append($("<option></option>").attr("value",response.clavePractica).text(response.nombrePractica));
 						$("#cmbNombrePracticas").trigger('contentChanged');
 						$('select').material_select();
    				}
    				else
    				{
-   					sweetAlert("No hay practicas asignadas a ese maestro", "", "error");
+   					sweetAlert("No hay practicas asignadas a esa hora", "", "error");
    				}
    			},
    			error: function(xhr, ajaxOptions,x)
@@ -368,9 +365,17 @@ var inicio = function()
 	}
 	var horarioPractica = function()
 	{
-		var clavePrac 	 	= $("#cmbNombrePracticas").val();
+		//fecha del sistema
+		var f  = new Date();
+		var dd = f.getDate();
+		var mm = (f.getMonth())+1;
+		(dd<10) ? (dd="0"+dd) : dd;
+		(mm<10) ? (mm="0"+mm) : mm;
+		var fe  = (dd+"/"+mm+"/"+f.getFullYear());
+		var claveMaestro = $("#cmbMaestrosMat").val();
 		var parametros 		= "opc=consultaHoraPractica"+
-								"&clavePrac="+clavePrac+
+								"&claveMaestro="+claveMaestro+
+								"&fecha="+fe+
 								"&id="+Math.random();
 		$.ajax({
 			cache:false,
@@ -382,17 +387,14 @@ var inicio = function()
 			{
 				if(response.respuesta)
 				{
-   					$("#cmbHorariosPracticas").html(" ");
-						for (var i = 0; i < response.contador; i++) 
-						{
-							$("#cmbHorariosPractica").append($("<option></option>").attr("value",response.clavePractica[i]).text(response.horaPractica[i]));
-						}
+   					$("#cmbHorariosPractica").html(" ");
+						$("#cmbHorariosPractica").append($("<option></option>").attr("value",response.clavePractica).text(response.horaPractica));
 						$("#cmbHorariosPractica").trigger('contentChanged');
 						$('select').material_select();
    				}
    				else
    				{
-   					sweetAlert("No existe la practica", "", "error");
+   					sweetAlert("EL maestro no tiene asignadas prácticas", "", "error");
    				}
    			},
    			error: function(xhr, ajaxOptions,x)
@@ -625,13 +627,7 @@ var inicio = function()
     		success: function(response){
     			if(response.respuesta == true)
     			{
-    				$("#cmbMaterialesLab").html(" ");
-						for (var i = 0; i < response.contador; i++) 
-						{
-							$("#cmbMaterialesLab").append($("<option></option>").attr("value",response.claveArticulo[i]).text(response.nombreArticulo[i]));
-						}
-						$("#cmbMaterialesLab").trigger('contentChanged');
-						$('select').material_select();
+    				swal("Solicitud enviada con éxito!", "Da clic en el botón OK!", "success");
 				}
 				else
 				{
@@ -666,8 +662,8 @@ var inicio = function()
 	//selects
 	$("#chbElegirOtroMaterial").on("change",checkOtroArticulo);
 	$("#cmbMateriasAlumnos").on("change",maestroPractica);
-	$("#cmbMaestrosMat").on("change",nombrePracticaMaestro);
-	$("#cmbNombrePracticas").on("change",horarioPractica);
+	$("#cmbMaestrosMat").on("change",horarioPractica);
+	$("#cmbHorariosPractica").on("change",nombrePracticaMaestro );
 	$("#btnEntradaAlumno").on("click",guardaEntradaAlumno);
 	$("#btnCancelarEntrada").on("click",cancelaEntrada);
 	$("#btnAgregarArtAlu").on("click",agregaArtAlumno);
