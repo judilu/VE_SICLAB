@@ -8,6 +8,7 @@ function usuario ()
 }
 function claveUsuario($clavePersona)
 {
+
 	$clavePer 		= $clavePersona;
 	$conexion 		= conectaBDSICLAB();
 	$consulta 		= sprintf("select claveUsuario from lbusuarios where PERCVE = %d",$clavePer);
@@ -21,7 +22,8 @@ function claveUsuario($clavePersona)
 		return 0;
 	}
 }
-function consultaAlumno(){
+function consultaAlumno()
+{
 	$respuesta		= false;
 	$nControl		= GetSQLValueString($_POST["nControl"],"text");
 	$ALUAPP 		= "";
@@ -45,7 +47,8 @@ function consultaAlumno(){
 	print json_encode($arrayJSON);
 }
 
-function consultaCarrera(){
+function consultaCarrera()
+{
 	$respuesta		= false;
 	$nControl		= GetSQLValueString($_POST["nControl"],"text");
 	$CARNOM 		= "";
@@ -220,54 +223,74 @@ function guardaEntrada()
 	$arrayJSON = array('respuesta' => $respuesta);
 		print json_encode($arrayJSON);
 }
+function insertaPedido($fecha,$hora,$clave,$numCtrl)
+{
+	 
+		$responsable	= "6";
+		$cvePrestamo 	= "0";
+		$periodo 		= periodoActual();
+		$query  		= sprintf("insert into lbprestamos values(%d,%d,%d,%s,%s,%s,%d)",$periodo,$cvePrestamo,$responsable,$numCtrl,$fecha,$hora,$clave);
+		$res 	 		=  mysql_query($query);
+		if(mysql_affected_rows()>0)
+			{
+				return true; 
+			}
+}
 function consultaMaterialPractica()
 {
 	$respuesta 		= false;
 	
 		$periodo 		= periodoActual();
-		$claveCal		= GetSQLValueString($_POST["claveCal"],"text");
-		$con 			= 0;
-		$rows			= array();
-		$renglones		= "";
-		$materiales 	= "";
-		$conexion 		= conectaBDSICLAB();
-		$consulta		= sprintf("select ap.claveArticulo,ac.nombreArticulo,ap.cantidad 
-								from lbasignaarticulospracticas ap 
-								INNER JOIN lbarticuloscat ac on ap.claveArticulo=ac.claveArticulo 
-								WHERE ap.estatus = 'V' and ap.claveSolicitud=%s",$claveCal);
-		$res 			= mysql_query($consulta);
-		while($row = mysql_fetch_array($res))
+		$claveCal		= GetSQLValueString($_POST["clave"],"int");
+		$fecha 			= GetSQLValueString($_POST["fecha"],"text");
+		$hora 			= GetSQLValueString($_POST["hora"],"text");
+		$numeroCtrl		= GetSQLValueString($_POST["nC"],"text");
+
+		if(insertaPedido($fecha,$hora,$claveCal,$numeroCtrl))
 		{
-			$materiales .="'".($row["claveArticulo"])."',";
-			$rows[]=$row;
-			$respuesta = true;
-			$con++;
-		}
-		$materiales = (rtrim($materiales,","));
-		for($c= 0; $c< $con; $c++)
-		{
-			$renglones .= "<tr>";
-			$renglones .= "<td class='col s6'>".$rows[$c]["nombreArticulo"]."</td>";
-			$renglones .= "<td class='col s3'>".$rows[$c]["cantidad"]."</td>";
-			$renglones .= "<td class='col s3'><a name = '".$rows[$c]["claveArticulo"]."' class='btn-floating btn-large waves-effect red darken-1' id='btnEliminarArtAlu'><i class='material-icons'>delete</i></a></td>";
-			$renglones .= "</tr>";
-			$respuesta = true;
-		}
-	$arrayJSON = array('respuesta' => $respuesta, 
+			$con 			= 0;
+			$rows			= array();
+			$renglones		= "";
+			$materiales 	= "";
+			$conexion 		= conectaBDSICLAB();
+			$consulta		= sprintf("select ap.claveArticulo,ac.nombreArticulo,ap.cantidad 
+									from lbasignaarticulospracticas ap 
+									INNER JOIN lbarticuloscat ac on ap.claveArticulo=ac.claveArticulo 
+									WHERE ap.estatus = 'V' and ap.claveSolicitud=%s",$claveCal);
+			$res 			= mysql_query($consulta);
+			while($row = mysql_fetch_array($res))
+			{
+				$materiales .="'".($row["claveArticulo"])."',";
+				$rows[]=$row;
+				$respuesta = true;
+				$con++;
+			}
+			$materiales = (rtrim($materiales,","));
+			for($c= 0; $c< $con; $c++)
+			{
+				$renglones .= "<tr>";
+				$renglones .= "<td class='col s6'>".$rows[$c]["nombreArticulo"]."</td>";
+				$renglones .= "<td class='col s3'>".$rows[$c]["cantidad"]."</td>";
+				$renglones .= "<td class='col s3'><a name = '".$rows[$c]["claveArticulo"]."' class='btn-floating btn-large waves-effect red darken-1' id='btnEliminarArtAlu'><i class='material-icons'>delete</i></a></td>";
+				$renglones .= "</tr>";
+				$respuesta = true;
+			}
+			$arrayJSON = array('respuesta' => $respuesta, 
 						'renglones' => $renglones, 
 						'contador' => $con);
 		print json_encode($arrayJSON);
+		}
 }
 function agregarArtAlumno()
 {
 	$cveArt 	= GetSQLValueString($_POST['artCve'],"text");
 	$num 	 	= GetSQLValueString($_POST['numArt'],"int");
-	$nomArt 	= GetSQLValueString($_POST['artNom'],"int");
+	$nomArt 	= $_POST['artNom'];
 	$respuesta	= true;
 	$renglones	= "";
 	$renglones .= "<tr id=".$cveArt.">";
-	$renglones .= "<td class='col s6'>".$num."</td>";
-	$renglones .= "<td class='col s3'>".$nomArt."</td>";
+	$renglones .= "<td class='col s6'>".$nomArt."</td>";
+	$renglones .= "<td class='col s3'>".$num."</td>";
 	$renglones .= "<td class='col s3'><a name =".$cveArt."class='btnEliminarArt btn-floating btn-large waves-effect waves-light red darken-1'><i class='material-icons'>delete</i></a></td>";
 	$renglones .= "</tr>";
 	$arrayJSON = array('respuesta' => $respuesta,
@@ -276,13 +299,13 @@ function agregarArtAlumno()
 }
 function materialesDisponibles()
 {
-	$claveCal 	= GetSQLValueString($_POST['claveCal'],"text");
+	$claveCal 	= GetSQLValueString($_POST['claveCal'],"int");
 	$resp 	 		= false;
 	$contador		= 0;
-	$laboratorio 	= "CCDM";
-	$comboHorario	= array();
-	$clavePractica 	= "";
-	$horaPractica	= "";
+	$laboratorio 	= "'CCDM'";
+	$comboArticulos	= array();
+	$claveArt 		= "";
+	$nombreArt		= "";
 	$conexion		= conectaBDSICLAB();
 	$consulta 		= sprintf("select a.claveArticulo,ac.nombreArticulo 
 						from lbasignaarticulos aa 
@@ -293,7 +316,7 @@ function materialesDisponibles()
 									where aap.claveSolicitud=(
 										SELECT c.claveSolicitud 
 										from lbcalendarizaciones c 
-										where c.claveCalendarizacion=%S)) as t 
+										where c.claveCalendarizacion=%d)) as t 
 						on a.claveArticulo=t.claveArticulo  
 						where aa.claveLaboratorio=%s and t.claveSolicitud IS NULL",$claveCal,$laboratorio);
 	$res 			= mysql_query($consulta);
@@ -301,16 +324,19 @@ function materialesDisponibles()
 			{
 				while($row = mysql_fetch_array($res))
 				{
-					$comboHorario[] 	= $row;
+					$comboArticulos[] 	= $row;
 					$resp 		 		= true;
 					$contador++;
 				}
 				for ($i=0; $i < $contador ; $i++)
 				{ 
-					$clavePractica[] 	=$comboHorario[$i]["claveCalendarizacion"];
-					$horaPractica[] 	=$comboHorario[$i]["horaAsignada"];
+					$claveArt[] 	=$comboArticulos[$i]["claveArticulo"];
+					$nombreArt[] 	=$comboArticulos[$i]["nombreArticulo"];
 				}
 			}
+	$arrayJSON = array('respuesta' => $resp,'claveArticulo' => $claveArt,'nombreArticulo' => $nombreArt, 
+						'contador' => $contador);
+	print json_encode($arrayJSON);
 
 }
 //Menú principal

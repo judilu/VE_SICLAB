@@ -46,7 +46,7 @@ function pendientesLaboratorio()
 	session_start();
 	if(!empty($_SESSION['nombre']))
 	{ 
-		$maestro	= $_SESSION['nombre'];
+		$responsable= $_SESSION['nombre'];
 		$con 		= 0;
 		$rows		= array();
 		$renglones	= "";

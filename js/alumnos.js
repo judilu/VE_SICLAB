@@ -58,11 +58,27 @@ var inicio = function()
 		$("#materialAlumno").show("slow");
 		$("#txtNumeroControlPrestamo").val($("#txtNControlAlu").val());
 		$("#txtNombreAluPrestamo").val($("#txtNombreAlu").val());
+		var nc 		=$("#txtNumeroControlPrestamo").val();
 		var claveCal = $("#cmbHorariosPractica").val();
-
+		//fecha del sistema
+		var f  = new Date();
+		var dd = f.getDate();
+		var mm = (f.getMonth())+1;
+		(dd<10) ? (dd="0"+dd) : dd;
+		(mm<10) ? (mm="0"+mm) : mm;
+		var fe  = (dd+"/"+mm+"/"+f.getFullYear());
+		//hora del sistema
+		var horaActual 				= new Date();
+		var hora 					=horaActual.getHours();
+		var minutos 				=horaActual.getMinutes();
+		(minutos<10) ? (minutos="0"+minutos) : minutos;
+		var hora					= hora + ":" + minutos;
 		var parametros = "opc=consultaMaterialPractica1"+
-		"&claveCal="+claveCal+
-		"&id="+Math.random();
+							"&clave="+claveCal+
+							"&fecha="+fe+
+							"&hora="+hora+
+							"&nC="+nc+
+							"&id="+Math.random();
 		$.ajax({
 			cache:false,
 			type: "POST",
@@ -83,6 +99,7 @@ var inicio = function()
 			error: function(xhr, ajaxOptions,x)
 			{
 				console.log("Error de conexión");
+				console.log(xhr);
 			}
 		});
 
@@ -433,14 +450,14 @@ var inicio = function()
 	}
 	var agregaArtAlumno = function()
 	{
-		alert("presionaste el boton");
-		/*var artCve = $("#cmbMaterialesLab" ).val();
+		var artCve = $("#cmbMaterialesLab" ).val();
 		var artNom = $("#cmbMaterialesLab option:selected").text();
     	var numArt    = $("#txtNumArtMat").val(); 	
 
     	nombreArticulos.push(artNom);
     	articulosSolicitadosAlumnos.push(artCve);
     	numeroArticulos.push(numArt);
+
     	var parametros = "opc=agregarArtAlu1"+
     						"&artNom="+artNom+
     						"&artCve="+artCve+
@@ -455,10 +472,9 @@ var inicio = function()
     		success: function(response){
     			if(response.respuesta == true)
     			{
-    				/*$("#txtNumArtMat").val("1");
+    				$("#txtNumArtMat").val("1");
     				$("#bodyArtAlumno").append(response.renglones);
 					$("#tbEleccionMaterial #btnEliminarArtAlu").on("click",eliminarArtAlumno);
-					alert("kjfhsdakjf");
 				}
 				else
 					sweetAlert("No se agregó el articulo", "", "error");
@@ -466,7 +482,7 @@ var inicio = function()
 			error: function(xhr, ajaxOptions,x){
 				console.log("Error de conexión articulo agregado");	
 			}
-		});*/
+		});
 	}
 	var checkOtroArticulo = function()
 	{
@@ -474,6 +490,7 @@ var inicio = function()
 		if ($("#chbElegirOtroMaterial").is(':checked'))
 		{
 			$(".select-dropdown").removeAttr("disabled");
+			$("#cmbMaterialesLab").removeAttr("disabled");
 			$("#txtNumArtMat").removeAttr("disabled");
 			$("#btnAgregarArtAlu").show();
 			var parametros = "opc=materialesDisponibles1"+
@@ -488,16 +505,23 @@ var inicio = function()
     		success: function(response){
     			if(response.respuesta == true)
     			{
-    				
+    				$("#cmbMaterialesLab").html(" ");
+						for (var i = 0; i < response.contador; i++) 
+						{
+							$("#cmbMaterialesLab").append($("<option></option>").attr("value",response.claveArticulo[i]).text(response.nombreArticulo[i]));
+						}
+						$("#cmbMaterialesLab").trigger('contentChanged');
+						$('select').material_select();
 				}
 				else
 				{
-					sweetAlert("No hay articulos disponibles", "", "error");
+					sweetAlert("No hay hay mas articulos en el laboratorio", "", "error");
 				}
 			},
 			error: function(xhr, ajaxOptions,x)
 			{
-				console.log("Error de conexión");	
+				console.log("Error de conexión");
+				console.log(xhr)	;
 			}
 		});
 		}
@@ -506,50 +530,22 @@ var inicio = function()
 			$("#btnAgregarArtAlu").hide();
 			$("#txtNumArtMat").attr("disabled","disabled");
 			$(".select-dropdown").attr("disabled","disabled");
+			$("#cmbMaterialesLab").attr("disabled","disabled");
 		}
 	}
 	var eliminarArtAlumno = function()
 	{
-		/*
-			var eliminarArt = function()
-    {
-    	var art = ($(this).attr("name"));
-    	var i = articulosAgregados.indexOf(art);
-    	articulos.splice(i,1);
-    	articulosAgregados.splice(i,1);
-    	numArticulos.splice(i,1);
-    	//construir tabla
-    	var parametros = "opc=construirTbArt1"+
-    						"&articulosAgregados="+articulosAgregados+
-    						"&articulos="+articulos+
-    						"&numArticulos="+numArticulos+
-    						"&id="+Math.random();
-		$.ajax({
-    		cache:false,
-    		type: "POST",
-    		dataType: "json",
-    		url:"../data/alumnos.php",
-    		data: parametros,
-    		success: function(response){
-    			if(response.respuesta == true)
-    			{
-    				$("#bodyArt").append(response.renglones);
-					$(".btnEliminarArt").on("click",eliminarArt);
-					//formar de nuevo el combo
-					llenarcomboEleArt();
-				}//termina if
-				else
-				{
-					console.log("no hizo nada");
-					$("#bodyArt").html("");
-				}
-			},
-			error: function(xhr, ajaxOptions,x)
-			{
-				console.log("Error de conexión articuloAgregado");	
-			}
-		});
-		*/
+
+		$(this).closest('tr').remove();
+    	var artElminar = ($(this).attr("name"));
+    	var i = articulosSolicitadosAlumnos.indexOf(artElminar);
+    	nombreArticulos = eliminar(nombreArticulosAgregados,i);
+    	articulosAgregados = eliminar(nombreArticulosAgregados,i);
+    	numeroArticulos = eliminar(numeroArticulos,i);
+	}
+	var guardaSolMaterial = function ()
+	{
+
 	}
 
 	$("#btnPracticaAlumnos").on("click",practicaAlumnos);
@@ -576,7 +572,6 @@ var inicio = function()
 	$("#btnEntradaAlumno").on("click",guardaEntradaAlumno);
 	$("#btnCancelarEntrada").on("click",cancelaEntrada);
 	$("#btnAgregarArtAlu").on("click",agregaArtAlumno);
-
-
+	$("#btnAceptarEleccionMat").on("click",guardaSolMaterial);
 }
 $(document).on("ready",inicio);

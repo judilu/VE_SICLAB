@@ -20,7 +20,7 @@
 			<label for="chbElegirOtroMaterial">Otro material</label>
 		</div>
 		<div class="input-field col s5 offset-s1">
-			<select id="cmbMaterialesLab" disabled>
+			<select id="cmbMaterialesLab">
 				<option value="" disabled selected>Selecciona el articulo</option>
 			</select>
 			<label>Agregar otro artículo</label>
