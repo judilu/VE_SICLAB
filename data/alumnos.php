@@ -260,6 +260,8 @@ function consultaMaterialPractica()
 				$con++;
 			}
 			$materiales = (rtrim($materiales,","));
+			$cantidad = (rtrim($cantidad,","));
+			$nombre = (rtrim($nombre,","));
 			for($c= 0; $c< $con; $c++)
 			{
 				$renglones .= "<tr>";
@@ -288,7 +290,7 @@ function agregarArtAlumno()
 	$renglones .= "<tr id=".$cveArt.">";
 	$renglones .= "<td class='col s6'>".$nomArt."</td>";
 	$renglones .= "<td class='col s3'>".$num."</td>";
-	$renglones .= "<td class='col s3'><a name =".$cveArt."class='btnEliminarArt btn-floating btn-large waves-effect waves-light red darken-1'><i class='material-icons'>delete</i></a></td>";
+	$renglones .= "<td class='col s3'><a name =".$cveArt."class='btn-floating btn-large waves-effect waves-light red darken-1' id='btnEliminarArtAlu'><i class='material-icons'>delete</i></a></td>";
 	$renglones .= "</tr>";
 	$arrayJSON = array('respuesta' => $respuesta,
 						'renglones' => $renglones);
@@ -390,9 +392,9 @@ function construirTablaArt()
 		{
 			$respuesta	= true;
 			$renglones	= "";
-			$renglones .= "<td class='col s6'>".$num[$i]."</td>";
-			$renglones .= "<td class='col s3'>".$nomArt[$i]."</td>";
-			$renglones .= "<td class='col s3'><a name ='".$cveArt[$i]."' class='btnEliminarArt btn-floating btn-large waves-effect waves-light red darken-1'><i class='material-icons'>delete</i></a></td>";
+			$renglones .= "<td class='col s6'>".$nomArt[$i]."</td>";
+			$renglones .= "<td class='col s3'>".$num[$i]."</td>";
+			$renglones .= "<td class='col s3'><a name ='".$cveArt[$i]."' class='btn-floating btn-large waves-effect waves-light red darken-1' id='btnEliminarArtAlu'><i class='material-icons'>delete</i></a></td>";
 			$renglones .= "</tr>";
 		}
 	}

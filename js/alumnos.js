@@ -4,10 +4,6 @@ var inicio = function()
 	var articulosSolicitadosAlumnos = new Array();
 	var numeroArticulos = new Array();
 	var nombreArticulos = new Array();
-	var articulosSolicitadosAlumnos1 = new Array();
-	var numeroArticulos1 = new Array();
-	var nombreArticulos1 = new Array();
-
 	var practicaAlumnos = function()
 	{
 		if(($("#txtNControl").val())!=" " && ($("#txtNombre").val())!=" ") 
@@ -99,12 +95,12 @@ var inicio = function()
 				if(response.respuesta)
 				{
 					$("#bodyArtAlumno").append(response.renglones);
-					articulosSolicitadosAlumnos1 = response.materiales;
-					numeroArticulos1 = response.cantidad;
-					nombreArticulos1 = response.nombre;
-					articulosSolicitadosAlumnos = articulosSolicitadosAlumnos.concat(articulosSolicitadosAlumnos1);
-					numeroArticulos = numeroArticulos.concat(numeroArticulos1);
-					nombreArticulos = nombreArticulos.concat(nombreArticulos1);
+					for (var i = 0; i < response.contador; i++) {
+						articulosSolicitadosAlumnos.push(response.materiales[i]);
+						numeroArticulos.push(response.cantidad[i]);
+						nombreArticulos.push(response.nombre[i]);
+					}
+					alert(articulosSolicitadosAlumnos);
 				}
 				else
 				{
@@ -469,8 +465,10 @@ var inicio = function()
 	{
 		var articuloCve = $("#cmbMaterialesLab" ).val();
 		var artNom 		= $("#cmbMaterialesLab option:selected").text();
-    	var numArt    	= $("#txtNumArtMat").val(); 	
-
+    	var numArt    	= $("#txtNumArtMat").val();
+    	nombreArticulos.push(artNom);
+		numeroArticulos.push(numArt);
+    	articulosSolicitadosAlumnos.push(articuloCve); 	
     	var parametros = "opc=agregarArtAlu1"+
     						"&artNom="+artNom+
     						"&artCve="+articuloCve+
@@ -484,14 +482,10 @@ var inicio = function()
     		data: parametros,
     		success: function(response){
     			if(response.respuesta == true)
-    			{
-    				nombreArticulos.push(artNom);
-			    	numeroArticulos.push(numArt);
-    				articulosSolicitadosAlumnos.push(articuloCve);
-			    	
+    			{		    	
     				$("#txtNumArtMat").val("1");
     				$("#bodyArtAlumno").append(response.renglones);
-					$("#tbEleccionMaterial #btnEliminarArtAlu").on("click",eliminarArtAlumno);
+					$("#bodyArtAlumno #btnEliminarArtAlu").on("click",eliminarArtAlumno);
 				}
 				else
 					sweetAlert("No se agregó el articulo", "", "error");
@@ -550,17 +544,28 @@ var inicio = function()
 			$("#cmbMaterialesLab").attr("disabled","disabled");
 		}
 	}
+	var buscaIndice = function(arreglo,elemento)
+	{
+		var ar= arreglo;
+		var e=elemento;
+		var c=elemento.length;
+		for (var i = 0; i < c; i++) 
+		{
+			if (ar[i]==e) 
+			{
+				return i;
+			}
+		}
+	}
 	var eliminarArtAlumno = function()
 	{
-
-		$(this).closest('tr').remove();
-    	var artEliminar = ($(this).attr("name"));
-    	var i = articulosSolicitadosAlumnos.indexOf(artEliminar);
-    	nombreArticulos = eliminar(nombreArticulos,i);
-    	articulosSolicitadosAlumnos = eliminar(articulosSolicitadosAlumnos,i);
-    	numeroArticulos = eliminar(numeroArticulos,i);
-
-    	var parametros = "opc=construirTablabArt1"+
+    	var artEliminar = ($(this).attr('name'));
+    	var i = buscaIndice(articulosSolicitadosAlumnos,artEliminar);
+    	alert(i);
+    	nombreArticulos = eliminar2(nombreArticulos,i);
+    	articulosSolicitadosAlumnos = eliminar2(articulosSolicitadosAlumnos,i);
+    	numeroArticulos = eliminar2(numeroArticulos,i);
+    	var parametros = "opc=construirTablaArt1"+
 				    	"&articulosSolicitados="+articulosSolicitadosAlumnos+
 				    	"&nombreArticulos="+nombreArticulos+
 				    	"&numeroArticulos="+numeroArticulos+
@@ -576,7 +581,7 @@ var inicio = function()
     			{
     				$("#bodyArtAlumno").html("");
     				$("#bodyArtAlumno").append(response.renglones);
-    				$(".btnEliminarArt").on("click",eliminarArtAlumno);
+    				$("#bodyArtAlumno #btnEliminarArtAlu").on("click",eliminarArtAlumno);
 					//formar de nuevo el combo
 					checkOtroArticulo();
 				}//termina if
@@ -588,10 +593,11 @@ var inicio = function()
 			error: function(xhr, ajaxOptions,x)
 			{
 				console.log("Error de conexión articulo eliminar");	
+				console.log(xhr);
 			}
 		});
 	}
-	var eliminar = function(arreglo,posicion,con)
+	var eliminar2 = function(arreglo,posicion)
 	{
 		var ar = arreglo;
 		var p  = posicion;
