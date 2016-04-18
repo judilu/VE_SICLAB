@@ -2,34 +2,48 @@
 	<h5>Lista de asistencia</h5>
 	<div class="row">
 		<div class="col s12">
-			<div class="row valign-wrapper">
+			<div class="row">
+				<div class="input-field col s2">
+					<input disabled placeholder="" id="txtClaveMaestroRep" type="text" class="validate">
+					<label class="active"for="txtClaveMaestroRep">Clave</label>
+				</div>
+				<div class="input-field col s7">
+					<input disabled placeholder="" id="txtNombreMaestroRep" type="text" class="validate">
+					<label class="active" for="txtNombreMaestroRep">Nombre</label>
+				</div>
 				<div class="input-field col s3">
-					<input id="txtClaveMaestro" type="text" class="validate">
-					<label for="txtClaveMaestro">Clave</label>
-				</div>
-				<div class="input-field col s2">
-					<input id="txtHoraPractica" type="text" class="validate">
-					<label for="txtHoraPractica">Hora</label>
-				</div>
-				<div class="input-field col s2">
-					<input id="txtFechaPractica" type="text" class="validate">
-					<label for="txtFechaPractica">Fecha</label>
+					<input disabled placeholder="" id="txtPeriodoRep" type="text" class="validate">
+					<label class="active" for="txtPeriodoRep">Periodo</label>
 				</div>
 			</div>
 			<div class="row">
-				<div class="input-field col s5">
-					<input id="txtNombreMaestro" type="text" class="validate">
-					<label for="txtNombreMaestro">Nombre</label>
+				<div class="input-field col s9">
+					<input disabled placeholder="" id="txtMateriaRep" type="text" class="validate">
+					<label class="active" for="txtMateriaRep">Materia</label>
 				</div>
-				<div class="input-field col s5 offset-s1">
-					<input id="txtNombrePractica" type="text" class="validate">
-					<label for="txtNombrePractica">Práctica</label>
+				<div class="input-field col s3">
+					<input disabled placeholder="" id="txtHoraMatRep" type="text" class="validate">
+					<label class="active" for="txtHoraMatRep">Hora de la materia</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="input-field col s7">
+					<input disabled placeholder="" id="txtPracticaRep" type="text" class="validate">
+					<label class="active" for="txtPracticaRep">Práctica</label>
+				</div>
+				<div class="input-field col s2">
+					<input disabled placeholder="" id="txtHoraPractRep" type="text" class="validate">
+					<label class="active" for="txtHoraPractRep">Hora de la práctica</label>
+				</div>
+				<div class="input-field col s3">
+					<input disabled placeholder="" id= "txtFechaPracticaRep2" type="text" class="validate">
+					<label class="active" for="txtFechaPracticaRep2">Fecha práctica</label>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col s10 offset-s1">
-					<table class="bordered responsive-table">
-						<thead>
+					<table  id ="tbListaAsistencia" class="bordered responsive-table">
+						<!-- <thead>
 							<tr>
 								<th>Número de control</th>
 								<th>Nombre</th>
@@ -40,15 +54,7 @@
 								<td>11170899</td>
 								<td>Moreno Zazueta Judith Guadalupe</td>
 							</tr>
-							<tr>
-								<td>11170884</td>
-								<td>López Valenzuela Ana Patricia</td>
-							</tr>
-							<tr>
-								<td>11170876</td>
-								<td>Jimenez Iñiguez Edwin Fernando</td>
-							</tr>
-						</tbody>
+						</tbody> -->
 					</table>
 				</div>
 			</div>
