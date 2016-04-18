@@ -332,7 +332,7 @@ function construirTbArt()
 		if ($cveArt[$i]!= "") 
 		{
 			$respuesta	= true;
-			$renglones	= "";
+			//$renglones	= "";
 			$renglones .= "<tr id=".$cveArt[$i].">";
 			$renglones .= "<td class='col s2'>".$num[$i]."</td>";
 			$renglones .= "<td class='col s8'>".$nomArt[$i]."</td>";

@@ -401,7 +401,7 @@ var inicioMaestro = function ()
 			}
 		});
 }
-var eliminar = function(arreglo,posicion,con)
+var eliminar = function(arreglo,posicion)
 {
 	var ar = arreglo;
 	var p  = posicion;
@@ -798,6 +798,7 @@ var eliminar = function(arreglo,posicion,con)
     				$("#cmbPractica").html("<option value='' disabled selected>Seleccione la práctica</option>");	
     				for (var i = 0; i < response.con; i++) 
     				{
+
     					$("#cmbPractica").append($("<option></option>").attr("value",response.comboCvePrac[i]).text(response.comboTitPrac[i]));
     				}
     				$("cmbPractica").trigger('contentChanged');
@@ -885,7 +886,14 @@ var eliminar = function(arreglo,posicion,con)
 					$("#txtCantAlumnos").attr("max",response.capacidad)
 					for (var i = hii; i <= hff; i++) 
 					{
-						$("#cmbHoraPract").append($("<option></option>").attr("value",i).text(i+":00"));
+						if(i>9)
+						{
+							$("#cmbHoraPract").append($("<option></option>").attr("value",i).text(i+":00"));
+						}
+						else
+						{
+							$("#cmbHoraPract").append($("<option></option>").attr("value","0"+i).text("0"+i+":00"));
+						}
 					}
 					$("cmbHoraPract").trigger('contentChanged');
 					$('select').material_select();

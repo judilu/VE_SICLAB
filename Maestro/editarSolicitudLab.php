@@ -1,20 +1,15 @@
 <div id = "editarSolLab">
-		<?php require_once('../data/conexion.php');?>
 		<div class="row" id="editarSol">
 			<h5>Editar Solicitud</h5>
 			<div class="col s12">
 				<div class="row">
 					<div class="input-field col s6">
-						<select id="cmbMateriaE">
-
-						</select>
-						<label>Materia</label>
+						<input disabled placeholder="" id="txtMateriaE" type="text" class="validate">
+						<label class="active" for="txtMateriaE">Materia</label>
 					</div>
 					<div class="input-field col s3">
-						<select id="cmbHoraMatE">
-							
-						</select>
-						<label>Hora de la materia</label>
+						<input disabled placeholder="" id="txtHoraMatE" type="text" class="validate">
+						<label class="active" for="txtHoraMatE">Hora de la materia</label>
 					</div>
 					<div class="input-field col s3">
 						<input id= "txtFechaSE" placeholder= " " type="date" class="datepicker">
@@ -23,16 +18,12 @@
 				</div>
 				<div class="row">
 					<div class="input-field col s6">
-						<select id="cmbPracticaE">
-							
-						</select>
-						<label>Práctica</label>
+						<input disabled id= "txtPracticaE" placeholder= " " type="text" class="validate">
+						<label class="active" for="txtPracticaE">Práctica</label>
 					</div>
 					<div class="input-field col s6">
-						<select id="cmbLaboratorioE">
-							
-						</select>
-						<label>Laboratorio</label>
+						<input disabled id= "txtLabE" placeholder= " " type="text" class="validate">
+						<label class="active" for="txtLabE">Laboratorio</label>
 					</div>
 				</div>
 				<div class="row">
@@ -43,12 +34,12 @@
 						<label>Hora de la práctica</label>
 					</div>
 					<div class="input-field col s2 offset-s1">
-						<input id="txtCantAlumnosE" type="number" min="1" max="45" value="1"class="validate">
-						<label for="txtCantAlumnosE">Cant. de alumnos</label>
+						<input disabled id="txtCantAlumnosE" type="number" min="1" value="1"class="validate">
+						<label class="active" for="txtCantAlumnosE">Cant. de alumnos</label>
 					</div>
 					<div class="input-field col s6">
-						<textarea id="textarea1E" class="materialize-textarea"></textarea>
-						<label for="textarea1E">Motivo de uso</label>
+						<textarea disabled id="textarea1E" class="materialize-textarea"></textarea>
+						<label class="active" for="textarea1E">Motivo de uso</label>
 					</div>
 				</div>
 				<div class="row">
@@ -65,10 +56,10 @@
 					<div class="row">
 						<div class="input-field col s6 offset-s1">
 							<select id="cmbMaterialCatE">
-								<option value="" disabled selected>Seleccione el material</option>
+								<!-- <option value="" disabled selected>Seleccione el material</option>
 								<option value="110">ALUMINIO</option>
 								<option value="115">AMONIACO</option>
-								<option value="120">AMPERIMETRO</option>
+								<option value="120">AMPERIMETRO</option> -->
 							</select>
 							<label>Materiales</label>
 						</div>
@@ -82,12 +73,12 @@
 					</div>
 					<div class="row">
 						<div class="col s10 offset-s1">
-							<table id="tbMaterialSolEE" class="bordered">
+							<table id="tbMaterialSolE" class="bordered">
 								<thead>
 									<tr>
-										<th data-field="txtCantidaEd" class="col s2">Cantidad</th>
-										<th data-field="txtDescripcionE" class="col s8">Descripción</th>
-										<th data-field="txtHoraE" class="col s2">Acción</th>
+										<th data-field="txtCantidad" class="col s2">Cantidad</th>
+										<th data-field="txtDescripcion" class="col s8">Descripción</th>
+										<th data-field="txtHora" class="col s2">Acción</th>
 									</tr>
 								</thead>
 								<tbody id="bodyArtE">
