@@ -349,6 +349,7 @@ var inicioMaestro = function ()
     	var comboArt 	= Array();
     	var comboclaArt = Array();
     	var c 			= articulosAgregados.length;
+    	console.log(c);
     	var i 			= 0;
     	var o 			= 0;	
     	var laboratorio = $("#cmbLaboratorio").val();
@@ -376,6 +377,7 @@ var inicioMaestro = function ()
 						comboArt 	= (eliminar(comboArt,i));				
 					}
 					var con = comboclaArt.length;
+					console.log(con);
 					//termina eliminación
 					$("#cmbMaterialCat").html(" ");
 					$("#cmbMaterialCat").html("<option value='' disabled selected>Seleccione el material</option>");
@@ -422,6 +424,7 @@ var eliminar = function(arreglo,posicion,con)
     	articulos = eliminar(articulos,i);
     	articulosAgregados = eliminar(articulosAgregados,i);
     	numArticulos = eliminar(numArticulos,i);
+    	console.log(articulos);
     	//construir tabla
     	var parametros = "opc=construirTbArt1"+
     	"&articulosAgregados="+articulosAgregados+
@@ -447,6 +450,7 @@ var eliminar = function(arreglo,posicion,con)
 				{
 					console.log("no elimino");
 					$("#bodyArt").html("");
+					llenarcomboEleArt();
 				}
 			},
 			error: function(xhr, ajaxOptions,x)
@@ -463,6 +467,8 @@ var eliminar = function(arreglo,posicion,con)
 	    //$(this).closest("td").children("input").val();
 	    $("#solicitudesPendientesLab").hide();
 	    $("#eleccionMaterialE").hide();
+	    //llenar combos
+	    
 	    //Contenido Dinamico
 	    $("#editarSolicitudLab").show("slow");
 	    var solId = parseInt($(this).attr("name"));

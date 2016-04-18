@@ -1,5 +1,4 @@
 <div id="solNuevaMaestro">
-		<?php require_once('../data/conexion.php');?>
 		<div class="row" id="nuevaMaestro">
 			<h5>Nueva solicitud</h5>
 			<div class="col s12">

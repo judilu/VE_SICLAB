@@ -299,7 +299,6 @@ function nuevaSol()
 	$num        = $_POST["num"];
 	$n 			= GetSQLValueString($_POST['n'],"int");
 	$respuesta3 = valirdarFeHr($fs,$hs,$lab);
-	//var_dump($respuesta3);
 	$conexion 	= conectaBDSICLAB();
 	if($respuesta3==true)
 	{
