@@ -1164,6 +1164,97 @@ function guardaPeticionArticulos()
 	$arrayJSON = array('respuesta' => $respuesta);
 		print json_encode($arrayJSON);
 }
+function obtieneCveLab($clave)
+{
+	$cveResp 		= $clave;
+	$conexion		= conectaBDSICLAB();
+	$consulta 		= sprintf("select claveLaboratorio 
+								from lbresponsables 
+								where claveUsuario=%s",$cveResp);
+	$res 			= mysql_query($consulta);
+	if($row = mysql_fetch_array($res))
+	{
+		return (int)($row["claveLaboratorio"]);
+	}
+	else
+	{
+		return 0;
+	}
+}
+function obtieneDepto($claveLab)
+{
+	$cveLab 		= $claveLab;
+	$conexion		= conectaBDSICLAB();
+	$consulta 		= sprintf("select DEPCVE 
+								from lblaboratorios 
+								where claveLaboratorio=%s",$cveLab);
+	$res 			= mysql_query($consulta);
+	if($row = mysql_fetch_array($res))
+	{
+		return (int)($row["DEPCVE"]);
+	}
+	else
+	{
+		return 0;
+	}
+
+}
+function listaArticulosAlta()
+{
+	$resp 	 		= false;
+	session_start();
+	if(!empty($_SESSION['nombre']))
+	{
+		$responsable 	= $_SESSION['nombre'];
+		$claveLab 		= obtieneCveLab($responsable);
+		$departamento 	= obtieneDepto($claveLab);
+		if ($departamento == 420) 
+		{
+			$flag="'S'";
+		}
+		elseif ($departamento == 407) 
+		{
+			$flag="'B'";
+		}
+		elseif ($departamento == ( 404 || 406 || 408 || 410)) 
+		{
+			$flag="'M'";
+		}
+		else
+		{
+			$flag="'G'";
+		}
+
+		$contador		= 0;
+		$comboMaterial	= array();
+		$claveMaterial 	= "";
+		$nombreMaterial = "";
+		$conexion		= conectaBDSICLAB();
+		$consulta 		= sprintf("select claveArticulo,nombreArticulo 
+									from lbarticuloscat where bandera=%s",$flag);
+		$res 			= mysql_query($consulta);
+		while($row = mysql_fetch_array($res))
+			{
+				$comboMaterial[] 	= $row;
+				$resp 		 		= true;
+				$contador++;
+			}
+			for ($i=0; $i < $contador ; $i++)
+			{ 
+				$claveMaterial[] 	=$comboMaterial[$i]["claveArticulo"];
+				$nombreMaterial[] 	=$comboMaterial[$i]["nombreArticulo"];
+			}
+	}
+	$arrayJSON = array('respuesta' => $resp,
+						'claveMaterial' => $claveMaterial,
+						'nombreMaterial' => $nombreMaterial, 
+						'contador' => $contador);
+	print json_encode($arrayJSON);
+}
+function identificadorArt()
+{
+	
+}
 //Menú principal
 $opc = $_POST["opc"];
 switch ($opc){
@@ -1259,6 +1350,9 @@ switch ($opc){
 	break;
 	case 'guardaPeticionArticulos1':
 	guardaPeticionArticulos();
+	break;
+	case 'listaArtAlta':
+	listaArticulosAlta();
 	break;
 } 
 ?>

@@ -20,8 +20,11 @@
 		<div class="col s12">
 			<div class="row">
 				<div class="input-field col s4">
-					<input id="txtCodigoBarrasAlta" type="text" class="validate">
-					<label class="active" for="txtCodigoBarras">Código de barras</label>
+					<select id="cmbNombreArtAlta">
+						<option value="" disabled selected>Seleccione</option>
+						
+					</select>
+					<label>Nombre del artículo</label>
 				</div>
 				<div class="input-field col s4 offset-s1">
 					<input id="txtModeloArtAlta" type="text" class="validate">
@@ -34,32 +37,6 @@
 			</div>
 			<div class="row">
 				<div class="input-field col s4">
-					<select id="cmbNombreArt">
-						<option value="" disabled selected>Seleccione</option>
-						<?php						
-						require_once('../data/conexion.php');
-
-						$conexion		= conectaBDSICLAB();
-						$consulta 		= sprintf("select * from lbarticuloscat");
-						$res 			= mysql_query($consulta);
-						while($row = mysql_fetch_array($res))
-						{
-							echo '<option value="'.$row["claveArticulo"].'">'.$row["nombreArticulo"].'</option>';
-						}?>
-					</select>
-					<label>Nombre del artículo</label>
-				</div>
-				<div class="input-field col s4 offset-s1">
-					<input id="txtMarcaArtAlta" type="text" class="validate">
-					<label class="active" for="txtMarcaArt">Marca</label>
-				</div>
-				<div class="input-field col s2 offset-s1">
-					<input id="txtTipoContenedorAlta" type="text" class="validate">
-					<label class="active" for="txtTipoContenedor">Tipo de contenedor</label>
-				</div>		
-			</div>
-			<div class="row">
-				<div class="input-field col s2">
 					<select id="cmbUm">
 						<option value="" disabled selected>Seleccione</option>
 						<option value="Pieza">Pieza</option>
@@ -71,7 +48,18 @@
 					</select>
 					<label>Unidad medida</label>
 				</div>
-				<div class="input-field col s2">
+				<div class="input-field col s4 offset-s1">
+					<input id="txtMarcaArtAlta" type="text" class="validate">
+					<label class="active" for="txtMarcaArt">Marca</label>
+				</div>
+				<div class="input-field col s2 offset-s1">
+					<input id="txtTipoContenedorAlta" type="text" class="validate">
+					<label class="active" for="txtTipoContenedor">Tipo de contenedor</label>
+				</div>		
+			</div>
+			<div class="row">
+				
+				<div class="input-field col s4">
 					<input id="txtClaveKitAlta" type="text" class="validate">
 					<label class="active" for="txtClaveKit">Clave kit</label>
 				</div>

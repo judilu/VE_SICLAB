@@ -703,17 +703,45 @@
 		$("#peticionesArticulos").hide("slow");
 		$("input").val("");
 		$("textarea").val("");
+		var parametros= "opc=listaArtAlta"
+						+"&id="+Math.random();
+			$.ajax({
+				cache:false,
+				type: "POST",
+				dataType: "json",
+				url:"../data/genericos.php",
+				data: parametros,
+				success: function(response)
+				{
+					if(response.respuesta)
+					{
+	       				$("#cmbNombreArtAlta").html(" ");
+						for (var i = 0; i < response.contador; i++) 
+						{
+							$("#cmbNombreArtAlta").append($("<option></option>").attr("value",response.claveMaterial[i]).text(response.nombreMaterial[i]));
+						}
+						$("#cmbNombreArtAlta").trigger('contentChanged');
+						$('select').material_select();
+	   				}
+	   				else
+	   				{
+	   					sweetAlert("No hay articulos disponibles", "", "error");
+	   				}
+	   			},
+	   			error: function(xhr, ajaxOptions,x)
+	   			{
+	   				console.log("Error de conexión alta articulos");
+	   			}
+	   		});
 		$("#altaArticulos").show("slow");
 	}
 	var altaInventario = function()
 	{
-		if(($("#txtCodigoBarrasAlta").val())!="" && 
-			($("#txtModeloArtAlta").val())!="")
+		if(($("#txtModeloArtAlta").val())!="")
 		{
 			//aqui empieza todo
        		//var cveUsuario = usuarioNombre();
        		var imagen						= " ";
-       		var identificadorArticulo		= $("#txtCodigoBarrasAlta").val();
        		var modelo 						= $("#txtModeloArtAlta").val();
        		var numeroSerie 				= $("#txtNumSerieAlta").val();
 			var claveArticulo				= $("#cmbNombreArt").val();//ocupo sacar el valor del select
@@ -728,7 +756,6 @@
 			var estatus						= "V";
 			var parametros 	= "opc=altaInventario1"+"&claveArticulo="+claveArticulo
 								+"&imagen="+imagen
-								+"&identificadorArticulo="+identificadorArticulo
 								+"&modelo="+modelo
 								+"&numeroSerie="+numeroSerie
 								+"&marca="+marca
@@ -750,9 +777,10 @@
 				success: function(response){
 					if(response.respuesta == true)
 					{
-						swal("El articulo fue dado de alta con éxito!", "Da clic en el botón OK!", "success");
+						/*swal("El articulo fue dado de alta con éxito!", "Da clic en el botón OK!", "success");
 						$("input").val("");
-						$("textarea").val("");
+						$("textarea").val("");*/
+						muestraIdentificador();
 					}
 					else
 					{
@@ -764,6 +792,10 @@
 				}
 			});
 		}
+	}
+	var muestraIdentificador = function()
+	{
+		
 	}
 	//muestra la pantalla de baja articulos
 	var bajaArticulos = function()
