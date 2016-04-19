@@ -29,7 +29,8 @@ function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDe
 function conectaBDSIE()
 {
 	//Servidor, Usuario, Contraseña
-	$conexion = mysql_connect("67.228.19.168", "sieapibduser", "B5fa4x_7*.*") ;
+	//$conexion = mysql_connect("67.228.19.168", "sieapibduser", "B5fa4x_7*.*") ;
+  $conexion = mysql_connect("itculiacan.edu.mx", "sieapibduser", "B5fa4x_7*.*") ;
 /*  if(!$conexion){
     die("error " . mysql_error());
   }*/

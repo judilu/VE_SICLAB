@@ -201,18 +201,16 @@ function solicitudesRealizadas ()
 }
 function mostrarSolicitud($clave,$solicitud)
 {
-	$periodo 	= periodoActual();
+	$periodo 	= GetSQLValueString(periodoActual(),"text");
 	$respuesta 	= false;
-	$rows 		= array();
-	$maestro	= $clave;
-	$solId      = $solicitud;
+	//$rows 		= array();
+	$maestro	= GetSQLValueString($clave,"text");
+	$solId      = GetSQLValueString($solicitud,"int");
 	$conexion 	= conectaBDSICLAB();
-	$consulta	= sprintf("select s.claveSolicitud, s.MATCVE, s.GPOCVE, s.fechaSolicitud, p.tituloPractica, s.horaSolicitud, s.cantidadAlumnos, l.nombreLaboratorio from lbsolicitudlaboratorios s inner join lbpracticas p on s.clavePractica = p.clavePractica inner join lblaboratorios l on s.claveLaboratorio = l.claveLaboratorio left join lbcalendarizaciones c ON c.claveSolicitud = s.claveSolicitud where s.PDOCVE =%s and s.claveUsuario =%d and s.claveSolicitud =%d and c.claveSolicitud is NULL",$periodo,$maestro,$solId);
+	$consulta	= sprintf("select s.claveSolicitud, s.MATCVE, s.GPOCVE, s.fechaSolicitud, p.tituloPractica, l.claveLaboratorio, l.nombreLaboratorio, s.horaSolicitud, s.cantidadAlumnos, s.motivoUso from lbsolicitudlaboratorios s inner join lbpracticas p on s.clavePractica = p.clavePractica inner join lblaboratorios l on s.claveLaboratorio = l.claveLaboratorio left join lbcalendarizaciones c ON c.claveSolicitud = s.claveSolicitud where s.PDOCVE =%s and s.claveUsuario =%s and s.claveSolicitud =%d and c.claveSolicitud is NULL",$periodo,$maestro,$solId);
 	$res 		= mysql_query($consulta);
 	if($row = mysql_fetch_array($res))
 	{	
-		//$respuesta 	= true;
-		//$rows		= $row;
 		return $row;
 	}
 	else
@@ -226,18 +224,36 @@ function mostrarSolicitud($clave,$solicitud)
 function editarSolicitud ()
 {
 	session_start();
-	$combo   		= "";
 	$clave  		= $_SESSION['nombre'];
 	$solId 			= GetSQLValueString($_POST['solId'],"int");
 	$solicitud  	= mostrarSolicitud($clave,$solId);
-	$materias 		= materias(claveMaestro($clave));
-	$respuesta 		= false;
-	if($solicitud!= " ")
-		$respuesta = true;
-		$combo .= "<option value='Ingenieria Web'>'Ingenieria Web'</option>";
-	$arrayJSON = array('respuesta' => $respuesta,
-						'combo' => $combo);
-	print json_encode($arrayJSON);
+	$claveMat 		= $solicitud['MATCVE'];
+	$mat 	 		= nomMat("'".$claveMat."'");
+    $horas 			= horaMat($claveMat,$clave);
+    $materia 		= $mat[$claveMat];
+    $fechaPrac 		= $solicitud['fechaSolicitud'];
+    $practica 		= $solicitud['tituloPractica'];
+    $claveLab 		= $solicitud['claveLaboratorio'];
+    $laboratorio 	= $solicitud['nombreLaboratorio'];
+    $horaPractica 	= $solicitud['horaSolicitud'];
+    $cantidad 		= $solicitud['cantidadAlumnos'];
+    $motivoUso 		= $solicitud['motivoUso'];
+    $respuesta 		= false;
+    if(($solicitud['claveSolicitud'])!=0)
+    {
+    	$respuesta = true;
+    }
+    $arrayJSON = array('respuesta' => $respuesta,
+    					'materia' => $materia,
+    					'horas' => $horas,
+    					'fechaPrac' => $fechaPrac,
+    					'practica' => $practica,
+    					'claveLab' => $claveLab,
+    					'laboratorio' => $laboratorio,
+    					'horaPractica' => $horaPractica,
+    					'cantidad' => $cantidad,
+    					'motivoUso' => $motivoUso);
+		print json_encode($arrayJSON);
 }
 function eliminarSolicitud ()
 {

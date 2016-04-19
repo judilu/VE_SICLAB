@@ -100,6 +100,22 @@ function grupo($mat,$per,$pdo,$hor)
 		return "";
 	}
 }
+function horaMat($mat,$per)
+{
+	$materia    = $mat;
+	$clave   	= $per;
+	$maestro 	= claveMaestro($clave);
+	$periodo 	= periodoActual();
+	$horas 		= array("");  
+	$conexion 	= conectaBDSIE();
+	$consulta 	= sprintf("select LUNHRA, MARHRA,MIEHRA,JUEHRA,VIEHRA from DGRUPO where MATCVE ='TIB1025' and PERCVE=920 and PDOCVE ='2161'",$materia,$maestro,$periodo);
+	$res		= mysql_query($consulta);
+	if($row = mysql_fetch_array($res))
+	{
+		$horas = $row;
+	}
+	return $horas;
+}
 function existeSolLab($dep,$pdo,$fce,$fcs,$hrs,$lab,$pra,$mat,$gpo,$usu)
 {
 	$d              = $dep;
@@ -345,7 +361,6 @@ function valirdarFeHr($f,$h,$lab)
 	$consulta 	 = sprintf("select c.claveCalendarizacion from lbcalendarizaciones c inner join lbsolicitudlaboratorios s on c.claveSolicitud = s.claveSolicitud where c.PDOCVE =%s and c.fechaAsignada =%s and c.horaAsignada =%s AND c.estatus = 'NR' AND s.claveLaboratorio =%s",$periodo,$fecha,$hora,$laboratorio);
 	$res 		 = mysql_query($consulta); 
 	$respuesta   = true;
-	//var_dump($consulta);
 	if($row = mysql_fetch_array($res))
 	{
 		$respuesta = false;

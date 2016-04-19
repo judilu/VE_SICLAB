@@ -12,7 +12,7 @@
 						<label class="active" for="txtHoraMatE">Hora de la materia</label>
 					</div>
 					<div class="input-field col s3">
-						<input id= "txtFechaSE" placeholder= " " type="date" class="datepicker">
+						<input value= "12/12/2016" id= "txtFechaSE" placeholder= " " type="date" class="datepicker">
 						<label class="active" for="txtFechaSE">Fecha práctica</label>
 					</div>
 				</div>
@@ -43,8 +43,9 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col s4 offset-s9">
+					<div class="col s8 offset-s4">
 						<a class="waves-effect waves-light btn amber darken-2" id="btnElegirMaterialE">Elegir material</a>
+						<a class="waves-effect waves-light btn green darken-2" id="btnRegresarPen">Regresar</a>
 					</div>
 				</div>
 			</div>

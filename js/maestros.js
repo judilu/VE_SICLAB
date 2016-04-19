@@ -82,6 +82,7 @@ var inicioMaestro = function ()
 			},
 			error: function(xhr, ajaxOptions,x){
 				console.log("Error de conexión sol aceptadas");
+				console.log(xhr);
 			}
 		});
 		$("#sAceptadasMaestro").show("slow");
@@ -467,8 +468,6 @@ var eliminar = function(arreglo,posicion)
 	    //$(this).closest("td").children("input").val();
 	    $("#solicitudesPendientesLab").hide();
 	    $("#eleccionMaterialE").hide();
-	    //llenar combos
-	    
 	    //Contenido Dinamico
 	    $("#editarSolicitudLab").show("slow");
 	    var solId = parseInt($(this).attr("name"));
@@ -481,20 +480,22 @@ var eliminar = function(arreglo,posicion)
 	    	dataType: "json",
 	    	url:'../data/maestros.php',
 	    	data: parametros,
-	    	success: function(response){
+	    	success: function(response)
+	    	{
 	    		if(response.respuesta == true)
 	    		{
-       				/*//llenado datos 
-       				//$("#cmbMateriaE").text("hola");
-       				$("#cmbHoraMatE").val("hola");
-       				$("#txtFechaE").val("2016-03-25");
-       				$("#cmbPracticaE").val("hola");
-       				$("#cmbHoraPractE").val("hola");
-       				$("#txtCantAlumnosE").val("20");
-       				$("#cmbLaboratorioE").val("hola");
-       				$("#textarea1E").val("nose");*/
-       				$("#cmbMateriaE").html(" ");
-       				$("#cmbMateriaE").append(response.combo);
+       				//llenado datos
+       				$("#txtMateriaE").val(response.materia);
+       				$("#txtHoraMatE").val(response.horas[0]);
+       				//$("#txtFechaSE").val("12/12/2016");
+       				//$("#txtFechaSE").value = "2014-02-09";
+       				$("#txtPracticaE").val(response.practica);
+       				$("#txtLabE").val(response.latboratorio);
+       				$("#cmbHoraPractE").val(); //modificar
+       				$("#txtCantAlumnosE").val(response.cantidad);
+       				$("#textarea1E").val(response.motivoUso);
+       				//combo
+       				//comboHoraPracE(response.claveLab);//pensar
        			}
        			else
        			{
@@ -911,6 +912,61 @@ var eliminar = function(arreglo,posicion)
 			}
 		});
     }//fin de funcion para llenar el combo de la hora de la practica
+	var comboHoraPracE = function(lab,hor)
+    {
+    	var hora 			= hor;
+    	var laboratorio   	= lab;
+    	var parametros 	  	= "opc=comboHoraPrac1"+
+    							"&laboratorio="+laboratorio+
+    							"&id="+Math.random();
+    	var hi = "";
+    	var hii = 0;
+    	var hf = "";
+    	var fff = 0;
+    	$.ajax({
+    		cache:false,
+    		type: "POST",
+    		dataType: "json",
+    		url:"../data/funciones.php",
+    		data: parametros,
+    		success: function(response){
+    			if(response.respuesta == true)
+    			{
+    				$("#cmbHoraPractE").html(" ");
+    				$("#cmbHoraPractE").html("<option value='"+hora+"' disabled selected>"+hora+"</option>");	
+    				(((response.horaApertura).length)<4) ? (hi=(response.horaApertura).substring(0,1)) : (hi=(response.horaApertura).substring(0,2));
+    				hii = parseInt(hi);
+    				(((response.horaCierre).length)<4) ? (hf=(response.horaCierre).substring(0,1)) : (hf=(response.horaCierre).substring(0,2));
+    				hff = parseInt(hf);
+					//modificando capacidad segun el laboratorio
+					//$("#txtCantAlumnos").attr("max",response.capacidad)
+					for (var i = hii; i <= hff; i++) 
+					{
+						if(i>9)
+						{
+							$("#cmbHoraPractE").append($("<option></option>").attr("value",i).text(i+":00"));
+						}
+						else
+						{
+							$("#cmbHoraPractE").append($("<option></option>").attr("value","0"+i).text("0"+i+":00"));
+						}
+					}
+					$("cmbHoraPractE").trigger('contentChanged');
+					$('select').material_select();
+				}
+				else
+				{
+					$("#cmbHoraPractE").html(" ");
+					$("#cmbHoraPractE").html("<option value='' disabled selected>Seleccione la hora</option>");
+					$('select').material_select();
+					sweetAlert("No existen horas", "Es posible que no existan horas asociados a dicha práctica!", "error");
+				}
+			},
+			error: function(xhr, ajaxOptions,x){
+				console.log("Error de conexión comboPracE");	
+			}
+		});
+    }
 	//eventos menu Reportes
 	var listaAsistencia = function()
 	{
@@ -930,6 +986,7 @@ var eliminar = function(arreglo,posicion)
 	$("#btnSolicitudesPendientes").on("click",solPendientes);
 	$("#btnElegirMaterialE").on("click",elegirMaterialE);
 	$("#btnRegresarE").on("click",regresarEditar);
+	$("#btnRegresarPen").on("click",solPendientes);
 	//para botones que son creados dinamicamente primero se coloca:
 	//el nombre de el id de la tabla que lo contiene despues el on y despues el evento
 	//y de ahi el nombre del boton que desencadenara el evento
