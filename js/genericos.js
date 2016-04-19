@@ -259,6 +259,7 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#tabListaSanciones").html("");
 					$("#tabListaSanciones").append(response.renglones);
 					$("#tabListaSanciones #btnQuitaSancion").on("click",quitaSancion);
 				}
@@ -276,7 +277,11 @@
 	}
 	var quitaSancion = function ()
 	{
-		var parametros 	= "opc=quitaSanciones1"+"&id="+Math.random();
+		$(this).closest("tr").remove();
+		var claveSancion = $(this).attr('name');
+		var parametros 	= "opc=quitaSanciones1"+
+							"&claveSancion="+claveSancion+
+							"&id="+Math.random();
 		$.ajax({
 			cache:false,
 			type: "POST",
@@ -286,11 +291,11 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
-					alert("muy bien :)");
+					swal("Sanción eliminada con éxito!", "Da clic en el botón OK!", "success");
 				}
 				else
 				{
-					sweetAlert("la sanción no se pudo eliminar!", " ", "error");
+					sweetAlert("La sanción no se pudo eliminar!", " ", "error");
 				}
 			},
 			error: function(xhr, ajaxOptions,x){
@@ -311,7 +316,7 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
-					alert("muy bien :)");
+					
 				}
 				else
 				{
@@ -336,7 +341,7 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
-					alert("muy bien :)");
+					swal("Sanción aplicada con éxito!", "Da clic en el botón OK!", "success");
 				}
 				else
 				{

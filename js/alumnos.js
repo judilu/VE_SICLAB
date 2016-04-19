@@ -451,12 +451,12 @@ var inicio = function()
 	}
 	var cancelaEntrada = function ()
 	{
-		$("#txtNControl").val().length = 0;
 		$("#txtNControl").val(" ");
 		$("#txtNombre").val(" ");
 		$("#txtCarrera").val(" ");
 		$("#txtSemestre").val(" ");
 		$("#txtNControl").removeAttr("disabled");
+		del();
 
 		//$("#alumno").show("slow");
 		//$("#accesoAlumno").show("slow");
