@@ -5,6 +5,9 @@ var inicioMaestro = function ()
 	var articulos = new Array();
 	var articulosAgregados = new Array();
 	var numArticulos = new Array();
+	var articulosE = new Array();
+	var articulosAgregadosE = new Array();
+	var numArticulosE = new Array();
 	//eventos menu Solicitudes
 	//Empieza función salir del sistema
 	var salir = function()
@@ -350,7 +353,6 @@ var inicioMaestro = function ()
     	var comboArt 	= Array();
     	var comboclaArt = Array();
     	var c 			= articulosAgregados.length;
-    	console.log(c);
     	var i 			= 0;
     	var o 			= 0;	
     	var laboratorio = $("#cmbLaboratorio").val();
@@ -378,7 +380,6 @@ var inicioMaestro = function ()
 						comboArt 	= (eliminar(comboArt,i));				
 					}
 					var con = comboclaArt.length;
-					console.log(con);
 					//termina eliminación
 					$("#cmbMaterialCat").html(" ");
 					$("#cmbMaterialCat").html("<option value='' disabled selected>Seleccione el material</option>");
@@ -425,7 +426,6 @@ var eliminar = function(arreglo,posicion)
     	articulos = eliminar(articulos,i);
     	articulosAgregados = eliminar(articulosAgregados,i);
     	numArticulos = eliminar(numArticulos,i);
-    	console.log(articulos);
     	//construir tabla
     	var parametros = "opc=construirTbArt1"+
     	"&articulosAgregados="+articulosAgregados+
@@ -470,10 +470,14 @@ var eliminar = function(arreglo,posicion)
 	    $("#eleccionMaterialE").hide();
 	    //Contenido Dinamico
 	    $("#editarSolicitudLab").show("slow");
-	    var solId = parseInt($(this).attr("name"));
-	    var parametros = "opc=editarSolicitud1"+
-	    "&solId="+solId+
-	    "&id="+Math.random();
+	    articulosE 			= Array();
+    	articulosAgregadosE	= Array();
+    	numArticulosE 		= Array();
+    	var con   			= 0
+	    var solId 			= parseInt($(this).attr("name"));
+	    var parametros 		= "opc=editarSolicitud1"+
+	    						"&solId="+solId+
+	    						"&id="+Math.random();
 	    $.ajax({
 	    	cache:false,
 	    	type: "POST",
@@ -486,16 +490,25 @@ var eliminar = function(arreglo,posicion)
 	    		{
        				//llenado datos
        				$("#txtMateriaE").val(response.materia);
-       				$("#txtHoraMatE").val(response.horas[0]);
+       				$("#txtHoraMatE").val(((response.horas[0]).substring(0,2))+":00");
        				//$("#txtFechaSE").val("12/12/2016");
        				//$("#txtFechaSE").value = "2014-02-09";
        				$("#txtPracticaE").val(response.practica);
-       				$("#txtLabE").val(response.latboratorio);
+       				$("#txtLabE").val(response.laboratorio);
+       				$("#txtLabE").attr("name",response.claveLab);
        				$("#cmbHoraPractE").val(); //modificar
        				$("#txtCantAlumnosE").val(response.cantidad);
        				$("#textarea1E").val(response.motivoUso);
        				//combo
-       				//comboHoraPracE(response.claveLab);//pensar
+       				comboHoraPracE(response.claveLab,response.horaPractica);
+       				//llenar tabla y combo
+       				con =((response.materiales['claveMat']).length);
+       				for (var i =0; i<con; i++) 
+       				{
+       					articulosAgregadosE.push((response.materiales['claveMat'][i]));
+       					articulosE.push((response.materiales['nomMat'][i]));
+						numArticulosE.push((response.materiales['cantidad'][i]));
+       				}
        			}
        			else
        			{
@@ -507,12 +520,149 @@ var eliminar = function(arreglo,posicion)
        		}
        	});
     }//Termina función editar solicitud
+    var agregarArtE = function()
+    {
+    	//aquiEmpieza todo
+    	var artCve = $("#cmbMaterialCatE" ).val();
+    	var artNom = $("#cmbMaterialCatE option:selected").text();
+    	var num    = $("#txtNumArtE").val();
+	    articulosE.push(artNom);
+	    articulosAgregadosE.push(artCve);
+	    numArticulosE.push(num);
+	    var parametros = "opc=agregarArt1"+
+	    "&artCve="+artCve+
+	    "&artNom="+artNom+
+	    "&num="+num+
+	    "&id="+Math.random();
+	    $.ajax({
+		    cache:false,
+		    type: "POST",
+		    dataType: "json",
+		    url:"../data/maestros.php",
+		    data: parametros,
+		    success: function(response)
+		    {
+		    	if(response.respuesta == true)
+		    	{
+		    				$("#txtNumArt").val("1");
+		    				$("#bodyArt").append(response.renglones);
+		    				$(".btnEliminarArtE").on("click",eliminarArtE);
+							//formar de nuevo el combo
+							llenarcomboEleArtE();		
+				}//termina if
+				else
+				{
+					console.log("no agrego articulos");
+				}
+			},
+			error: function(xhr, ajaxOptions,x)
+			{
+				console.log("Error de conexión articuloAgregado");	
+			}
+		});
+    }
     var elegirMaterialE = function()
     {
     	//ocultar elementos
     	$("#editarSol").hide();
     	$("#eleccionMaterialE").show("slow");
+    	//llenar combo y crear tabla
+    	//Crear tabla y crear combo
+    	construirTabla();
+    	llenarcomboEleArtE();
     }//Termina función elegirMaterial de editar
+    var construirTabla = function()
+    {
+    	var parametros = "opc=construirTbArt1"+
+    	"&articulosAgregados="+articulosAgregadosE+
+    	"&articulos="+articulosE+
+    	"&numArticulos="+numArticulosE+
+    	"&id="+Math.random();
+    	$.ajax({
+    		cache:false,
+    		type: "POST",
+    		dataType: "json",
+    		url:"../data/maestros.php",
+    		data: parametros,
+    		success: function(response){
+    			if(response.respuesta == true)
+    			{
+    				$("#bodyArtE").html("");
+    				$("#bodyArtE").append(response.renglones);
+    				//$(".btnEliminarArtE").on("click",eliminarArtE);
+					//formar de nuevo el combo
+					llenarcomboEleArtE();
+				}//termina if
+				else
+				{
+					console.log("no elimino");
+					$("#bodyArt").html("");
+					llenarcomboEleArt();
+				}
+			},
+			error: function(xhr, ajaxOptions,x)
+			{
+				console.log("Error de conexión construir tabla");	
+			}
+		});
+    }
+    var llenarcomboEleArtE = function()
+    {
+    	var comboArt 	= Array();
+    	var comboclaArt = Array();
+    	var c 			= articulosAgregadosE.length;
+    	var i 			= 0;
+    	var o 			= 0;	
+    	var laboratorio = $("#txtLabE").attr("name");
+    	var parametros 	= "opc=comboEleArt1"+
+    						"&laboratorio="+laboratorio+
+    						"&id="+Math.random();
+    	$.ajax({
+    		cache:false,
+    		type: "POST",
+    		dataType: "json",
+    		url:"../data/funciones.php",
+    		data: parametros,
+    		success: function(response)
+    		{
+    			if(response.respuesta == true)
+    			{
+    				comboclaArt = response.comboCveArt;
+    				comboArt 	= response.comboNomArt;
+					//eliminar elementos repetidos
+					for (var r =0; r< c; r++) 
+					{
+						o = (articulosAgregados[r]);
+						i = parseInt((comboclaArt).indexOf(o));
+						comboclaArt = (eliminar(comboclaArt,i));
+						comboArt 	= (eliminar(comboArt,i));				
+					}
+					var con = comboclaArt.length;
+					//termina eliminación
+					$("#cmbMaterialCatE").html(" ");
+					$("#cmbMaterialCatE").html("<option value='' disabled selected>Seleccione el material</option>");
+					for (var i = 0; i < con; i++) 
+					{
+						$("#cmbMaterialCatE").append($("<option></option>").attr("value",comboclaArt[i]).text(comboArt[i]));
+					}
+					$("cmbMaterialCatE").trigger('contentChanged');
+					$('select').material_select();
+				}
+				else
+				{
+					$("#cmbMaterialCat").html(" ");
+					$("#cmbMaterialCat").html("<option value='' disabled selected>Seleccione el material</option>");
+					$('select').material_select();
+					sweetAlert("No existen articulos", "Es posible que no existan articulos en dicho laboratorio!", "error");
+				}
+			},
+			error: function(xhr, ajaxOptions,x)
+			{
+				console.log("Error de conexion combomat editar");
+				console.log(xhr);	
+			}
+		});
+    }
     var regresarEditar = function()
     {
     	//ocultar elementos

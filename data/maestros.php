@@ -221,9 +221,38 @@ function mostrarSolicitud($clave,$solicitud)
 		'rows' => $rows);
 	print json_encode($arrayJSON);*/
 }
+function materiales($clave)
+{
+	$claveSol 	= GetSQLValueString($clave,"int");
+	$materiales = array();
+	$nomMat 	= array();
+	$claveMat 	= array();
+	$cantidad 	= array();
+	$salida 	= array();
+	$conexion 	= conectaBDSICLAB();
+	$consulta	= sprintf("select a.claveArticulo, a.nombreArticulo, p.cantidad from lbasignaarticulospracticas p INNER JOIN lbarticuloscat a on p.claveArticulo = a.claveArticulo where claveSolicitud =%d",$claveSol);
+	$res 		= mysql_query($consulta);
+	$con 		= 0;
+	while($row = mysql_fetch_array($res))
+	{	
+		$materiales[] = $row;
+		$con ++;
+	}
+	for ($i=0; $i <$con ; $i++) 
+	{ 
+		$claveMat[$i]		= $materiales[$i][0];
+		$nomMat[$i] 		= $materiales[$i][1];
+		$cantidad[$i] 		= $materiales[$i][2];
+	}
+	$salida = array("claveMat" => $claveMat,
+					 "nomMat" => $nomMat,
+					 "cantidad" => $cantidad);
+	return $salida;
+}
 function editarSolicitud ()
 {
 	session_start();
+	$materiales 	= array();
 	$clave  		= $_SESSION['nombre'];
 	$solId 			= GetSQLValueString($_POST['solId'],"int");
 	$solicitud  	= mostrarSolicitud($clave,$solId);
@@ -239,6 +268,7 @@ function editarSolicitud ()
     $cantidad 		= $solicitud['cantidadAlumnos'];
     $motivoUso 		= $solicitud['motivoUso'];
     $respuesta 		= false;
+    $materiales 	= materiales($solicitud['claveSolicitud']);
     if(($solicitud['claveSolicitud'])!=0)
     {
     	$respuesta = true;
@@ -252,8 +282,9 @@ function editarSolicitud ()
     					'laboratorio' => $laboratorio,
     					'horaPractica' => $horaPractica,
     					'cantidad' => $cantidad,
-    					'motivoUso' => $motivoUso);
-		print json_encode($arrayJSON);
+    					'motivoUso' => $motivoUso,
+    					'materiales' => $materiales);
+	print json_encode($arrayJSON);
 }
 function eliminarSolicitud ()
 {
