@@ -419,6 +419,12 @@ function construirTbArtE()
 						'renglones' => $renglones);
 	print json_encode($arrayJSON);
 }
+function ModificarSol()
+{
+	$fs 		= GetSQLValueString($_POST["fs"],"text");
+	$hs 		= GetSQLValueString($_POST["hs"],"text");
+	$respuesta  = false;
+}
 //Menú principal
 $opc = $_POST["opc"];
 switch ($opc){
@@ -454,6 +460,9 @@ switch ($opc){
 		break;
 	case 'construirTbArtE1':
 		construirTbArtE();
+		break;
+	case 'ModificarSol1':
+		ModificarSol();
 		break;
 } 
 ?>

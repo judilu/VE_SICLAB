@@ -9,6 +9,7 @@ var inicioMaestro = function ()
 	var articulosAgregadosE = new Array();
 	var numArticulosE = new Array();
 	//eventos menu Solicitudes
+
 	//Empieza función salir del sistema
 	var salir = function()
 	{
@@ -57,6 +58,7 @@ var inicioMaestro = function ()
 			} 
 		});
 	}//Termina función salir del sistema
+
 	//Empieza función de solicitudes Aceptadas
 	var solAceptadas = function()
 	{
@@ -90,6 +92,7 @@ var inicioMaestro = function ()
 		});
 		$("#sAceptadasMaestro").show("slow");
 	}//Termina función de solicitudes Aceptadas
+
 	//Empieza función para liberar una solicitud realizada a aceptadas
 	var practicaRealizada = function()
 	{
@@ -121,6 +124,7 @@ var inicioMaestro = function ()
 			}
 		});	
 	}//Termina función para liberar una solicitud realizada a aceptadas
+	
 	//Empieza función de solicitudes pendientes
 	var solPendientes = function()
 	{
@@ -158,6 +162,7 @@ var inicioMaestro = function ()
 		$("#tabSolPendientes").on("click", ".btnEditarSolicitudLab" , editarSolicitudLab);
 		$("#tabSolPendientes").on("click", ".btnEliminarSolicitudLab" , eliminarSolicitud);	
 	}//Termina función de solicitudes pendientes
+	
 	//Empieza función de solicitudes realizadas
 	var solRealizadas = function()
 	{
@@ -190,6 +195,7 @@ var inicioMaestro = function ()
 		});
 		$("#sRealizadas").show("slow");
 	}//Termina función de solicitudes realizadas
+	
 	//Empieza función de crear nueva solicitud
 	var solNueva = function()
 	{
@@ -260,6 +266,7 @@ var inicioMaestro = function ()
 			}
 		});
     }//Termina función de crear nueva solicitud
+    
     //Empieza función de elegir material
     var elegirMaterial = function()
     {
@@ -306,6 +313,7 @@ var inicioMaestro = function ()
        //limpiar tabla de agregarMaterial
        $("#bodyArt").html(" "); 
     }//Termina función de elegir material
+    
     //Empieza función agregar articulo
     var agregarArt = function()
     {
@@ -348,6 +356,8 @@ var inicioMaestro = function ()
 			}
 		});
     }//Termina función agregar articulo
+    
+    //inicia función de llenar combo de elegir articulos
     var llenarcomboEleArt = function()
     {
     	var comboArt 	= Array();
@@ -402,22 +412,24 @@ var inicioMaestro = function ()
 				console.log("Error de conexión combomat");	
 			}
 		});
-}
-var eliminar = function(arreglo,posicion)
-{
-	var ar = arreglo;
-	var p  = posicion;
-	var c  = ar.length;
-	var af = Array();
-	for (var i=0; i < c; i++) 
+	}//termina función de llenar combo de elegir articulos
+	//inicia función para eliminar un elemento de un arreglo
+	var eliminar = function(arreglo,posicion)
 	{
-		if(i != posicion)
+		var ar = arreglo;
+		var p  = posicion;
+		var c  = ar.length;
+		var af = Array();
+		for (var i=0; i < c; i++) 
 		{
-			af.push(ar[i]);
+			if(i != posicion)
+			{
+				af.push(ar[i]);
+			}
 		}
-	}
-	return af;
-}
+		return af;
+	}//termina función para eliminar un elemento de un arreglo
+    
     //Comienza función de eliminar Articulo
     var eliminarArt = function()
     {
@@ -461,6 +473,7 @@ var eliminar = function(arreglo,posicion)
 		});
     	//termina construcción de tabla
     }//Termina función de eliminar Articulo
+
     //Empieza función editar solicitud
     var editarSolicitudLab = function()
     {
@@ -519,6 +532,8 @@ var eliminar = function(arreglo,posicion)
        		}
        	});
     }//Termina función editar solicitud
+    
+    //inicia función editar solicitud
     var elegirMaterialE = function()
     {
     	//ocultar elementos
@@ -529,6 +544,8 @@ var eliminar = function(arreglo,posicion)
     	construirTabla();
     	llenarcomboEleArtE();
     }//Termina función elegirMaterial de editar
+    
+    //Inicia función para construir tabla de los articulos a elegir para la practica
     var construirTabla = function()
     {
     	var parametros = "opc=construirTbArtE1"+
@@ -563,7 +580,9 @@ var eliminar = function(arreglo,posicion)
 				console.log("Error de conexión construir tabla");	
 			}
 		});
-    }
+    }//Termina función para construir tabla
+    
+    //Inicia función para llenar el combo de elegir material de editar
     var llenarcomboEleArtE = function()
     {
     	var comboArt 	= Array();
@@ -620,7 +639,9 @@ var eliminar = function(arreglo,posicion)
 				console.log(xhr);	
 			}
 		});
-    }
+    }//Termina función para llenar el combo de elegir material de editar
+    
+    //Inicia función para agregarArticulos en editar
     var agregarArtE = function()
     {
     	var artCve = $("#cmbMaterialCatE" ).val();
@@ -629,11 +650,10 @@ var eliminar = function(arreglo,posicion)
 	    articulosE.push(artNom);
 	    articulosAgregadosE.push(artCve);
 	    numArticulosE.push(num);
-	    //llenarcomboEleArtE();
 	    construirTabla();
-
-
-    }
+    }//Termina función para agregarArticulos en editar
+    
+    //Inicia función para eliminarArticulos en editar
     var eliminarArtE = function()
     {
     	var art = ($(this).attr("name"));
@@ -643,13 +663,16 @@ var eliminar = function(arreglo,posicion)
     	numArticulosE = eliminar(numArticulosE,i);
     	//llenarcomboEleArtE();
     	construirTabla();
-    }
+    }//Termina función para eliminarArticulos en editar
+    
+    //Inicia función para regresar al editar
     var regresarEditar = function()
     {
     	//ocultar elementos
     	$("#eleccionMaterialE").hide();
     	$("#editarSol").show("slow");
-    }
+    }//Termina función para regresar al editar
+    
     //empieza función de eliminar solicitud
     var eliminarSolicitud = function()
     {
@@ -702,7 +725,8 @@ var eliminar = function(arreglo,posicion)
     		} 
     	});
     }//fin función eliminar solicitud
-    //inicio de funcion de capacidad de laboratorio
+    
+    //inicia funcion de capacidad de laboratorio
     var capacidadLab = function()
     {
     	var laboratorio = $("#cmbLaboratorio").val();
@@ -738,6 +762,7 @@ var eliminar = function(arreglo,posicion)
 		});
 
     }//fin de funcion de capacidad de laboratorio
+    
     //inicio de funcion para dar de alta una nueva solicitud de lab
     var altaNuevaSol = function()
     {
@@ -853,6 +878,44 @@ var eliminar = function(arreglo,posicion)
 	    	sweetAlert("Error", "Debe llenar todos los campos!", "error");
 	   	}
     }//fin de funcion para dar de alta una nueva solicitud de lab
+    
+    //Inicia función para editar una solicitud
+    var SolEditSol = function()
+    {
+    	if(articulosE != "" && articulosAgregadosE != "" && numArticulosE != "")
+    	{
+    		var ff = $("#txtFechaSE").val();
+    		var a  = ff.substring(0,4);
+    		var m  = ff.substring(5,7);
+    		var d  = ff.substring(8,10);
+    		var fs = d+"/"+m+"/"+a;
+    		var hs = $("#cmbHoraPractE option:selected").text();
+    		var parametros = "opc=ModificarSol1"+
+    							"&fs="+fs+
+    							"&hs="+hs+
+				        		"&id="+Math.random();
+			$.ajax({
+	    		cache:false,
+	    		type: "POST",
+	    		dataType: "json",
+	    		url:"../data/maestros.php",
+	    		data: parametros,
+	    		success: function(response)
+	    		{
+	    			//aqui pasa algo
+				},
+				error: function(xhr, ajaxOptions,x)
+				{
+					console.log("Error de conexión ModificarSol");	
+				}
+			});
+    	}//Termina if de checar campos vacios en editar
+    	else
+    	{
+    		sweetAlert("Error", "Debe llenar todos los campos!", "error");
+    	}
+    }//Termina función para editar una solicitud
+
     //inicio de funcion para llenar el combo de hora de materia
     var comboHoraMat = function()
     {
@@ -907,6 +970,7 @@ var eliminar = function(arreglo,posicion)
 		$("#cmbHoraPract").html("<option value='' disabled selected>Seleccione la hora</option>");
 		$('select').material_select();
     }//fin de funcion para llenar el combo de hora de materia
+    
     //inicio de funcion para llenar el combo de practica
     var comboPract = function()
     {
@@ -946,6 +1010,7 @@ var eliminar = function(arreglo,posicion)
     		}
     	});
     }//fin de funcion para llenar el combo de practica
+    
     //inicio de funcion para llenar el combo de laboratorio
     var comboLab = function()
     {
@@ -985,6 +1050,7 @@ var eliminar = function(arreglo,posicion)
     		}
     	});
     }//fin de funcion para llenar el combo de laboratorio
+    
     //inicio de funcion para llenar el combo de la hora de la practica
     var comboHoraPrac = function()
     {
@@ -1040,6 +1106,8 @@ var eliminar = function(arreglo,posicion)
 			}
 		});
     }//fin de funcion para llenar el combo de la hora de la practica
+	
+    //Inicio de funcion para llenar el combo de la hora de la practica en Editar
 	var comboHoraPracE = function(lab,hor)
     {
     	var hora 			= hor;
@@ -1094,7 +1162,8 @@ var eliminar = function(arreglo,posicion)
 				console.log("Error de conexión comboPracE");	
 			}
 		});
-    }
+    }//Termina funcion para llenar el combo de la hora de la practica en Editar
+	
 	//eventos menu Reportes
 	var listaAsistencia = function()
 	{
@@ -1106,9 +1175,11 @@ var eliminar = function(arreglo,posicion)
 		$("#lista").hide();
 		$("#selecionarLista").show("slow");
 	}
+	
 	//Configuramos el evento del Tab
 	$("#salirTab").on("click",salir);
 	$("#solicitudestab").on("click",solAceptadas);
+	
 	//Configuramos los eventos Menu Solicitudes
 	$("#btnSolicitudesAceptadas").on("click",solAceptadas);
 	$("#btnSolicitudesPendientes").on("click",solPendientes);
@@ -1116,22 +1187,26 @@ var eliminar = function(arreglo,posicion)
 	$("#btnAgregarArtE").on("click",agregarArtE);
 	$("#btnRegresarE").on("click",regresarEditar);
 	$("#btnRegresarPen").on("click",solPendientes);
+	$("#btnFinalizarNSE").on("click",SolEditSol);
 	//para botones que son creados dinamicamente primero se coloca:
 	//el nombre de el id de la tabla que lo contiene despues el on y despues el evento
 	//y de ahi el nombre del boton que desencadenara el evento
 	$("#tbSolRealizadas").on("click","#btnPracticaRealizada",practicaRealizada);
 	$("#btnSolicitudesRealizadas").on("click",solRealizadas);
 	$("#btnNuevaSolicitud").on("click",solNueva);
+	
 	//eventos de los combos
 	$("#cmbMateria").on("change",comboHoraMat);
 	$("#cmbHoraMat").on("change",comboPract);
 	$("#cmbPractica").on("change",comboLab);
 	$("#cmbLaboratorio").on("change",comboHoraPrac);
+	
 	//eventos de altaArticulo
 	$("#btnElegirMaterial").on("click",elegirMaterial);
 	$("#btnFinalizarNS").on("click",altaNuevaSol);
 	$("#btnRegresar").on("click",solNueva);
 	$("#btnAgregarArt").on("click",agregarArt);
+	
 	//Configuramos los eventos Menu Reportes
 	$("#btnListaAsistencia").on("click",listaAsistencia);
 	$("#btnRegresarla").on("click",regresar);
