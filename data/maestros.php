@@ -369,7 +369,6 @@ function nuevaSol()
 function construirTbArt()
 {
 	$cveArt[] 	= $_POST['articulosAgregados'];
-	var_dump($cveArt);
 	$nomArt[] 	= $_POST['articulos'];
 	$num[] 		= $_POST['numArticulos'];
 	$n 			= count($cveArt);
@@ -391,6 +390,34 @@ function construirTbArt()
 	$arrayJSON = array('respuesta' => $respuesta,
 						'renglones' => $renglones);
 	print json_encode($arrayJSON);	
+}
+function construirTbArtE()
+{
+	$cve 		= $_POST['articulosAgregadosE'];
+	$nomArt 	= $_POST['articulosE'];
+	$numArt 	= $_POST['numArticulosE'];
+	$cveArtE 	= explode(",",$cve);
+	$nomArtE 	= explode(",",$nomArt);
+	$numE 	 	= explode(",",$numArt);
+	$n 			= count($cveArtE);
+	$respuesta 	= false;
+	$renglones 	= "";
+	for ($i=0; $i < $n ; $i++) 
+	{ 
+		if ($cveArtE[$i]!= "") 
+		{
+			$respuesta	= true;
+			//$renglones	= "";
+			$renglones .= "<tr id=".$cveArtE[$i].">";
+			$renglones .= "<td class='col s2'>".$numE[$i]."</td>";
+			$renglones .= "<td class='col s8'>".$nomArtE[$i]."</td>";
+			$renglones .= "<td class='col s2'><a name ='".$cveArtE[$i]."' class='btnEliminarArtE btn-floating btn-large waves-effect waves-light red darken-1'><i class='material-icons'>delete</i></a></td>";
+			$renglones .= "</tr>";
+		}
+	}
+	$arrayJSON = array('respuesta' => $respuesta,
+						'renglones' => $renglones);
+	print json_encode($arrayJSON);
 }
 //Menú principal
 $opc = $_POST["opc"];
@@ -424,6 +451,9 @@ switch ($opc){
 		break;
 	case 'construirTbArt1':
 		construirTbArt();
+		break;
+	case 'construirTbArtE1':
+		construirTbArtE();
 		break;
 } 
 ?>

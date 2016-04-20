@@ -334,7 +334,7 @@ var inicioMaestro = function ()
 		    				$("#txtNumArt").val("1");
 		    				$("#bodyArt").append(response.renglones);
 		    				$(".btnEliminarArt").on("click",eliminarArt);
-							//formar de nuevo el combo
+							//formar de nuevo el combo para elegir el material
 							llenarcomboEleArt();		
 				}//termina if
 				else
@@ -508,7 +508,6 @@ var eliminar = function(arreglo,posicion)
        					articulosE.push((response.materiales['nomMat'][i]));
 						numArticulosE.push((response.materiales['cantidad'][i]));
        				}
-       				console.log(articulosAgregadosE);
        			}
        			else
        			{
@@ -520,47 +519,6 @@ var eliminar = function(arreglo,posicion)
        		}
        	});
     }//Termina función editar solicitud
-    var agregarArtE = function()
-    {
-    	//aquiEmpieza todo
-    	var artCve = $("#cmbMaterialCatE" ).val();
-    	var artNom = $("#cmbMaterialCatE option:selected").text();
-    	var num    = $("#txtNumArtE").val();
-	    articulosE.push(artNom);
-	    articulosAgregadosE.push(artCve);
-	    numArticulosE.push(num);
-	    var parametros = "opc=agregarArt1"+
-	    "&artCve="+artCve+
-	    "&artNom="+artNom+
-	    "&num="+num+
-	    "&id="+Math.random();
-	    $.ajax({
-		    cache:false,
-		    type: "POST",
-		    dataType: "json",
-		    url:"../data/maestros.php",
-		    data: parametros,
-		    success: function(response)
-		    {
-		    	if(response.respuesta == true)
-		    	{
-		    				$("#txtNumArt").val("1");
-		    				$("#bodyArt").append(response.renglones);
-		    				$(".btnEliminarArtE").on("click",eliminarArtE);
-							//formar de nuevo el combo
-							llenarcomboEleArtE();		
-				}//termina if
-				else
-				{
-					console.log("no agrego articulos");
-				}
-			},
-			error: function(xhr, ajaxOptions,x)
-			{
-				console.log("Error de conexión articuloAgregado");	
-			}
-		});
-    }
     var elegirMaterialE = function()
     {
     	//ocultar elementos
@@ -573,10 +531,10 @@ var eliminar = function(arreglo,posicion)
     }//Termina función elegirMaterial de editar
     var construirTabla = function()
     {
-    	var parametros = "opc=construirTbArt1"+
-    	"&articulosAgregados="+articulosAgregadosE+
-    	"&articulos="+articulosE+
-    	"&numArticulos="+numArticulosE+
+    	var parametros = "opc=construirTbArtE1"+
+    	"&articulosAgregadosE="+articulosAgregadosE+
+    	"&articulosE="+articulosE+
+    	"&numArticulosE="+numArticulosE+
     	"&id="+Math.random();
     	$.ajax({
     		cache:false,
@@ -589,9 +547,9 @@ var eliminar = function(arreglo,posicion)
     			{
     				$("#bodyArtE").html("");
     				$("#bodyArtE").append(response.renglones);
-    				//$(".btnEliminarArtE").on("click",eliminarArtE);
+    				llenarcomboEleArtE();
+    				$(".btnEliminarArtE").on("click",eliminarArtE);
 					//formar de nuevo el combo
-					llenarcomboEleArtE();
 				}//termina if
 				else
 				{
@@ -614,7 +572,6 @@ var eliminar = function(arreglo,posicion)
     	var i 			= 0;
     	var o 			= 0;	
     	var laboratorio = $("#txtLabE").attr("name");
-    	console.log(laboratorio);
     	var parametros 	= "opc=comboEleArt1"+
     						"&laboratorio="+laboratorio+
     						"&id="+Math.random();
@@ -638,7 +595,6 @@ var eliminar = function(arreglo,posicion)
 						comboclaArt = (eliminar(comboclaArt,i));
 						comboArt 	= (eliminar(comboArt,i));				
 					}
-					console.log(comboclaArt);
 					var con = comboclaArt.length;
 					//termina eliminación
 					$("#cmbMaterialCatE").html(" ");
@@ -664,6 +620,29 @@ var eliminar = function(arreglo,posicion)
 				console.log(xhr);	
 			}
 		});
+    }
+    var agregarArtE = function()
+    {
+    	var artCve = $("#cmbMaterialCatE" ).val();
+    	var artNom = $("#cmbMaterialCatE option:selected").text();
+    	var num    = $("#txtNumArtE").val();
+	    articulosE.push(artNom);
+	    articulosAgregadosE.push(artCve);
+	    numArticulosE.push(num);
+	    //llenarcomboEleArtE();
+	    construirTabla();
+
+
+    }
+    var eliminarArtE = function()
+    {
+    	var art = ($(this).attr("name"));
+    	var i = articulosAgregadosE.indexOf(art);
+    	articulosE = eliminar(articulosE,i);
+    	articulosAgregadosE = eliminar(articulosAgregadosE,i);
+    	numArticulosE = eliminar(numArticulosE,i);
+    	//llenarcomboEleArtE();
+    	construirTabla();
     }
     var regresarEditar = function()
     {
@@ -741,9 +720,6 @@ var eliminar = function(arreglo,posicion)
     			{
     				if(parseInt($("#txtCantAlumnos").val()) <= response.capacidad)
     				{
-						//console.log("entro t");
-						//console.log($("#txtCantAlumnos").val());
-						//console.log(response.capacidad);
 						return true;
 					}
 					else
@@ -1137,6 +1113,7 @@ var eliminar = function(arreglo,posicion)
 	$("#btnSolicitudesAceptadas").on("click",solAceptadas);
 	$("#btnSolicitudesPendientes").on("click",solPendientes);
 	$("#btnElegirMaterialE").on("click",elegirMaterialE);
+	$("#btnAgregarArtE").on("click",agregarArtE);
 	$("#btnRegresarE").on("click",regresarEditar);
 	$("#btnRegresarPen").on("click",solPendientes);
 	//para botones que son creados dinamicamente primero se coloca:
@@ -1150,7 +1127,7 @@ var eliminar = function(arreglo,posicion)
 	$("#cmbHoraMat").on("change",comboPract);
 	$("#cmbPractica").on("change",comboLab);
 	$("#cmbLaboratorio").on("change",comboHoraPrac);
-	//dddddd
+	//eventos de altaArticulo
 	$("#btnElegirMaterial").on("click",elegirMaterial);
 	$("#btnFinalizarNS").on("click",altaNuevaSol);
 	$("#btnRegresar").on("click",solNueva);
