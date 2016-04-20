@@ -492,7 +492,6 @@ var eliminar = function(arreglo,posicion)
        				$("#txtMateriaE").val(response.materia);
        				$("#txtHoraMatE").val(((response.horas[0]).substring(0,2))+":00");
        				//$("#txtFechaSE").val("12/12/2016");
-       				//$("#txtFechaSE").value = "2014-02-09";
        				$("#txtPracticaE").val(response.practica);
        				$("#txtLabE").val(response.laboratorio);
        				$("#txtLabE").attr("name",response.claveLab);
@@ -509,6 +508,7 @@ var eliminar = function(arreglo,posicion)
        					articulosE.push((response.materiales['nomMat'][i]));
 						numArticulosE.push((response.materiales['cantidad'][i]));
        				}
+       				console.log(articulosAgregadosE);
        			}
        			else
        			{
@@ -614,6 +614,7 @@ var eliminar = function(arreglo,posicion)
     	var i 			= 0;
     	var o 			= 0;	
     	var laboratorio = $("#txtLabE").attr("name");
+    	console.log(laboratorio);
     	var parametros 	= "opc=comboEleArt1"+
     						"&laboratorio="+laboratorio+
     						"&id="+Math.random();
@@ -632,11 +633,12 @@ var eliminar = function(arreglo,posicion)
 					//eliminar elementos repetidos
 					for (var r =0; r< c; r++) 
 					{
-						o = (articulosAgregados[r]);
+						o = (articulosAgregadosE[r]);
 						i = parseInt((comboclaArt).indexOf(o));
 						comboclaArt = (eliminar(comboclaArt,i));
 						comboArt 	= (eliminar(comboArt,i));				
 					}
+					console.log(comboclaArt);
 					var con = comboclaArt.length;
 					//termina eliminación
 					$("#cmbMaterialCatE").html(" ");

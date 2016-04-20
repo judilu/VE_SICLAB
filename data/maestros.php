@@ -369,6 +369,7 @@ function nuevaSol()
 function construirTbArt()
 {
 	$cveArt[] 	= $_POST['articulosAgregados'];
+	var_dump($cveArt);
 	$nomArt[] 	= $_POST['articulos'];
 	$num[] 		= $_POST['numArticulos'];
 	$n 			= count($cveArt);
