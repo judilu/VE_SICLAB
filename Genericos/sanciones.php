@@ -22,12 +22,7 @@
 					<label for="txtFechaSancion">Fecha</label>
 				</div>
 				<div class="input-field col s5" id="cmbSanciones">
-					<select>
-						<option value="" disabled selected>Seleccione la sanción</option>
-						<option value="1">Option 1</option>
-						<option value="2">Option 2</option>
-						<option value="3">Option 3</option>
-					</select>
+					
 					<label>Sanciones</label>
 				</div>
 				<div class="input-field col s5">

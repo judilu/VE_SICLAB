@@ -1,6 +1,16 @@
 <div id="devolucionMaterial2">
 	<h5>Devolución de material</h5>
 	<div class="row">
+				<div class="input-field col s2">
+					<input id="txtNControlAlu" placeholder="" type="text" class="validate" disabled>
+					<label active for="txtNControlAluDev">Número control</label>
+				</div>
+				<div class="input-field col s4">
+					<input id="txtNombreAlu" placeholder="" type="text" class="validate" disabled>
+					<label active for="txtNombreAluDev">Nombre del alumno</label>
+				</div>
+			</div>
+	<div class="row">
 		<div class="col s8 offset-s2">
 			<table class="bordered highlight responsive-table" id="tbListaArticulosDevolucion">
 

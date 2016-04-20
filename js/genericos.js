@@ -60,6 +60,7 @@
 		$("#atenderSolicitud").hide("slow");
 		$("#alumnosSancionados").hide("slow");
 		$("#solicitudesEnProceso").hide("slow");
+		$("#tabSolPendientesAlumnos").html(" ");
 		var parametros 	= "opc=prestamosPendientes1"+"&id="+Math.random();
 		$.ajax({
 			cache:false,
@@ -70,9 +71,10 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
-					$("#tabSolPendientesAlumnos").append("");
+					$("#tabSolPendientesAlumnos").html(" ");
 					$("#tabSolPendientesAlumnos").append(response.renglones);
 					$("#tabSolPendientesAlumnos #btnAtenderPrestamo").on("click",atenderPrestamoMaterial);
+					$("#txtnombreAlumnoPrestamo").val(response.nombreAlumno);
 					//$("#tabSolPendientesAlumnos #btnEliminarprestamo").on("click",verMas);
 				}
 				else
@@ -306,6 +308,7 @@
 	var aplicaSancion = function()
 	{		
 		$("#devolucionMaterial2").hide("slow");
+		$("#").val();
 		var parametros 	= "opc=aplicaSancion1"+"&id="+Math.random();
 		$.ajax({
 			cache:false,
@@ -316,7 +319,13 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
-					
+					$("#cmbSanciones").html(" ");
+						for (var i = 0; i < response.contador; i++) 
+						{
+							$("#cmbSanciones").append($("<option></option>").attr("value",response.claveSancion[i]).text(response.nombreSancion[i]));
+						}
+						$("#cmbSanciones").trigger('contentChanged');
+						$('select').material_select();
 				}
 				else
 				{

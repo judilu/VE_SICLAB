@@ -729,6 +729,7 @@ function prestamosPendientes()
 		$con 		= 0;
 		$rows		= array();
 		$renglones	= "";
+		$nombreAlu 	= "";
 		$conexion 	= conectaBDSICLAB();
 		$consulta	= sprintf("select ea.ALUCTR,ea.horaEntrada,ea.fechaEntrada,p.clavePrestamo 
 								from lbentradasalumnos ea 
@@ -759,7 +760,8 @@ function prestamosPendientes()
 			$renglones .= "<tbody>";
 			$renglones .= "<tr>";
 			$renglones .= "<td>".$rows[$c]["ALUCTR"]."</td>";
-			$renglones .= "<td>".$rows[$c]["ALUCTR"]."</td>";
+			$nombreAlu 	= consultaAlumno($rows[$c]["ALUCTR"]); 
+			$renglones .= "<td>".$nombreAlu."</td>";
 			$renglones .= "<td>".$rows[$c]["fechaEntrada"]."</td>";
 			$renglones .= "<td>".$rows[$c]["horaEntrada"]."</td>";
 			$renglones .= "<td><a name = '".$rows[$c]["clavePrestamo"]."' class='btn waves-effect waves-light  green darken-2' id='btnAtenderPrestamo'>Atender</a></td>";
@@ -769,7 +771,8 @@ function prestamosPendientes()
 			$respuesta = true;
 		}
 	}
-	$salidaJSON = array('respuesta' => $respuesta, 'renglones' => $renglones);
+	$salidaJSON = array('respuesta' => $respuesta, 
+						'renglones' => $renglones);
 	print json_encode($salidaJSON);
 }
 function atenderPrestamo()
@@ -786,7 +789,7 @@ function atenderPrestamo()
 		$renglones	= "";
 		$nombre		= "";
 		$conexion 	= conectaBDSICLAB();
-		$consulta	= sprintf("select p.aluctr,p.clavePrestamo,ac.claveArticulo,ac.nombreArticulo,sa.cantidad 
+		$consulta	= sprintf("select p.ALUCTR,p.clavePrestamo,ac.claveArticulo,ac.nombreArticulo,sa.cantidad 
 								from lbarticuloscat ac 
 								INNER JOIN lbsolicitudarticulos sa on sa.claveArticulo=ac.claveArticulo 
 								INNER JOIN lbprestamos p on p.clavePrestamo=sa.clavePrestamo
@@ -905,6 +908,7 @@ function prestamosProceso()
 		$con 		= 0;
 		$rows		= array();
 		$renglones	= "";
+		$nombreAlu 	= "";
 		$conexion 	= conectaBDSICLAB();
 		$consulta	= sprintf("select ea.ALUCTR,p.fechaPrestamo,p.horaPrestamo, p.clavePrestamo 
 								from lbentradasalumnos ea 
@@ -935,7 +939,8 @@ function prestamosProceso()
 			$renglones .= "<tbody>";
 			$renglones .= "<tr>";
 			$renglones .= "<td>".$rows[$c]["ALUCTR"]."</td>";
-			$renglones .= "<td>".$rows[$c]["ALUCTR"]."</td>";
+			$nombreAlu 	= consultaAlumno($rows[$c]["ALUCTR"]);
+			$renglones .= "<td>".$nombreAlu."</td>";
 			$renglones .= "<td>".$rows[$c]["fechaPrestamo"]."</td>";
 			$renglones .= "<td>".$rows[$c]["horaPrestamo"]."</td>";
 			$renglones .= "<td><a name = '".$rows[$c]["clavePrestamo"]."' class='waves-effect waves-light btn amber darken-2' id='btnDevolucionMaterial'>Devolución</a></td>";
@@ -946,6 +951,22 @@ function prestamosProceso()
 	}
 	$salidaJSON = array('respuesta' => $respuesta, 'renglones' => $renglones);
 	print json_encode($salidaJSON);
+}
+function consultaAlumno($nc)
+{
+	$respuesta		= false;
+	$nControl		= $nc;
+	$ALUAPP 		= "";
+	$ALUAPM			= "";
+	$ALUNOM			= "";
+	$conexion 		= conectaBDSIE();
+	$consulta 		= sprintf("select ALUAPP, ALUAPM, ALUNOM from DALUMN where ALUCTR=%s limit 1",$nControl);
+	$res			= mysql_query($consulta);
+	if($row = mysql_fetch_array($res))
+	{
+		return $row["ALUAPP"]." ".$row["ALUAPM"]." ".$row["ALUNOM"];
+	}
+
 }
 function devolucionPrestamo()
 {

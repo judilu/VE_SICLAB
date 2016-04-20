@@ -401,8 +401,11 @@ var inicio = function()
 	}
 	var guardaEntradaAlumno = function()
 	{
-		var nc   		= $("#txtNControlAlu").val();
-		var claveCal 	= $("#cmbHorariosPractica").val();
+		if (($("#cmbNombrePracticas").val()) != "") 
+		{
+			var nc   		= $("#txtNControlAlu").val();
+			var claveCal 	= $("#cmbNombrePracticas").val();
+		}
 		//fecha del sistema
 		var f  = new Date();
 		var dd = f.getDate();
