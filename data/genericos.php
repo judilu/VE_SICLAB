@@ -394,7 +394,6 @@ function listaArticulos()
 		$res 		= mysql_query($consulta);
 		$renglones	.= "<thead>";
 		$renglones	.= "<tr>";
-		$renglones	.= "<th data-field='codigo'>Código</th>";
 		$renglones	.= "<th data-field='nombreArticulo'>Nombre del artículo</th>";
 		$renglones	.= "<th data-field='cantidad'>Cantidad</th>";
 		$renglones	.= "</tr>";
@@ -411,7 +410,6 @@ function listaArticulos()
 		{
 			$renglones .= "<tbody>";
 			$renglones .= "<tr>";
-			$renglones .= "<td>".$rows[$c]["claveArticulo"]."</td>";
 			$renglones .= "<td>".$rows[$c]["nombreArticulo"]."</td>";
 			$renglones .= "<td>".$rows[$c]["cantidad"]."</td>";
 			$renglones .= "</tr>";
@@ -436,7 +434,7 @@ function altaInventario1 ()
 	{
 		$conexion					= conectaBDSICLAB();
 		$imagen						= GetSQLValueString($_POST["imagen"],"text");
-		$identificadorArticulo 		= GetSQLValueString($_POST["identificadorArticulo"],"text");
+		$identificadorArticulo 		= "' '";
 		$modelo						= GetSQLValueString($_POST["modelo"],"text");
 		$numeroSerie				= GetSQLValueString($_POST["numeroSerie"],"text");
 		$marca						= GetSQLValueString($_POST["marca"],"text");
@@ -448,20 +446,23 @@ function altaInventario1 ()
 		$claveKit					= GetSQLValueString($_POST["claveKit"],"text");
 		$ubicacionAsignada			= GetSQLValueString($_POST["ubicacionAsignada"],"text");
 		$claveArticulo 				= GetSQLValueString($_POST["claveArticulo"],"text");	
-		//$claveArticulo = claveArt(nombreArt);
 		$estatus 					= GetSQLValueString($_POST["estatus"],"text");
 		//insert a tabla lbarticulos
 		$consulta= sprintf("insert into lbarticulos values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
 			$claveArticulo,$descripcionUso,$descripcionArticulo,$numeroSerie,$marca,$modelo,$estatus,$unidadMedida,$fechaCaducidad,$tipoContenedor,$imagen,$identificadorArticulo,$ubicacionAsignada,$claveKit);
 		$resconsulta = mysql_query($consulta);
 		if(mysql_affected_rows()>0)
+		{
+			$identificadorArticulo = mysql_insert_id($conexion);
 			$respuesta = true; 
+		}
 	}
 	else
 	{
 		//salir();
 	}
-	$salidaJSON = array('respuesta' => $respuesta);
+	$salidaJSON = array('respuesta' => $respuesta,
+						'idu' => $identificadorArticulo);
 	print json_encode($salidaJSON);
 	
 }
@@ -525,14 +526,6 @@ function bajaArticulos()
 		$res = mysql_query($consulta1);
 		if(mysql_affected_rows()>0)
 			$respuesta = true;
-		
-		/*else if ($estatus == 'MR') 
-		{
-			$consulta2	= sprintf("update lbmovimientosarticulos set estatus='MR' where identificadorArticulo=%d",$identificadorArticulo,$responsable);
-			$res 		= mysql_query($consulta2);
-			if(mysql_affected_rows()>0)
-			$respuesta = true;
-		} */
 	}
 	$salidaJSON = array('respuesta' => $respuesta);
 	print json_encode($salidaJSON);
@@ -556,7 +549,7 @@ function listaMantenimiento()
 		$res 		= mysql_query($consulta);
 		$renglones	.= "<thead>";
 		$renglones	.= "<tr>";
-		$renglones	.= "<th data-field='codigoBarras'>Código de barras</th>";
+		$renglones	.= "<th data-field='codigoBarras'>Identificador artículo</th>";
 		$renglones	.= "<th data-field='nombreArticulo'>Nombre del artículo</th>";
 		$renglones	.= "<th data-field='accion'>Acción</th>";
 		$renglones	.= "</tr>";
@@ -1254,6 +1247,8 @@ function listaArticulosAlta()
 function identificadorArt()
 {
 	
+
+
 }
 //Menú principal
 $opc = $_POST["opc"];

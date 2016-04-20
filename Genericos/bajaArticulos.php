@@ -4,7 +4,7 @@
 			<div class="row">
 				<div class="input-field col s5">
 					<input id="txtCodigoBarrasBaja" type="text" class="validate">
-					<label class="active" for="txtCodigoBarrasBaja">Código de barras</label>
+					<label class="active" for="txtCodigoBarrasBaja">Identificador arículo</label>
 				</div>
 				<div class="col s3">
 					<a class="waves-effect waves-light btn blue darken-1" id="btnBuscarArtBaja">Buscar</a>

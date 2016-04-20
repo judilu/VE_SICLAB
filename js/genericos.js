@@ -688,7 +688,6 @@
 			},
 			error: function(xhr, ajaxOptions,x){
 				alert("Error de conexión lista de artículos");
-				console.log(xhr);	
 			}
 		});
 		$("#listaArt").show("slow");
@@ -737,21 +736,26 @@
 	}
 	var altaInventario = function()
 	{
-		if(($("#txtModeloArtAlta").val())!="")
+		if(($("#txtModeloArtAlta").val())!="" && ($("#txtNumSerieAlta").val())!="" && ($("#cmbNombreArtAlta").val())!=""
+			&& ($("#txtMarcaArtAlta").val())!="" && ($("#txtTipoContenedorAlta").val())!="" && ($("#txtUbicacionAlta").val())!="")
 		{
+			if($("#txtClaveKitAlta").val() == "")
+			{
+				var claveKit 	="0000";
+			}
 			//aqui empieza todo
        		//var cveUsuario = usuarioNombre();
        		var imagen						= " ";
        		var modelo 						= $("#txtModeloArtAlta").val();
        		var numeroSerie 				= $("#txtNumSerieAlta").val();
-			var claveArticulo				= $("#cmbNombreArt").val();//ocupo sacar el valor del select
+			var claveArticulo				= $("#cmbNombreArtAlta").val();//ocupo sacar el valor del select
 			var marca						= $("#txtMarcaArtAlta").val();
 			var tipoContenedor 				= $("#txtTipoContenedorAlta").val();
 			var descripcionArticulo			= $("#txtDescripcionArtAlta").val();
 			var descripcionUso				= $("#txtDescripcionUsoAlta").val();
 			var unidadMedida 				= $("#cmbUm").val();
 			var fechaCaducidad				= $("#txtFechaCaducidadAlta").val();
-			var claveKit					= $("#txtClaveKitAlta").val();
+			//var claveKit					= $("#txtClaveKitAlta").val();
 			var ubicacionAsignada			= $("#txtUbicacionAlta").val();
 			var estatus						= "V";
 			var parametros 	= "opc=altaInventario1"+"&claveArticulo="+claveArticulo
@@ -774,28 +778,25 @@
 				dataType: "json",
 				url:'../data/genericos.php',
 				data: parametros,
-				success: function(response){
+				success: function(response)
+				{
 					if(response.respuesta == true)
 					{
-						/*swal("El articulo fue dado de alta con éxito!", "Da clic en el botón OK!", "success");
+						swal("El articulo fue dado de alta con éxito! El identificador del artículo es: "+response.idu, "Da clic en el botón OK!", "success");
 						$("input").val("");
-						$("textarea").val("");*/
-						muestraIdentificador();
+						$("textarea").val("");
 					}
 					else
 					{
 						sweetAlert("Error", "No se pudo insertar el articulo!", "error");
 					}
 				},
-				error: function(xhr, ajaxOptions,x){
+				error: function(xhr, ajaxOptions,x)
+				{
 					sweetAlert("Error", "Error de conexión alta inventario", "error");
 				}
 			});
 		}
-	}
-	var muestraIdentificador = function()
-	{
-		
 	}
 	//muestra la pantalla de baja articulos
 	var bajaArticulos = function()
@@ -840,7 +841,8 @@
 						sweetAlert("Error", "No se pudo dar de baja el articulo!", "error");
 					}
 				},
-				error: function(xhr, ajaxOptions,x){
+				error: function(xhr, ajaxOptions,x)
+				{
 					sweetAlert("Error", "Error de conexión baja de artículos", "error");
 				}
 			});

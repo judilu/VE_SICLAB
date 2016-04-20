@@ -7,7 +7,7 @@
 			</div>
 			<div class="input-field col s3 offset-s2">
 				<input id="txtcodigoBarras" type="text" class="validate">
-				<label class="active" for="txtcodigoBarras">Código de barras</label>
+				<label class="active" for="txtcodigoBarras">Identificador artículo</label>
 			</div>
 			<div class="col s3">
 				<a class="waves-effect waves-light btn blue darken-1"><i class="material-icons left">search</i>Buscar</a>
