@@ -1053,7 +1053,7 @@ function devolucionPrestamo()
 			$renglones .= "<td>".$rows[$c]["identificadorArticulo"]."</td>";
 			$renglones .= "<td>".$rows[$c]["nombreArticulo"]."</td>";
 			$renglones .= "<td><a name = '".$rows[$c]["identificadorArticulo"]."' class='btn waves-effect waves-light green darken-2 devolucionArt' id='btnDevolverArt'>Devolver</a></td>";
-			$renglones .= "<td><a name = '".$rows[$c]["identificadorArticulo"]."' class='waves-effect waves-light btn amber darken-2' id='btnAplicaSancion'>Sancionar</a></td>";
+			$renglones .= "<td><a name = '".$rows[$c]["identificadorArticulo"]."' class='waves-effect waves-light btn amber darken-2 aplicaSancion' id='btnAplicaSancion'>Sancionar</a></td>";
 			$renglones .= "</tr>";
 			$renglones .= "</tbody>";
 			$respuesta = true;
@@ -1076,7 +1076,7 @@ function guardaDevolucion()
 		$fecha 					= GetSQLValueString($_POST["fechaDevolucion"],"text");
 		$hora 					= GetSQLValueString($_POST["horaDevolucion"],"text");
 		$depto 					= "1234";
-		$periodo 				= "9898";
+		$periodo 				= periodoActual();
 		$conexion 				= conectaBDSICLAB();
 		$consulta  				= sprintf("insert into lbdevoluciones values(%s,%s,%s,%s,%s,%s)",
 									$periodo,$clavePrestamo,$identificadorArticulo,$responsable,$fecha,$hora);
@@ -1097,6 +1097,7 @@ function aplicaSancion()
 	session_start();
 	if(!empty($_SESSION['nombre']))
 	{ 
+		$identificadorArticulo 	= GetSQLValueString($_POST["identificador"],"text");
 		$respuesta = true;
 	}
 	$salidaJSON = array('respuesta' => $respuesta);

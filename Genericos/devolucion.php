@@ -9,6 +9,9 @@
 					<input id="txtNombreAlu" placeholder="" type="text" class="validate" disabled>
 					<label active for="txtNombreAluDev">Nombre del alumno</label>
 				</div>
+				<div class="input-field col s1 offset-s1">
+					<input id="txtCvePrestamoDev" type="hidden" class="validate">
+				</div>
 			</div>
 	<div class="row">
 		<div class="col s8 offset-s2">

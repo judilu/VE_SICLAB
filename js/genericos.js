@@ -94,6 +94,8 @@
 		$(this).closest('tr').remove();
 		articulosPrestados = Array();
 		$("#solicitudesPendientes2").hide("slow");
+		$("#tbListaMaterialPrestamo").html("");
+		$("#bodyArtSolicitados").html("");
 		var clavePrestamo= $(this).attr('name');
 		var parametros 	= "opc=atenderPrestamo1"+"&clavePrestamo="+clavePrestamo+"&id="+Math.random();
 		$.ajax({
@@ -223,6 +225,7 @@
 		$("#solicitudesPendientes").hide("slow");
 		$("#devolucionMaterial").hide("slow");
 		$("#alumnosSancionados").hide("slow");
+		$("#tabSolProcesoAlumnos").html("");
 		var parametros 	= "opc=prestamosProceso1"+"&id="+Math.random();
 		$.ajax({
 			cache:false,
@@ -312,8 +315,12 @@
 	var aplicaSancion = function()
 	{		
 		$("#devolucionMaterial2").hide("slow");
-		$("#").val();
-		var parametros 	= "opc=aplicaSancion1"+"&id="+Math.random();
+		var idu 			= $(this).attr("name");
+		var clavePrestamo 	= $("#txtClavePrestamoDevolucion").val();
+		var parametros 	= "opc=aplicaSancion1"
+						+"&identificador="+idu
+						+"&clavePrestamo="+clavePrestamo
+						+"&id="+Math.random();
 		$.ajax({
 			cache:false,
 			type: "POST",
@@ -1253,6 +1260,7 @@
 	$("#btnCancelarAtenderSol").on("click",prestamosPendientes);
 	$("#tabSolPendientesAlumnos").on("click",".eliminarPrestamo",eliminaPrestamoPendiente);
 	$("#tbListaArticulosDevolucion").on("click",".devolucionArt",guardarDevolucionPrestamo);
+	$("#tbListaArticulosDevolucion").on("click",".aplicaSancion",aplicaSancion);
 	$("#btnDevolucionMaterial").on("click",devolucionPrestamo);
 	$("#btnFinalizarDevolucion").on("click",prestamosPendientes);
 	//Laboratorios
