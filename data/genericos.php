@@ -783,7 +783,7 @@ function atenderPrestamo()
 	{ 
 		$responsable= $_SESSION['nombre'];
 		$prestamo	= "";
-		$clavePrestamo = GetSQLValueString($_POST["clavePrestamo"],"text");
+		$clavePrestamo = GetSQLValueString($_POST["clavePrestamo"],"int");
 		$con 		= 0;
 		$rows		= array();
 		$renglones	= "";
@@ -821,7 +821,9 @@ function atenderPrestamo()
 			$respuesta = true;
 		}
 	}
-	$salidaJSON = array('respuesta' => $respuesta, 'renglones' => $renglones);
+	$salidaJSON = array('respuesta' => $respuesta,
+						 'renglones' => $renglones, 
+						 'clavePrestamo' => $clavePrestamo);
 	print json_encode($salidaJSON);
 }
 function agregaArticulos()
@@ -831,27 +833,46 @@ function agregaArticulos()
 	if(!empty($_SESSION['nombre']))
 	{ 
 		$responsable			= $_SESSION['nombre'];
-		$identificadorArticulo	= GetSQLValueString($_POST["identificadorArticulo"],"text");
-		$idu 					= "";
+		$identificadorArticulo	= GetSQLValueString($_POST["identificadorArticulo"],"int");
+		$clavePrestamo			= GetSQLValueString($_POST["clavePrestamo"],"int");
+		$idu 					= 0;
 		$nomArt 				= "";
-		$renglones				= "";
-		$conexion 				= conectaBDSICLAB();
-		$consulta				= sprintf("select A.identificadorArticulo,B.nombreArticulo,B.claveArticulo
-											from lbarticulos as A inner join lbarticuloscat as B on A.claveArticulo=B.claveArticulo
-											where A.estatus='V' and A.identificadorArticulo=%s",$identificadorArticulo,$responsable);
-		$res 					= mysql_query($consulta);
-		
-		if($row = mysql_fetch_array($res))
-		{
-			$idu  		=$row["identificadorArticulo"];
-			$nomArt 	=$row["nombreArticulo"];
-			$respuesta 	= true;
+		if (buscaArtSolicitud($clavePrestamo,$identificadorArticulo)) {
+			$conexion 				= conectaBDSICLAB();
+			$consulta				= sprintf("select A.identificadorArticulo,B.nombreArticulo,B.claveArticulo
+												from lbarticulos as A inner join lbarticuloscat as B on A.claveArticulo=B.claveArticulo
+												where A.estatus='V' and A.identificadorArticulo=%d",$identificadorArticulo,$responsable);
+			$res 					= mysql_query($consulta);
+			if($row = mysql_fetch_array($res))
+			{
+				$idu  		=$row["identificadorArticulo"];
+				$nomArt 	=$row["nombreArticulo"];
+				$respuesta 	= true;
+			}
 		}
 	}
 	$salidaJSON = array('respuesta' => $respuesta,
 						 'idu' 		=> $idu,
 						 'nomArt' 	=> $nomArt);
 	print json_encode($salidaJSON);
+}
+function buscaArtSolicitud($prestamo,$idu)
+{
+	$identificador 	= $idu;
+	$cvePrestamo 	= $prestamo;
+	$conexion 		= conectaBDSICLAB();
+	$consulta		= sprintf("select sa.claveArticulo from lbsolicitudarticulos sa
+								inner join lbarticulos a on sa.claveArticulo=a.claveArticulo
+								where a.identificadorArticulo=%d and sa.clavePrestamo=%d",$identificador,$cvePrestamo);
+	$res 			= mysql_query($consulta);
+	if(mysql_affected_rows()>0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}	
 }
  function guardaPrestamoPendiente()
  {
@@ -860,16 +881,22 @@ function agregaArticulos()
 	if(!empty($_SESSION['nombre']))
 	{
 		$responsable	= $_SESSION['nombre'];
-		$clavePrestamo	= GetSQLValueString($_POST["clavePrestamo"],"text");
+		$clavePrestamo	= GetSQLValueString($_POST["clavePrestamo"],"int");
 		$listaArt		= $_POST['listaArt'];
 		$arrayArt 		= explode(',',$listaArt); 
 		$cantidad 		= count($arrayArt);
-		for ($i=0; $i < $cantidad ; $i++) { 
+		for ($i=0; $i < $cantidad ; $i++) 
+		{ 
 			$conexion 	= conectaBDSICLAB();
-			$consulta	= sprintf(" insert into lbprestamosarticulos values(%s,%s,%s,%s)",'""',$arrayArt[$i],$clavePrestamo,'"P"');
+			$consulta	= sprintf("insert into lbprestamosarticulos values(%s,%s,%s,%s)",'""',$arrayArt[$i],$clavePrestamo,'"P"');
 			$res 		= mysql_query($consulta);
 			if(mysql_affected_rows()>0)
-				$respuesta = true;
+			{
+				if(actualizaSolArt($clavePrestamo))
+				{
+					$respuesta = true;
+				}
+			}
 		}
 	}
 	else
@@ -878,6 +905,21 @@ function agregaArticulos()
 	}
 	$arrayJSON = array('respuesta' => $respuesta);
 		print json_encode($arrayJSON);
+ }
+ function actualizaSolArt($prestamo)
+ {
+ 	$cveP 		= $prestamo;
+ 	$conexion 	= conectaBDSICLAB();
+ 	$consulta	= sprintf("update lbsolicitudarticulos set estatus ='A' where clavePrestamo=%d",$cveP);
+	$res 		= mysql_query($consulta);
+		if($res)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
  }
 function eliminaPrestamoPendiente()
 {

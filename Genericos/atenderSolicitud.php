@@ -6,6 +6,9 @@
 					<input id="txtnombreAlumnoPrestamo" type="text" class="validate">
 					<label for="txtnombreAlumnoPrestamo">Nombre</label>
 				</div>
+				<div class="input-field col s1 offset-s1">
+					<input id="txtclavePrestamo" type="hidden" class="validate">
+				</div>
 			</div>
 			<div class="row">
 				<div class="col s2">
