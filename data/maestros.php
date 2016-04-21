@@ -303,22 +303,6 @@ function eliminarSolicitud ()
 		print json_encode($arrayJSON);
 	}
 }
-function agregarArt ()
-{
-	$cveArt 	= GetSQLValueString($_POST['artCve'],"text");
-	$nomArt 	= $_POST['artNom'];
-	$num 		= GetSQLValueString($_POST['num'],"int");
-	$respuesta	= true;
-	$renglones	= "";
-	$renglones .= "<tr id=".$cveArt.">";
-	$renglones .= "<td class='col s2'>".$num."</td>";
-	$renglones .= "<td class='col s8'>".$nomArt."</td>";
-	$renglones .= "<td class='col s2'><a name =".$cveArt."class='btnEliminarArt btn-floating btn-large waves-effect waves-light red darken-1'><i class='material-icons'>delete</i></a></td>";
-	$renglones .= "</tr>";
-	$arrayJSON = array('respuesta' => $respuesta,
-						'renglones' => $renglones);
-	print json_encode($arrayJSON);
-}
 function nuevaSol()
 {
 	//insertar en lbsolicitudes
@@ -368,9 +352,12 @@ function nuevaSol()
 }
 function construirTbArt()
 {
-	$cveArt[] 	= $_POST['articulosAgregados'];
-	$nomArt[] 	= $_POST['articulos'];
-	$num[] 		= $_POST['numArticulos'];
+	$cve 	 	= $_POST['articulosAgregados'];
+	$nom 	 	= $_POST['articulos'];
+	$numArt		= $_POST['numArticulos'];
+	$cveArt 	= explode(",",$cve);
+	$nomArt 	= explode(",",$nom);
+	$num 		= explode(",",$numArt);
 	$n 			= count($cveArt);
 	$respuesta 	= false;
 	$renglones 	= "";
@@ -449,9 +436,6 @@ switch ($opc){
 	case 'eliminarSolicitud1':
 	eliminarSolicitud();
 	break;
-	case 'agregarArt1':
-		agregarArt();
-		break;
 	case 'nuevaSol1':
 		nuevaSol();
 		break;

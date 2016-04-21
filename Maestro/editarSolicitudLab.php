@@ -58,9 +58,7 @@
 						<div class="input-field col s6 offset-s1">
 							<select id="cmbMaterialCatE">
 								<!-- <option value="" disabled selected>Seleccione el material</option>
-								<option value="110">ALUMINIO</option>
-								<option value="115">AMONIACO</option>
-								<option value="120">AMPERIMETRO</option> -->
+								<option value="110">ALUMINIO</option> -->
 							</select>
 							<label>Materiales</label>
 						</div>
@@ -83,11 +81,7 @@
 									</tr>
 								</thead>
 								<tbody id="bodyArtE">
-									<!-- <tr>
-										<td class="col s2">3</td>
-										<td class="col s8">Osciloscopio</td>
-										<td class="col s2"><a name = 1 class="btnEliminarArtE btn-floating btn-large waves-effect waves-light red darken-1"><i class="material-icons">delete</i></a></td>";
-									</tr> -->
+									
 								</tbody>
 							</table>
 						</div>
