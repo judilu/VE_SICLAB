@@ -260,6 +260,7 @@ function editarSolicitud ()
 	$mat 	 		= nomMat("'".$claveMat."'");
     $horas 			= horaMat($claveMat,$clave);
     $materia 		= $mat[$claveMat];
+    $claveSol 		= $solicitud['claveSolicitud'];
     $fechaPrac 		= $solicitud['fechaSolicitud'];
     $practica 		= $solicitud['tituloPractica'];
     $claveLab 		= $solicitud['claveLaboratorio'];
@@ -268,12 +269,13 @@ function editarSolicitud ()
     $cantidad 		= $solicitud['cantidadAlumnos'];
     $motivoUso 		= $solicitud['motivoUso'];
     $respuesta 		= false;
-    $materiales 	= materiales($solicitud['claveSolicitud']);
-    if(($solicitud['claveSolicitud'])!=0)
+    $materiales 	= materiales($claveSol);
+    if($claveSol!=0)
     {
     	$respuesta = true;
     }
     $arrayJSON = array('respuesta' => $respuesta,
+    					'claveSol' => $claveSol,
     					'materia' => $materia,
     					'horas' => $horas,
     					'fechaPrac' => $fechaPrac,

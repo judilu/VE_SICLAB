@@ -381,7 +381,7 @@ var inicioMaestro = function ()
     				$("#bodyArt").html("");
     				$("#bodyArt").append(response.renglones);
     				llenarcomboEleArt();
-    				$("#txtCantAlumnos").val("1");
+    				$("#txtNumArt").val("1");
     				$(".btnEliminarArt").on("click",eliminarArt);
 					//formar de nuevo el combo
 				}//termina if
@@ -446,6 +446,7 @@ var inicioMaestro = function ()
 	    		{
        				//llenado datos
        				$("#txtMateriaE").val(response.materia);
+       				$("#txtMateriaE").attr("name",response.claveSol);
        				$("#txtHoraMatE").val(((response.horas[0]).substring(0,2))+":00");
        				//$("#txtFechaSE").val("12/12/2016");
        				$("#txtPracticaE").val(response.practica);
@@ -454,9 +455,11 @@ var inicioMaestro = function ()
        				$("#cmbHoraPractE").val(); //modificar
        				$("#txtCantAlumnosE").val(response.cantidad);
        				$("#textarea1E").val(response.motivoUso);
+       				
        				//combo
        				comboHoraPracE(response.claveLab,response.horaPractica);
        				//llenar tabla y combo
+       				console.log("bd "+response.materiales);
        				con =((response.materiales['claveMat']).length);
        				for (var i =0; i<con; i++) 
        				{
@@ -464,6 +467,7 @@ var inicioMaestro = function ()
        					articulosE.push((response.materiales['nomMat'][i]));
 						numArticulosE.push((response.materiales['cantidad'][i]));
        				}
+       				console.log(articulosAgregadosE);
        			}
        			else
        			{
@@ -1076,7 +1080,7 @@ var inicioMaestro = function ()
     				(((response.horaCierre).length)<4) ? (hf=(response.horaCierre).substring(0,1)) : (hf=(response.horaCierre).substring(0,2));
     				hff = parseInt(hf);
 					//modificando capacidad segun el laboratorio
-					//$("#txtCantAlumnos").attr("max",response.capacidad)
+					$("#txtCantAlumnosE").attr("max",response.capacidad)
 					for (var i = hii; i <= hff; i++) 
 					{
 						if(i>9)

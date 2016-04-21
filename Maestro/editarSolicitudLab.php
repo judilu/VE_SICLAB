@@ -34,7 +34,7 @@
 						<label>Hora de la práctica</label>
 					</div>
 					<div class="input-field col s2 offset-s1">
-						<input disabled id="txtCantAlumnosE" type="number" min="1" value="1"class="validate">
+						<input placeholder=" " id="txtCantAlumnosE" type="number" min="1" value="1"class="validate">
 						<label class="active" for="txtCantAlumnosE">Cant. de alumnos</label>
 					</div>
 					<div class="input-field col s6">
