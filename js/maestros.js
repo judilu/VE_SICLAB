@@ -448,7 +448,7 @@ var inicioMaestro = function ()
        				$("#txtMateriaE").val(response.materia);
        				$("#txtMateriaE").attr("name",response.claveSol);
        				$("#txtHoraMatE").val(((response.horas[0]).substring(0,2))+":00");
-       				//$("#txtFechaSE").val("12/12/2016");
+       				$("#txtFechaSE").val("2016/12/05");
        				$("#txtPracticaE").val(response.practica);
        				$("#txtLabE").val(response.laboratorio);
        				$("#txtLabE").attr("name",response.claveLab);
@@ -459,7 +459,6 @@ var inicioMaestro = function ()
        				//combo
        				comboHoraPracE(response.claveLab,response.horaPractica);
        				//llenar tabla y combo
-       				console.log("bd "+response.materiales);
        				con =((response.materiales['claveMat']).length);
        				for (var i =0; i<con; i++) 
        				{
@@ -604,11 +603,39 @@ var inicioMaestro = function ()
     var eliminarArtE = function()
     {
     	var art = ($(this).attr("name"));
+    	var solId = $("#txtMateriaE").attr("name");
     	var i = articulosAgregadosE.indexOf(art);
     	articulosE = eliminar(articulosE,i);
     	articulosAgregadosE = eliminar(articulosAgregadosE,i);
     	numArticulosE = eliminar(numArticulosE,i);
     	construirTablaE();
+    	var parametros 	= "opc=eliminarArt1"+
+    						"&claveArt="+art+
+    						"&solId="+solId
+    						"&id="+Math.random();
+    	$.ajax({
+    		cache:false,
+    		type: "POST",
+    		dataType: "json",
+    		url:"../data/maestros.php",
+    		data: parametros,
+    		success: function(response)
+    		{
+    			if(response.respuesta == true)
+    			{
+    				console.log("si se elimino de la bd el art");
+				}
+				else
+				{
+					console.log("no se elimino de la bd el art");
+				}
+			},
+			error: function(xhr, ajaxOptions,x)
+			{
+				console.log("Error de conexion combomat editar");
+				console.log(xhr);	
+			}
+		});
     }//Termina función para eliminarArticulos en editar
     
     //Inicia función para regresar al editar
@@ -825,19 +852,27 @@ var inicioMaestro = function ()
     }//fin de funcion para dar de alta una nueva solicitud de lab
     
     //Inicia función para editar una solicitud
-    var SolEditSol = function()
+    var editSol = function()
     {
     	if(articulosE != "" && articulosAgregadosE != "" && numArticulosE != "")
     	{
-    		var ff = $("#txtFechaSE").val();
-    		var a  = ff.substring(0,4);
-    		var m  = ff.substring(5,7);
-    		var d  = ff.substring(8,10);
-    		var fs = d+"/"+m+"/"+a;
-    		var hs = $("#cmbHoraPractE option:selected").text();
-    		var parametros = "opc=ModificarSol1"+
+    		var ff 	 		= $("#txtFechaSE").val();
+    		var a  	 		= ff.substring(0,4);
+    		var m  	 		= ff.substring(5,7);
+    		var d  	 		= ff.substring(8,10);
+    		console.log(ff);
+    		var fs 	 		= d+"/"+m+"/"+a;
+    		var hs 	 		= $("#cmbHoraPractE option:selected").text();
+    		var cant 		= $("#txtCantAlumnosE").val();
+    		var solId 		= $("#txtMateriaE").attr("name");
+    		console.log(solId);
+    		var parametros  = "opc=ModificarSol1"+
     							"&fs="+fs+
     							"&hs="+hs+
+    							"&cant="+cant+
+    							"&solId="+solId+
+    							"&articulosAgregadosE="+articulosAgregadosE+
+    							"&numArticulos="+numArticulosE+
 				        		"&id="+Math.random();
 			$.ajax({
 	    		cache:false,
@@ -847,11 +882,20 @@ var inicioMaestro = function ()
 	    		data: parametros,
 	    		success: function(response)
 	    		{
-	    			//aqui pasa algo
+	    			if (response.respuesta==true) 
+	    			{
+	    				swal("La solicitud fue actualizada exitosamente", "Da clic en el botón OK!", "success");
+	    				solPendientes();
+	    			}
+	    			else
+	    			{
+	    				sweetAlert("Error", "La solicitud no pudo ser actualizada exitosamente.!", "error");
+	    			}
 				},
 				error: function(xhr, ajaxOptions,x)
 				{
-					console.log("Error de conexión ModificarSol");	
+					console.log("Error de conexión ModificarSol");
+					console.log(xhr);	
 				}
 			});
     	}//Termina if de checar campos vacios en editar
@@ -1132,7 +1176,7 @@ var inicioMaestro = function ()
 	$("#btnAgregarArtE").on("click",agregarArtE);
 	$("#btnRegresarE").on("click",regresarEditar);
 	$("#btnRegresarPen").on("click",solPendientes);
-	$("#btnFinalizarNSE").on("click",SolEditSol);
+	$("#btnFinalizarNSE").on("click",editSol);
 	//para botones que son creados dinamicamente primero se coloca:
 	//el nombre de el id de la tabla que lo contiene despues el on y despues el evento
 	//y de ahi el nombre del boton que desencadenara el evento

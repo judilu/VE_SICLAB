@@ -54,14 +54,15 @@ function existeCal ($clave)
 function existeSol ($clave)
 {
 	$claveSol	= $clave;
+	$respuesta  = false;
 	$conexion 	= conectaBDSICLAB();
 	$consulta 	= sprintf("select claveSolicitud from lbsolicitudlaboratorios where claveSolicitud =%d",$claveSol);
 	$res 		= mysql_query($consulta); 
 	if($row = mysql_fetch_array($res))
 	{
-		return true;
+		$respuesta = true;
 	}
-	return false;
+	return $respuesta;
 }
 function claveMaestro($clave)
 {
