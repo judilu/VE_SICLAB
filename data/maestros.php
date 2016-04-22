@@ -230,7 +230,7 @@ function materiales($clave)
 	$cantidad 	= array();
 	$salida 	= array();
 	$conexion 	= conectaBDSICLAB();
-	$consulta	= sprintf("select a.claveArticulo, a.nombreArticulo, p.cantidad from lbasignaarticulospracticas p INNER JOIN lbarticuloscat a on p.claveArticulo = a.claveArticulo where claveSolicitud =%d",$claveSol);
+	$consulta	= sprintf("select a.claveArticulo, a.nombreArticulo, p.cantidad from lbasignaarticulospracticas p INNER JOIN lbarticuloscat a on p.claveArticulo = a.claveArticulo where claveSolicitud =%d and estatus = 'V'",$claveSol);
 	$res 		= mysql_query($consulta);
 	$con 		= 0;
 	while($row = mysql_fetch_array($res))
@@ -414,22 +414,32 @@ function ModificarSol()
 	$hs 		= GetSQLValueString($_POST["hs"],"text");
 	$cant 		= GetSQLValueString($_POST["cant"],"int");
 	$solId 	 	= GetSQLValueString($_POST["solId"],"int");
-	$cveArtE	= GetSQLValueString($_POST["articulosAgregadosE"],"tex");
-	$numArtE	= GetSQLValueString($_POST["numArticulos"],"tex");
+	$lab 		= GetSQLValueString($_POST["lab"],"text");
+	$cveArtE	= $_POST["articulosAgregadosE"];
+	$numArtE	= $_POST["numArticulos"];
+	$cveArt  	= explode(",",$cveArtE); 
+	$numArt 	= explode(",",$numArtE);
+	$c 			= count($numArt);
 	$respuesta  = false;
-	$sol 		= modificarSolPen($fs,$hs,$cant,$solId);
-	if($sol)
+	$respuesta2 = false;
+	$respuesta2 = valirdarFeHr($fs,$hs,$lab);
+	if($respuesta2 == true)
 	{
-		for ($i=0; $i < ; $i++) 
-		{ 
-			$artSol = modificarsolArt($cveArtE,$numArtE,$solId);
-			if($artSol)
-			{
-				$respuesta = true;
+		$sol 		= modificarSolPen($fs,$hs,$cant,$solId);
+		if($sol)
+		{
+			for ($i=0; $i < $c; $i++) 
+			{ 
+				$artSol = modificarsolArt($cveArt[$i],(int)$numArt[$i],(int)$solId);
+				if($artSol)
+				{
+					$respuesta = true;
+				}
 			}
 		}
 	}
-	$arrayJSON = array('respuesta' => $respuesta);
+	$arrayJSON = array('respuesta' => $respuesta,
+						'respuesta2' => $respuesta2);
 	print json_encode($arrayJSON);
 }
 function modificarSolPen($ffs,$hhs,$can,$clave)
@@ -476,22 +486,23 @@ function modificarsolArt($claveArt,$n,$clave)
 			$respuesta = true; 
 		}
 	}
+	return $respuesta;
 }
 function eliminarArt()
 {
 	$solId 		= GetSQLValueString($_POST["solId"],"int");
-	$claveArt 	= GetSQLValueString($_POST["claveArt"],"text");
-	$existe 	= existeArt($solId,$claveArt);
+	$cveArtE 	= $_POST["claveArt"];
+	$existe 	= existeArt($solId,$cveArtE);
 	$respuesta 	= false;
 	$conexion 	= conectaBDSICLAB();
 	if($existe)
 	{
-		$consulta 	= sprintf("delete from lbasignaarticulospracticas where claveSolicitud=%d and claveArticulo =%s",$solId,$claveArt);
-      	$res 		= mysql_query($consulta);
-      	if (mysql_affected_rows() > 0)
-        {
-        	$respuesta = true;
-        }
+		$consulta  	= sprintf("update lbasignaarticulospracticas set estatus = 'B' where claveSolicitud =%d and claveArticulo ='%s'",$solId,$cveArtE);		
+		$res 	 	=  mysql_query($consulta);
+		if($res)
+		{	
+			$respuesta = true;
+		}
 	}
 	$arrayJSON = array('respuesta' => $respuesta);
 	print json_encode($arrayJSON);
@@ -502,12 +513,14 @@ function existeArt($claveSol,$claveArtE)
 	$claveArt 	= $claveArtE;
 	$respuesta  = false;
 	$conexion 	= conectaBDSICLAB();
-	$consulta 	= sprintf("select * from lbasignaarticulospracticas where claveSolicitud =%d and claveArticulo =%s",$solId,$claveArt);
-	var_dump($consulta);
+	$consulta 	= sprintf("select * from lbasignaarticulospracticas where claveSolicitud =%d and claveArticulo ='%s'",$solId,$claveArt);
 	$res 		= mysql_query($consulta); 
-	if($row = mysql_fetch_array($res))
+	if($res)
 	{
-		$respuesta = true;
+		if($row = mysql_fetch_array($res))
+		{
+			$respuesta = true;
+		}
 	}
 	return $respuesta;
 }

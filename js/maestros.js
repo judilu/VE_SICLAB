@@ -131,6 +131,7 @@ var inicioMaestro = function ()
 		$("#sNuevaMaestro").hide();
 		$("#sAceptadasMaestro").hide();
 		$("#editarSolicitudLab").hide();
+		$("#editarSol").hide();
 		$("#sRealizadas").hide();
 		//Contenido Dinamico
 		var parametros = "opc=solicitudesPendientes1"+
@@ -146,8 +147,8 @@ var inicioMaestro = function ()
 				{
 					$("#tabSolPendientes").html("");
 					$("#tabSolPendientes").append(response.renglones);
-					/*$("#tabSolPendientes").on("click", ".btnEditarSolicitudLab" , editarSolicitudLab);
-					$("#tabSolPendientes").on("click", ".btnEliminarSolicitudLab" , eliminarSolicitud);*/
+					//$("#tabSolPendientes").on("click", ".btnEditarSolicitudLab" , editarSolicitudLab);
+					//$("#tabSolPendientes").on("click", ".btnEliminarSolicitudLab" , eliminarSolicitud);
 				}
 				else
 					sweetAlert("No hay solicitudes pendientes", "Han aceptado todas tus solicitudes o no ha enviado ninguna solicitud", "error");
@@ -426,11 +427,13 @@ var inicioMaestro = function ()
 	    $("#eleccionMaterialE").hide();
 	    //Contenido Dinamico
 	    $("#editarSolicitudLab").show("slow");
-	    articulosE 			= Array();
-    	articulosAgregadosE	= Array();
-    	numArticulosE 		= Array();
+	    $("#editarSol").show("slow");
     	var con   			= 0
 	    var solId 			= parseInt($(this).attr("name"));
+	    var fecha 			= "";
+	    var d 				= "";
+	    var m 				= "";
+	    var a 				= "";
 	    var parametros 		= "opc=editarSolicitud1"+
 	    						"&solId="+solId+
 	    						"&id="+Math.random();
@@ -444,11 +447,19 @@ var inicioMaestro = function ()
 	    	{
 	    		if(response.respuesta == true)
 	    		{
+	    			//limpiando arreglos
+	    			articulosE 			= Array();
+    				articulosAgregadosE	= Array();
+    				numArticulosE 		= Array();
        				//llenado datos
        				$("#txtMateriaE").val(response.materia);
        				$("#txtMateriaE").attr("name",response.claveSol);
        				$("#txtHoraMatE").val(((response.horas[0]).substring(0,2))+":00");
-       				$("#txtFechaSE").val("2016/12/05");
+       				d = (response.fechaPrac).substring(0,2);
+       				m = (response.fechaPrac).substring(3,5);
+       				a = (response.fechaPrac).substring(6,10);
+       				fecha = (a+"-"+m+"-"+d);
+       				$("#txtFechaSE").val(fecha);
        				$("#txtPracticaE").val(response.practica);
        				$("#txtLabE").val(response.laboratorio);
        				$("#txtLabE").attr("name",response.claveLab);
@@ -466,7 +477,6 @@ var inicioMaestro = function ()
        					articulosE.push((response.materiales['nomMat'][i]));
 						numArticulosE.push((response.materiales['cantidad'][i]));
        				}
-       				console.log(articulosAgregadosE);
        			}
        			else
        			{
@@ -596,6 +606,7 @@ var inicioMaestro = function ()
 	    articulosE.push(artNom);
 	    articulosAgregadosE.push(artCve);
 	    numArticulosE.push(num);
+	    $("#txtNumArtE").val("1");
 	    construirTablaE();
     }//Termina función para agregarArticulos en editar
     
@@ -860,17 +871,17 @@ var inicioMaestro = function ()
     		var a  	 		= ff.substring(0,4);
     		var m  	 		= ff.substring(5,7);
     		var d  	 		= ff.substring(8,10);
-    		console.log(ff);
     		var fs 	 		= d+"/"+m+"/"+a;
     		var hs 	 		= $("#cmbHoraPractE option:selected").text();
     		var cant 		= $("#txtCantAlumnosE").val();
     		var solId 		= $("#txtMateriaE").attr("name");
-    		console.log(solId);
+    		var lab 		= $("#txtLabE").attr("name");
     		var parametros  = "opc=ModificarSol1"+
     							"&fs="+fs+
     							"&hs="+hs+
     							"&cant="+cant+
     							"&solId="+solId+
+    							"&lab="+lab+
     							"&articulosAgregadosE="+articulosAgregadosE+
     							"&numArticulos="+numArticulosE+
 				        		"&id="+Math.random();
@@ -882,14 +893,21 @@ var inicioMaestro = function ()
 	    		data: parametros,
 	    		success: function(response)
 	    		{
-	    			if (response.respuesta==true) 
+	    			if (response.respuesta==true && response.respuesta2 == true) 
 	    			{
 	    				swal("La solicitud fue actualizada exitosamente", "Da clic en el botón OK!", "success");
 	    				solPendientes();
 	    			}
 	    			else
 	    			{
-	    				sweetAlert("Error", "La solicitud no pudo ser actualizada exitosamente.!", "error");
+	    				if(response.respuesta2 == false)
+	    				{
+	    					sweetAlert("Error", "ya existe una calendarización en esa fecha y hora.!", "error");
+	    				}
+	    				else
+	    				{
+	    					sweetAlert("Error", "La solicitud no pudo ser actualizada exitosamente.!", "error");
+	    				}
 	    			}
 				},
 				error: function(xhr, ajaxOptions,x)

@@ -12,7 +12,7 @@
 						<label class="active" for="txtHoraMatE">Hora de la materia</label>
 					</div>
 					<div class="input-field col s3">
-						<input id= "txtFechaSE" placeholder= " " type="date" class="datepicker">
+						<input id= "txtFechaSE" placeholder= " " type="date">
 						<label class="active" for="txtFechaSE">Fecha práctica</label>
 					</div>
 				</div>
