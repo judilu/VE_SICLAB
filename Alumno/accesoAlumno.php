@@ -33,7 +33,7 @@
 					<section class="col s5">      
 						<div class="row">
 							<div class="input-field col s12">
-								<input id="txtNControl" type="text" class="validate" autofocus>
+								<input maxlength="8" id="txtNControl" type="text" class="validate" autofocus>
 								<label active for="txtNControl">Número de control</label>
 							</div>
 						</div>

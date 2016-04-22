@@ -222,10 +222,10 @@
 	}
 	var prestamosProceso = function()
 	{
+		$("#tabSolProcesoAlumnos").html("");
 		$("#solicitudesPendientes").hide("slow");
 		$("#devolucionMaterial").hide("slow");
 		$("#alumnosSancionados").hide("slow");
-		$("#tabSolProcesoAlumnos").html("");
 		var parametros 	= "opc=prestamosProceso1"+"&id="+Math.random();
 		$.ajax({
 			cache:false,
@@ -313,14 +313,29 @@
 		});
 	}
 	var aplicaSancion = function()
-	{		
+	{	
 		$("#devolucionMaterial2").hide("slow");
+		var f  = new Date();
+    	var dd = f.getDate();
+    	var mm = (f.getMonth())+1;
+    	(dd<10) ? (dd="0"+dd) : dd;
+    	(mm<10) ? (mm="0"+mm) : mm;
+    	var fe  = (dd+"/"+mm+"/"+f.getFullYear());	
 		var idu 			= $(this).attr("name");
 		var clavePrestamo 	= $("#txtClavePrestamoDevolucion").val();
-		var parametros 	= "opc=aplicaSancion1"
-						+"&identificador="+idu
-						+"&clavePrestamo="+clavePrestamo
-						+"&id="+Math.random();
+		$("#txtNumeroControlSancion").val($("#txtNControlAluDev").val());
+		$("#txtNombreAlumnoSancion").val($("#txtNombreAluDev").val());
+		$("#txtIdentificadorArtSancion").val(idu);
+		$("#txtFechaSancion").val(fe);
+
+		var nc 				= $("#txtNumeroControlSancion").val();
+		var nom 			= $("#txtNombreAlumnoSancion").val();
+		var parametros 		= "opc=aplicaSancion1"
+							+"&identificador="+idu
+							+"&clavePrestamo="+clavePrestamo
+							+"&nc="+nc
+							+"&nom="+nom
+							+"&id="+Math.random();
 		$.ajax({
 			cache:false,
 			type: "POST",
@@ -331,6 +346,7 @@
 				if(response.respuesta == true)
 				{
 					$("#cmbSanciones").html(" ");
+					$("#txtClavePrestamoSancion").val(response.prestamo);
 						for (var i = 0; i < response.contador; i++) 
 						{
 							$("#cmbSanciones").append($("<option></option>").attr("value",response.claveSancion[i]).text(response.nombreSancion[i]));
@@ -349,9 +365,29 @@
 		});
 		$("#aplicaSanciones").show("slow");
 	}
-	var guardaSancionAlumno = function()
+	var  guardaSancionAlumno = function()
 	{
-		var parametros 	= "opc=guardaSancion1"+"&id="+Math.random();
+		var f  = new Date();
+    	var dd = f.getDate();
+    	var mm = (f.getMonth())+1;
+    	(dd<10) ? (dd="0"+dd) : dd;
+    	(mm<10) ? (mm="0"+mm) : mm;
+    	var fe  = (dd+"/"+mm+"/"+f.getFullYear());	
+		var clavePrestamo 	= $("#txtClavePrestamoSancion").val();
+		var idu 			= $("#txtIdentificadorArtSancion").val();
+		var nc 				= $("#txtNumeroControlSancion").val();
+		var claveSancion 	= $("#cmbSanciones").val();
+		var fecha 			= $("#txtFechaSancion").val();
+		var comentario 		= $("#txtComentariosSanciones").val();
+
+		var parametros 	= "opc=guardaSancion1"
+							+"&clavePrestamo="+clavePrestamo
+							+"&idu="+idu
+							+"&nc="+nc
+							+"&claveSancion="+claveSancion
+							+"&fecha="+fecha
+							+"&comentario="+comentario
+							+"&id="+Math.random();
 		$.ajax({
 			cache:false,
 			type: "POST",
@@ -377,6 +413,7 @@
 	{
 		$("#solicitudesEnProceso2").hide("slow");
 		$("#aplicaSanciones").hide("slow");
+		$("#tbListaArticulosDevolucion").html("");
 		var clavePrestamo 	= $(this).attr('name');
 		var parametros 	= "opc=devolucionPrestamo1"
 						+"&clavePrestamo="+clavePrestamo
@@ -390,10 +427,10 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#txtNControlAluDev").val(response.numeroControl);
+					$("#txtNombreAluDev").val(response.nombreAlumno);
 					$("#tbListaArticulosDevolucion").append(response.renglones);
 					$("#txtClavePrestamoDevolucion").val(response.clavePrestamo);
-					//$("#tbListaArticulosDevolucion #btnDevolverArt").on("click",aceptarSolicitudLab);
-					//$("#tbListaArticulosDevolucion #btnAplicaSancion").on("click",aceptarSolicitudLab);
 				}
 				else
 				{
@@ -1253,6 +1290,7 @@
 	$("#btnCancelarDevolucion").on("click",prestamosProceso);
 	$("#btnListaSanciones").on("click",listaSanciones);
 	$("#btnAplicaSancion").on("click",aplicaSancion);
+	$("#btnAplicarSancion").on("click",guardaSancionAlumno);
 	$("#btnAgregarArtPrestamo").on("click",agregarArticuloPrestamo);
 	$("#btnRegresarSancion").on("click",devolucionPrestamo);
 	$("#btnDevolucion").on("click",devolucionPrestamo);

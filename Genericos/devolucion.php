@@ -2,11 +2,11 @@
 	<h5>Devolución de material</h5>
 	<div class="row">
 				<div class="input-field col s2">
-					<input id="txtNControlAlu" placeholder="" type="text" class="validate" disabled>
+					<input id="txtNControlAluDev" placeholder="" type="text" class="validate" disabled>
 					<label active for="txtNControlAluDev">Número control</label>
 				</div>
 				<div class="input-field col s4">
-					<input id="txtNombreAlu" placeholder="" type="text" class="validate" disabled>
+					<input id="txtNombreAluDev" placeholder="" type="text" class="validate" disabled>
 					<label active for="txtNombreAluDev">Nombre del alumno</label>
 				</div>
 				<div class="input-field col s1 offset-s1">
