@@ -100,7 +100,6 @@ var inicio = function()
 						numeroArticulos.push(response.cantidad[i]);
 						nombreArticulos.push(response.nombre[i]);
 					}
-					alert(articulosSolicitadosAlumnos);
 				}
 				else
 				{
@@ -564,7 +563,6 @@ var inicio = function()
 	{
     	var artEliminar = ($(this).attr('name'));
     	var i = buscaIndice(articulosSolicitadosAlumnos,artEliminar);
-    	alert(i);
     	nombreArticulos = eliminar2(nombreArticulos,i);
     	articulosSolicitadosAlumnos = eliminar2(articulosSolicitadosAlumnos,i);
     	numeroArticulos = eliminar2(numeroArticulos,i);

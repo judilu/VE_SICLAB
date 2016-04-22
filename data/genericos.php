@@ -1018,7 +1018,9 @@ function devolucionPrestamo()
 	{ 
 		$responsable 	= $_SESSION['nombre'];
 		$prestamo		= "";
-		$clavePrestamo 	= GetSQLValueString($_POST["clavePrestamo"],"text");
+		$clavePrestamo 	= GetSQLValueString($_POST["clavePrestamo"],"int");
+		$numC 			= consultaNCPrestamo($clavePrestamo);
+		$nombreAlu 		= consultaAlumno($numC);
 		$con 			= 0;
 		$rows			= array();
 		$renglones		= "";
@@ -1061,8 +1063,26 @@ function devolucionPrestamo()
 	}
 	$salidaJSON = array('respuesta' => $respuesta, 
 						'renglones' => $renglones, 
-						'clavePrestamo' => $clavePrestamo);
+						'clavePrestamo' => $clavePrestamo,
+						'numeroControl' => $numC,
+						'nombreAlumno' => $nombreAlu);
 	print json_encode($salidaJSON);
+}
+function consultaNCPrestamo($cveP)
+{
+	$clave 		= $cveP;
+	$nc 		= "";
+	$conexion 	= conectaBDSICLAB();
+	$consulta  	= sprintf("select ALUCTR from lbprestamos where clavePrestamo=%d",$clave);
+	$res 	 	=  mysql_query($consulta);
+	if($row = mysql_fetch_array($res))
+	{
+		return (int)($row["ALUCTR"]);
+	}
+	else
+	{
+		return 0;
+	}
 }
 function guardaDevolucion()
 {
@@ -1097,11 +1117,40 @@ function aplicaSancion()
 	session_start();
 	if(!empty($_SESSION['nombre']))
 	{ 
-		$identificadorArticulo 	= GetSQLValueString($_POST["identificador"],"text");
-		$respuesta = true;
+		$responsable 	= $_SESSION['nombre'];
+		$idArt 			= GetSQLValueString($_POST["identificador"],"text");
+		$clavePrestamo 	= GetSQLValueString($_POST["clavePrestamo"],"int");
+		$numeroControl 	= GetSQLValueString($_POST["nc"],"text");
+		$nombre 		= GetSQLValueString($_POST["nom"],"text");
+		$con 			= 0;
+		$comboSanciones	= array();
+		$claveSancion	= "";
+		$nombreSancion	= "";
+		$conexion 		= conectaBDSICLAB();
+		$consulta		= sprintf("select claveSancion,nombreSancion 
+								from lbsanciones");
+		$res 		= mysql_query($consulta);
+		if($res)
+		{
+			while($row = mysql_fetch_array($res))
+			{
+				$comboSanciones[] = $row;
+				$respuesta = true;
+				$con++;
+			}
+			for ($i=0; $i < $con ; $i++)
+			{ 
+				$claveSancion[] 	=$comboSanciones[$i]["claveSancion"];
+				$nombreSancion[] 	=$comboSanciones[$i]["nombreSancion"];
+			}
+		}
 	}
-	$salidaJSON = array('respuesta' => $respuesta);
-	print json_encode($salidaJSON);
+	$arrayJSON = array('respuesta' => $respuesta,
+						'claveSancion' => $claveSancion, 
+						'nombreSancion' => $nombreSancion, 
+						'contador' => $con,
+						'prestamo' => $clavePrestamo);
+	print json_encode($arrayJSON);
 }
 function guardaSancion()
 {
@@ -1109,7 +1158,24 @@ function guardaSancion()
 	session_start();
 	if(!empty($_SESSION['nombre']))
 	{
-
+		$responsable 	= $_SESSION['nombre'];
+		$periodo 		= "2161";
+		$idArt 			= GetSQLValueString($_POST["idu"],"text");
+		$clavePrestamo 	= GetSQLValueString($_POST["clavePrestamo"],"int");
+		$numControl 	= GetSQLValueString($_POST["nc"],"text");
+		$claveSancion 	= GetSQLValueString($_POST["claveSancion"],"int");
+		$fecha 			= GetSQLValueString($_POST["fecha"],"text");
+		$comentario 	= GetSQLValueString($_POST["comentario"],"text");
+		$cveLab 		= obtieneCveLab($responsable);
+		$conexion 		= conectaBDSICLAB();
+		$consulta  		= sprintf("insert into lbasignasanciones values(%s,%d,%d,%s,%s,%s,%s,%s,%s,%s)",
+							$periodo,'""',$claveSancion,$numControl,$fecha,'"dd/mm/aaaa"',$comentario,$idArt,$cveLab,'"P"');
+		$res 	 		=  mysql_query($consulta);
+		var_dump($consulta);
+			if(mysql_affected_rows()>0)
+			{
+				$respuesta = true;
+			}	
 	}
 	else
 	{
@@ -1117,6 +1183,10 @@ function guardaSancion()
 	}
 	$arrayJSON = array('respuesta' => $respuesta);
 		print json_encode($arrayJSON);
+}
+function actualizaPrendiente()
+{
+
 }
 function listaAlumnosSancionados()
 {
@@ -1207,7 +1277,7 @@ function guardaPeticionArticulos()
 		$fecha 			= GetSQLValueString($_POST["fecha"],"text");
 		$depto 			= "1234";
 		$firma 			= "0000";
-		$periodo 		= "9898";
+		$periodo 		= periodoActual();
 		$conexion 		= conectaBDSICLAB();
 		$consulta  		= sprintf("insert into lbpedidos values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",$periodo,'""',$fecha,$depto,$firma,$responsable,$nombreArticulo,$cantidad,$motivo,$marca,$modelo,'"P"');
 		$res 	 		=  mysql_query($consulta);
