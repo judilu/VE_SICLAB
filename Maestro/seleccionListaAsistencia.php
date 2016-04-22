@@ -12,8 +12,10 @@
 					<label for="txtNombreMaestroRep">Nombre</label>
 				</div>
 				<div class="input-field col s3">
-					<input id="txtPeriodoRep" type="text" class="validate">
-					<label for="txtPeriodoRep">Periodo</label>
+					<select id="cmbPeriodoRep">
+
+					</select>
+					<label>Periodo</label>
 				</div>
 			</div>
 			<div class="row">
@@ -33,7 +35,7 @@
 			<div class="row">
 				<div class="input-field col s7">
 					<select id="cmbPracticaRep">
-
+						
 					</select>
 					<label>Práctica</label>
 				</div>

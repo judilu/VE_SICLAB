@@ -79,6 +79,22 @@ function claveMaestro($clave)
 		return 0;
 	}
 }
+function nombreMaestro($clave)
+{
+	$claveUsuario 	= $clave;
+	$maestro 		= claveMaestro($claveUsuario);
+	$conexion 		= conectaBDSIE();
+	$consulta 		= sprintf("select PERCVE, PERNOM, PERAPE from DPERSO where PERCVE =%d",$maestro);
+	$res			= mysql_query($consulta);
+	if($row = mysql_fetch_array($res))
+	{
+		return $row;
+	}
+	else
+	{
+		return "";
+	}
+}
 function grupo($mat,$per,$pdo,$hor)
 {
 	$matcve  = $mat;
@@ -368,6 +384,82 @@ function valirdarFeHr($f,$h,$lab)
 	}
 	return $respuesta;
 }
+function periodosAn()
+{
+	$periodos 		= array();
+	$conexion		= conectaBDSIE();
+	$consulta		= sprintf("select pdocve,pdodes from DPERIO where PDOINI > '2002-01-01' order by PDOCVE desc limit 20");
+	$res 			= mysql_query($consulta);
+	if($res)
+	{
+		while($row = mysql_fetch_array($res))
+		{				
+			$periodos[]  = $row;
+		}
+	}
+	return $periodos;
+}
+function comboMatRep ()
+{
+	session_start();
+	$clave  		= GetSQLValueString(($_SESSION['nombre']),"int");
+	$maestro 		= claveMaestro($clave);
+	$respuesta 		= false;
+	$periodo 		= GetSQLValueString(($_POST['periodo']),"text");
+	$con 			= 0;
+	$combomat 		= array();
+	$claveMat 		= "";
+	$nombreMat		= "";
+	$conexion		= conectaBDSIE();
+	$consulta		= sprintf("select m.MATCVE, m.MATNCO from DMATER m inner join DGRUPO g on m.MATCVE = g.MATCVE where g.PERCVE =%d and g.PDOCVE =%s and g.GRUBAS = ' ' and g.INSNUM > 0",$maestro,$periodo);
+	$res 			= mysql_query($consulta);
+	if($res)
+	{
+		while($row = mysql_fetch_array($res))
+		{
+			$combomat[] = $row;
+			$respuesta = true;
+			$con++;
+		}
+		for ($i=0; $i < $con ; $i++)
+		{ 
+			$claveMat[] 	=$combomat[$i]["MATCVE"];
+			$nombreMat[] 	=$combomat[$i]["MATNCO"];
+		}
+	}
+	$arrayJSON = array('respuesta' => $respuesta,
+						 'claveMat' => $claveMat, 
+						'nombreMat' => $nombreMat, 
+						'contador' => $con);
+	print json_encode($arrayJSON);
+
+}
+function comboHrMatRep()
+{
+	session_start();
+	$clave  		= GetSQLValueString(($_SESSION['nombre']),"int");
+	$materia 		= GetSQLValueString($_POST["materia"],"text");
+	$maestro 		= GetSQLValueString((claveMaestro($clave)),"int");
+	$periodo 		= GetSQLValueString(($_POST["periodo"]),"text");
+	$respuesta 		= false;
+	$comboHr 		= "";
+	$comboHrMat     = array();
+	$cont 			= 0;
+	$conexion		= conectaBDSIE();
+	$consulta		= sprintf("select LUNHRA,MARHRA,MIEHRA,JUEHRA,VIEHRA from DGRUPO where MATCVE =%s and PERCVE=%d and PDOCVE =%s",$materia,$maestro,$periodo);
+	$res 			= mysql_query($consulta);
+	if($row = mysql_fetch_array($res))
+	{		
+		$comboHr 	= $row[0].",".$row[1].",".$row[2].",".$row[3].",".$row[4];
+		$comboHrMat = array_unique((explode(",",$comboHr)));
+		$respuesta 	= true;
+		$cont 		= count($comboHrMat);
+	}
+	$arrayJSON = array('respuesta' => $respuesta,
+						 'comboHr' => $comboHrMat,
+						 'cont' => $cont); 
+	print json_encode($arrayJSON);
+}
 //Menú principal
 $opc = $_POST["opc"];
 switch ($opc)
@@ -395,6 +487,12 @@ switch ($opc)
 		break;
 	case 'capacidadLab1':
 		capacidadLab();
+		break;
+	case 'comboMatRep1':
+		comboMatRep();
+		break;
+	case 'comboHrMatRep1':
+		comboHrMatRep();
 		break;
 }	 
 ?>

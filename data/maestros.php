@@ -524,6 +524,23 @@ function existeArt($claveSol,$claveArtE)
 	}
 	return $respuesta;
 }
+//reportes
+function datosMaestro()
+{
+	session_start();
+	$respuesta  = false;
+	$clave 		= $_SESSION['nombre'];
+	$datosMa 	= nombreMaestro($clave);
+	$periodos 	= periodosAn();
+	if ($datosMa) 
+	{
+		$respuesta = true;
+	}
+	$arrayJSON = array('respuesta' => $respuesta,
+						'datosMa' => $datosMa,
+						'periodos' => $periodos);
+	print json_encode($arrayJSON);
+}
 //Menú principal
 $opc = $_POST["opc"];
 switch ($opc){
@@ -562,6 +579,9 @@ switch ($opc){
 		break;
 	case 'eliminarArt1':
 		eliminarArt();
+		break;
+	case 'datosMaestro1':
+		datosMaestro();
 		break;
 } 
 ?>

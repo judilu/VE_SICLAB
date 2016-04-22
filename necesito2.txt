@@ -1,0 +1,37 @@
+var hh = "";
+    	var materia = $("#cmbMateria").val();
+    	var parametros = "opc=comboMatHr1"+
+    	"&materia="+materia+
+    	"&id="+Math.random();
+    	$.ajax({
+    		cache:false,
+    		type: "POST",
+    		dataType: "json",
+    		url:"../data/funciones.php",
+    		data: parametros,
+    		success: function(response){
+    			if(response.respuesta == true)
+    			{
+    				$("#cmbHoraMat").html(" ");
+    				$("#cmbHoraMat").html("<option value='' disabled selected>Seleccione la hora</option>");	
+    				for (var i = 0; i < response.cont; i++) 
+    				{
+						//arreglar la hora
+						hh = ((response.comboHr[i]).substring(0,2)+":00");
+						$("#cmbHoraMat").append($("<option></option>").attr("value",response.cont).text(hh));
+					}
+					$("cmbHoraMat").trigger('contentChanged');
+					$('select').material_select();
+				}
+				else
+				{
+					$("#cmbHoraMat").html(" ");
+					$("#cmbHoraMat").html("<option value='' disabled selected>Seleccione la hora</option>");
+					$('select').material_select();
+					sweetAlert("No existen horas", "Es posible que no existan horas para la materia seleccionada", "error");
+				}
+			},
+			error: function(xhr, ajaxOptions,x){
+				console.log("Error de conexión combomat");	
+			}
+		});
