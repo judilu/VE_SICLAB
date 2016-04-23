@@ -541,6 +541,63 @@ function datosMaestro()
 						'periodos' => $periodos);
 	print json_encode($arrayJSON);
 }
+function listaAlumnos()
+{
+	session_start();
+	$clave 		= GetSQLValueString($_SESSION['nombre'],"int");
+	$respuesta 	= false;
+	$renglones  = "";
+	$datosAlu 	= array();
+	$nc 		= "";
+	$con 		= 0;
+	$periodo	= GetSQLValueString($_POST["periodo"],"text");
+	$materia	= GetSQLValueString($_POST["materia"],"text");
+	$hrMat 		= GetSQLValueString($_POST["horaMat"],"int");
+	$gpo 		= GetSQLValueString(grupo($materia,$clave,$periodo,$hrMat),"text");
+	$practica	= GetSQLValueString($_POST["practica"],"int");
+	$fecha 		= GetSQLValueString($_POST["fecha"],"text");
+	$hrPrac 	= GetSQLValueString($_POST["horaPract"],"text");
+	$cal 		= (int)(existCal($clave,$periodo,$materia,$gpo,$practica,$fecha,$hrPrac));
+	if ($cal != 0) 
+	{
+		$conexion 	= conectaBDSICLAB();
+		$consulta 	= sprintf("select ALUCTR from lbentradasalumnos e inner join lbcalendarizaciones c on e.claveCalendarizacion = c.claveCalendarizacion where e.claveCalendarizacion =%d",$cal);
+		$res 		= mysql_query($consulta);
+		$renglones .= "<thead>";
+		$renglones .= "<tr>";
+		$renglones .= "<th>Número de control</th>";
+		$renglones .= "<th>Nombre</th>";
+		$renglones .= "</tr>";
+		$renglones .= "</thead>";
+		if($res)
+		{
+			$respuesta 	= true;
+			while($row = mysql_fetch_array($res))
+			{
+				$nc 		.= "'".($row["ALUCTR"])."',";
+				$con++;
+			}
+			$nc 	  = (rtrim($nc,","));
+			$datosAlu = numerosControl($nc);
+			if ($datosAlu["respuesta"]) 
+			{
+				for($c= 0; $c< $con; $c++)
+				{
+					$renglones .= "<tbody>";
+					$renglones .= "<tr>";
+					$renglones .= "<td>".$datosAlu["numeros"][$c]."</td>";
+					$renglones .= "<td>".$datosAlu["nombres"][$c]."</td>";
+					$renglones .= "</tr>";
+					$renglones .= "</tbody>";
+					$respuesta = true;
+				}
+			}
+		}
+	}
+	$arrayJSON = array('respuesta' => $respuesta,
+						'renglones' => $renglones);
+	print json_encode($arrayJSON);
+}
 //Menú principal
 $opc = $_POST["opc"];
 switch ($opc){
@@ -582,6 +639,9 @@ switch ($opc){
 		break;
 	case 'datosMaestro1':
 		datosMaestro();
+		break;
+	case 'listaAlumnos1':
+		listaAlumnos();
 		break;
 } 
 ?>

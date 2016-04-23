@@ -1085,7 +1085,7 @@ var inicioMaestro = function ()
     				(((response.horaCierre).length)<4) ? (hf=(response.horaCierre).substring(0,1)) : (hf=(response.horaCierre).substring(0,2));
     				hff = parseInt(hf);
 					//modificando capacidad segun el laboratorio
-					$("#txtCantAlumnos").attr("max",response.capacidad)
+					$("#txtCantAlumnos").attr("max",response.capacidad);
 					for (var i = hii; i <= hff; i++) 
 					{
 						if(i>9)
@@ -1143,7 +1143,7 @@ var inicioMaestro = function ()
     				(((response.horaCierre).length)<4) ? (hf=(response.horaCierre).substring(0,1)) : (hf=(response.horaCierre).substring(0,2));
     				hff = parseInt(hf);
 					//modificando capacidad segun el laboratorio
-					$("#txtCantAlumnosE").attr("max",response.capacidad)
+					$("#txtCantAlumnosE").attr("max",response.capacidad);
 					for (var i = hii; i <= hff; i++) 
 					{
 						if(i>9)
@@ -1175,6 +1175,16 @@ var inicioMaestro = function ()
 	//eventos menu Reportes
 	var tbReportes = function()
 	{
+		//limpiar datos
+		$("#txtClaveMaestroRep2").val(" ");
+    	$("#txtNombreMaestroRep2").val(" ");
+    	$("#txtPeriodoRep").val(" ");
+	    $("#txtMateriaRep").val(" ");
+	    $("#txtHoraMatRep").val(" ");
+	    $("#txtPracticaRep").val(" ");
+	    $("#txtHoraPractRep").val(" ");
+	    $("#txtFechaPracticaRep2").val(" ");
+	    $("#txtFechaPracticaRep").val(" ");
 		//valor por default de los combos
 		//Combo de la materia
 		$("#cmbMateriaRep").html(" ");
@@ -1235,21 +1245,141 @@ var inicioMaestro = function ()
 	}
 	var listaAsistencia = function()
 	{
+		//oculta y mostrar elementos
 		$("#selecionarLista").hide();
-		$("#lista").show();
+		$("#lista").show("slow");
+		//limpiar datos
+		$("#txtClaveMaestroRep2").val(" ");
+    	$("#txtNombreMaestroRep2").val(" ");
+    	$("#txtPeriodoRep").val(" ");
+	    $("#txtMateriaRep").val(" ");
+	    $("#txtHoraMatRep").val(" ");
+	    $("#txtPracticaRep").val(" ");
+	    $("#txtHoraPractRep").val(" ");
+	    $("#txtFechaPracticaRep2").val(" ");
+		$("#tbListaAsistencia").html(" ");
+		//contenido dinamico
+		var periodo 	= $("#cmbPeriodoRep").val();
+		var materia 	= $("#cmbMateriaRep").val();
+		var h			= $("#cmbHoraMatRep option:selected").text();
+		var horaMat 	= parseInt(h.substring(0,2));
+		var practica 	= $("#cmbPracticaRep").val();
+		var ff  		= $("#txtFechaPracticaRep").val();
+    	var a  			= ff.substring(0,4);
+    	var m  			= ff.substring(5,7);
+    	var d  			= ff.substring(8,10);
+    	var fecha 		= d+"/"+m+"/"+a;
+		var horaPract 	= $("#cmbHoraPracticaRep option:selected").text(); 	
+		var parametros = "opc=listaAlumnos1"+
+							"&periodo="+periodo+
+							"&materia="+materia+
+							"&horaMat="+horaMat+
+							"&practica="+practica+
+							"&fecha="+fecha+
+							"&horaPract="+horaPract+
+							"&id="+Math.random();
+		$.ajax({
+    		cache:false,
+    		type: "POST",
+    		dataType: "json",
+    		url:"../data/maestros.php",
+    		data: parametros,
+    		success: function(response)
+    		{
+    			if (response.respuesta==true) 
+    			{
+    				//llenar datos
+    				$("#txtClaveMaestroRep2").val($("#txtClaveMaestroRep").val());
+    				$("#txtNombreMaestroRep2").val($("#txtNombreMaestroRep").val());
+    				$("#txtPeriodoRep").val($("#cmbPeriodoRep option:selected").text());
+	    			$("#txtMateriaRep").val($("#cmbMateriaRep option:selected").text());
+	    			$("#txtHoraMatRep").val($("#cmbHoraMatRep option:selected").text());
+	    			$("#txtPracticaRep").val($("#cmbPracticaRep option:selected").text());
+	    			$("#txtHoraPractRep").val($("#cmbHoraPracticaRep option:selected").text());
+	    			$("#txtFechaPracticaRep2").val($("#txtFechaPracticaRep").val());
+	    			//crear tabla de asistencia de alumnos
+	    			$("#tbListaAsistencia").html(" ");
+					$("#tbListaAsistencia").append(response.renglones);
+	    		}
+	    		else
+	    		{
+	    			//limpiar datos
+					$("#txtClaveMaestroRep2").val(" ");
+			    	$("#txtNombreMaestroRep2").val(" ");
+			    	$("#txtPeriodoRep").val(" ");
+				    $("#txtMateriaRep").val(" ");
+				    $("#txtHoraMatRep").val(" ");
+				    $("#txtPracticaRep").val(" ");
+				    $("#txtHoraPractRep").val(" ");
+				    $("#txtFechaPracticaRep2").val(" ");
+					$("#tbListaAsistencia").html(" ");
+					$("#tbListaAsistencia").html(" ");
+					sweetAlert("No existe ninguna práctica", "No se realizo ninguna práctica!", "error");
+	    		}
+			},
+			error: function(xhr, ajaxOptions,x)
+			{
+				console.log("Error de conexión datosMaestro");	
+			}
+		});
 	}
-	var regresar = function()
+	var regresarRep = function()
 	{
 		$("#lista").hide();
 		$("#selecionarLista").show("slow");
+		//limpiar
+		$("#txtClaveMaestroRep2").val(" ");
+    	$("#txtNombreMaestroRep2").val(" ");
+    	$("#txtPeriodoRep").val(" ");
+	    $("#txtMateriaRep").val(" ");
+	    $("#txtHoraMatRep").val(" ");
+	    $("#txtPracticaRep").val(" ");
+	    $("#txtHoraPractRep").val(" ");
+	    $("#txtFechaPracticaRep2").val(" ");
+	    $("#txtFechaPracticaRep").val(" ");
+		//Combo Periodo
+		$("#cmbPeriodoRep").html(" ");
+		$("#cmbPeriodoRep").html("<option value='' disabled selected>Seleccione el Periodo</option>");
+		$('select').material_select();
+		//Combo de la materia
+		$("#cmbMateriaRep").html(" ");
+		$("#cmbMateriaRep").html("<option value='' disabled selected>Seleccione la materia</option>");
+		$('select').material_select();
+		//Combo hora materia
+		$("#cmbHoraMatRep").html(" ");
+		$("#cmbHoraMatRep").html("<option value='' disabled selected>Seleccione la hora</option>");
+		$('select').material_select();
+		//combo de practica
+		$("#cmbPracticaRep").html(" ");
+		$("#cmbPracticaRep").html("<option value='' disabled selected>Seleccione la práctica</option>");
+		$('select').material_select();
+		//combo hora práctica
+		$("#cmbHoraPracticaRep").html(" ");
+		$("#cmbHoraPracticaRep").html("<option value='' disabled selected>Seleccione la hora</option>");
+		$('select').material_select();
+		//limpiar tabla
+		$("#tbListaAsistencia").html("");
 	}
 	var comboMatRep = function()
 	{
+		//limpiar combos
+		//Combo hora materia
+		$("#cmbHoraMatRep").html(" ");
+		$("#cmbHoraMatRep").html("<option value='' disabled selected>Seleccione la hora</option>");
+		$('select').material_select();
+		//combo de practica
+		$("#cmbPracticaRep").html(" ");
+		$("#cmbPracticaRep").html("<option value='' disabled selected>Seleccione la práctica</option>");
+		$('select').material_select();
+		//combo hora práctica
+		$("#cmbHoraPracticaRep").html(" ");
+		$("#cmbHoraPracticaRep").html("<option value='' disabled selected>Seleccione la hora</option>");
+		$('select').material_select();
 		var periodo = $("#cmbPeriodoRep").val();
 		var parametros = "opc=comboMatRep1"+
 							"&periodo="+periodo+
 							"&id="+Math.random();
-		$.ajax({
+			$.ajax({
 			cache:false,
 			type: "POST",
 			dataType: "json",
@@ -1292,53 +1422,148 @@ var inicioMaestro = function ()
 	}
 	var comboHrMatRep = function()
 	{
-		var materia    = $("#cmbMateriaRep").val();
-		var periodo    = $("#cmbPeriodoRep").val();
-		var parametros = "opc=comboHrMatRep1"+
+		//limpiar combos
+		//combo de practica
+		$("#cmbPracticaRep").html(" ");
+		$("#cmbPracticaRep").html("<option value='' disabled selected>Seleccione la práctica</option>");
+		$('select').material_select();
+		//combo hora práctica
+		$("#cmbHoraPracticaRep").html(" ");
+		$("#cmbHoraPracticaRep").html("<option value='' disabled selected>Seleccione la hora</option>");
+		$('select').material_select();
+		var hh 			= "";
+		var materia    	= $("#cmbMateriaRep").val();
+		var periodo    	= $("#cmbPeriodoRep").val();
+		var parametros 	= "opc=comboHrMatRep1"+
 							"&periodo="+periodo+
 							"&materia="+materia+
 							"&id="+Math.random();
 		$.ajax({
-			cache:false,
-			type: "POST",
-			dataType: "json",
-			url:"../data/funciones.php",
-			data: parametros,
-			success: function(response)
-			{
-				if(response.respuesta == true)
-				{
-					$("#cmbHoraMatRep").html(" ");
-					$("#cmbHoraMatRep").html("<option value='' disabled selected>Seleccione la hora</option>");
-					for (var i = 0; i < response.contador; i++) 
-					{
-						$("#cmbHoraMatRep").append($("<option></option>").attr("value",response.claveMat[i]).text(response.nombreMat[i]));
+    		cache:false,
+    		type: "POST",
+    		dataType: "json",
+    		url:"../data/funciones.php",
+    		data: parametros,
+    		success: function(response){
+    			if(response.respuesta == true)
+    			{
+    				$("#cmbHoraMatRep").html(" ");
+    				$("#cmbHoraMatRep").html("<option value='' disabled selected>Seleccione la hora</option>");	
+    				for (var i = 0; i < response.cont; i++) 
+    				{
+						//arreglar la hora
+						hh = ((response.comboHr[i]).substring(0,2)+":00");
+						$("#cmbHoraMatRep").append($("<option></option>").attr("value",response.cont).text(hh));
 					}
 					$("cmbHoraMatRep").trigger('contentChanged');
-					$('select').material_select();
-					//limpiar campos
-					//combo de practica
-					$("#cmbPracticaRep").html(" ");
-					$("#cmbPracticaRep").html("<option value='' disabled selected>Seleccione la práctica</option>");
-					$('select').material_select();
-					//combo hora práctica
-					$("#cmbHoraPracticaRep").html(" ");
-					$("#cmbHoraPracticaRep").html("<option value='' disabled selected>Seleccione la hora</option>");
 					$('select').material_select();
 				}
 				else
 				{
-					$("#cmbMateria").html(" ");
-					$("#cmbMateria").html("<option value='' disabled selected>Seleccione la materia</option>");
+					$("#cmbHoraMatRep").html(" ");
+					$("#cmbHoraMatRep").html("<option value='' disabled selected>Seleccione la hora</option>");
 					$('select').material_select();
-					sweetAlert("No tiene materias", "Es posible que no tenga materias asignadas!", "error");
+					sweetAlert("No existen horas", "Es posible que no existan horas para la materia seleccionada", "error");
 				}
 			},
 			error: function(xhr, ajaxOptions,x){
-				console.log("Error de conexión combomat");	
+				console.log("Error de conexión combomatRep");	
 			}
 		});
 	}
+	var comboPractRep = function()
+    {
+    	var materia 	= $("#cmbMateriaRep").val();
+    	var periodo 	= $("#cmbPeriodoRep").val();
+    	var parametros 	= "opc=comboPract1"+
+    						"&materia="+materia+
+    						"&periodo="+periodo+
+    						"&id="+Math.random();
+    	$.ajax({
+    		cache:false,
+    		type: "POST",
+    		dataType: "json",
+    		url:"../data/funciones.php",
+    		data: parametros,
+    		success: function(response){
+    			if(response.respuesta == true)
+    			{
+    				$("#cmbPracticaRep").html(" ");
+    				$("#cmbPracticaRep").html("<option value='' disabled selected>Seleccione la práctica</option>");	
+    				for (var i = 0; i < response.con; i++) 
+    				{
+
+    					$("#cmbPracticaRep").append($("<option></option>").attr("value",response.comboCvePrac[i]).text(response.comboTitPrac[i]));
+    				}
+    				$("cmbPracticaRep").trigger('contentChanged');
+    				$('select').material_select();
+    			}
+    			else
+    			{
+    				$("#cmbPracticaRep").html(" ");
+    				$("#cmbPracticaRep").html("<option value='' disabled selected>Seleccione la práctica</option>");	
+    				$('select').material_select();
+    				sweetAlert("No existen prácticas", "Es posible que no existan prácticas asociadas a dicha materia!", "error");
+    			}
+    		},
+    		error: function(xhr, ajaxOptions,x){
+    			console.log("Error de conexión comboPrac");	
+    		}
+    	});
+    }
+    var comboHoraPracRep = function()
+    {
+    	var practica   		= $("#cmbPracticaRep").val();
+    	var parametros 	  	= "opc=comboHoraPracRep1"+
+    							"&practica="+practica+
+    							"&id="+Math.random();
+    	var hi = "";
+    	var hii = 0;
+    	var hf = "";
+    	var fff = 0;
+    	$.ajax({
+    		cache:false,
+    		type: "POST",
+    		dataType: "json",
+    		url:"../data/funciones.php",
+    		data: parametros,
+    		success: function(response){
+    			if(response.respuesta == true)
+    			{
+    				$("#cmbHoraPracticaRep").html(" ");
+    				$("#cmbHoraPracticaRep").html("<option value='' disabled selected>Seleccione la hora</option>");	
+    				(((response.horaApertura).length)<4) ? (hi=(response.horaApertura).substring(0,1)) : (hi=(response.horaApertura).substring(0,2));
+    				hii = parseInt(hi);
+    				(((response.horaCierre).length)<4) ? (hf=(response.horaCierre).substring(0,1)) : (hf=(response.horaCierre).substring(0,2));
+    				hff = parseInt(hf);
+					for (var i = hii; i <= hff; i++) 
+					{
+						if(i>9)
+						{
+							$("#cmbHoraPracticaRep").append($("<option></option>").attr("value",i).text(i+":00"));
+						}
+						else
+						{
+							$("#cmbHoraPracticaRep").append($("<option></option>").attr("value","0"+i).text("0"+i+":00"));
+						}
+					}
+					$("cmbHoraPracticaRep").trigger('contentChanged');
+					$('select').material_select();
+				}
+				else
+				{
+					$("#cmbHoraPracticaRep").html(" ");
+					$("#cmbHoraPracticaRep").html("<option value='' disabled selected>Seleccione la hora</option>");
+					$('select').material_select();
+					sweetAlert("No existen horas", "Es posible que no existan horas asociados a dicha práctica!", "error");
+				}
+			},
+			error: function(xhr, ajaxOptions,x)
+			{
+				console.log("Error de conexión comboPrac");	
+			}
+		});
+    }
 	//Configuramos el evento del Tab
 	$("#salirTab").on("click",salir);
 	$("#solicitudestab").on("click",solAceptadas);
@@ -1373,9 +1598,11 @@ var inicioMaestro = function ()
 	//Configuramos los eventos Menu Reportes
 	$("#reportestab").on("click",tbReportes);
 	$("#btnListaAsistencia").on("click",listaAsistencia);
-	$("#btnRegresarla").on("click",regresar);
+	$("#btnRegresarRep").on("click",regresarRep);
 	//conbos del menu de reportes
 	$("#cmbPeriodoRep").on("change",comboMatRep);
-	$("#cmbMateriaRep").on("change",comboHrMatRep)
+	$("#cmbMateriaRep").on("change",comboHrMatRep);
+	$("#cmbHoraMatRep").on("change",comboPractRep);
+	$("#cmbPracticaRep").on("change",comboHoraPracRep);
 }
 $(document).on("ready",inicioMaestro);

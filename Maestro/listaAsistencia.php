@@ -4,12 +4,12 @@
 		<div class="col s12">
 			<div class="row">
 				<div class="input-field col s2">
-					<input disabled placeholder="" id="txtClaveMaestroRep" type="text" class="validate">
-					<label class="active"for="txtClaveMaestroRep">Clave</label>
+					<input disabled placeholder="" id="txtClaveMaestroRep2" type="text" class="validate">
+					<label class="active"for="txtClaveMaestroRep2">Clave</label>
 				</div>
 				<div class="input-field col s7">
-					<input disabled placeholder="" id="txtNombreMaestroRep" type="text" class="validate">
-					<label class="active" for="txtNombreMaestroRep">Nombre</label>
+					<input disabled placeholder="" id="txtNombreMaestroRep2" type="text" class="validate">
+					<label class="active" for="txtNombreMaestroRep2">Nombre</label>
 				</div>
 				<div class="input-field col s3">
 					<input disabled placeholder="" id="txtPeriodoRep" type="text" class="validate">
@@ -63,7 +63,7 @@
 	<div class="row">
 		<div class="col s5 offset-s7">
 			<a id="btnImprimir" class="waves-effect waves-light btn green darken-2 "><i class="material-icons left">print</i>Imprimir</a>
-			<a id="btnRegresarla" class="waves-effect btn amber darken-1"><i class="material-icons left">reply</i>Regresar</a>
+			<a id="btnRegresarRep" class="waves-effect btn amber darken-1"><i class="material-icons left">reply</i>Regresar</a>
 		</div>
 	</div>
 </div>

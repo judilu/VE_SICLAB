@@ -51,6 +51,55 @@ function existeCal ($clave)
 	}
 	return false;
 }
+function existCal($clave,$p,$mat,$gpo,$pract,$f,$hr)
+{
+	$maestro	= $clave;
+	$periodo 	= $p;
+	$materia 	= $mat;
+	$grupo 		= $gpo;
+	$practica 	= $pract;
+	$fecha 		= $f;
+	$hora 		= $hr;
+	$cal 		= 0;
+	$conexion 	= conectaBDSICLAB();
+	$consulta 	= sprintf("select c.claveCalendarizacion from lbcalendarizaciones c inner join lbsolicitudlaboratorios s on c.claveSolicitud = s.claveSolicitud where s.claveUsuario=%d and s.PDOCVE=%s and s.MATCVE=%s and s.GPOCVE=%s and s.clavePractica=%d and c.fechaAsignada=%s and c.horaAsignada=%s and c.estatus = 'R'",$maestro,$periodo,$materia,$grupo,$practica,$fecha,$hora);
+	$res 		= mysql_query($consulta); 
+	if($res)
+	{
+		if($row = mysql_fetch_array($res))
+		{
+			$cal = $row["claveCalendarizacion"];
+		}
+	}
+	return $cal;
+}
+function numerosControl($nums)
+{
+	$respuesta  = false;
+	$ncs 		= $nums;
+	$numeros	= array();
+	$nombres 	= array();
+	$conexion	= conectaBDSIE();
+	$consulta	= sprintf("select ALUCTR, ALUNOM, ALUAPP, ALUAPM from DALUMN WHERE ALUCTR in(%s)",$ncs);
+	$res 		= mysql_query($consulta);
+	if($res)
+	{
+		$respuesta = true;
+		while($row = mysql_fetch_array($res))
+		{	
+			$numeros[] = $row["ALUCTR"];
+			$nombres[] = $row["ALUNOM"]." ".$row["ALUAPP"]." ".$row["ALUAPM"];
+		}
+		$datosAlu = array('respuesta' => $respuesta,
+						 	'numeros' => $numeros, 
+							'nombres' => $nombres);
+		return $datosAlu;
+	}
+	else
+	{
+		return "";
+	}
+}
 function existeSol ($clave)
 {
 	$claveSol	= $clave;
@@ -246,7 +295,7 @@ function comboMatHr ()
 function comboPract()
 {
 	$materia 		= GetSQLValueString($_POST["materia"],"text");
-	$periodo 		= GetSQLValueString(periodoActual(),"text");
+	$periodo 		= GetSQLValueString($_POST["periodo"],"text");
 	$respuesta 		= false;
 	$comboPrac 		= array();
 	$comboCvePrac 	= "";
@@ -460,6 +509,26 @@ function comboHrMatRep()
 						 'cont' => $cont); 
 	print json_encode($arrayJSON);
 }
+function comboHoraPracRep()
+{
+	$practica 		= GetSQLValueString($_POST["practica"],"int");
+	$respuesta 		= false;
+	$comboHrAp 		= "";
+	$comboHrC 		= "";
+	$conexion		= conectaBDSICLAB();
+	$consulta		= sprintf("select horaApertura, horaCierre from lbasignapracticas a inner join lblaboratorios l on a.claveLaboratorio = l.claveLaboratorio where a.clavePractica =%d",$practica);
+	$res 			= mysql_query($consulta);
+	if($row = mysql_fetch_array($res))
+	{
+			$comboHrAp  = $row["horaApertura"];
+			$comboHrC 	= $row["horaCierre"];
+			$respuesta = true;
+	}
+	$arrayJSON = array('respuesta' => $respuesta,
+						'horaApertura' => $comboHrAp, 
+						'horaCierre' => $comboHrC);
+	print json_encode($arrayJSON);
+}
 //Menú principal
 $opc = $_POST["opc"];
 switch ($opc)
@@ -493,6 +562,9 @@ switch ($opc)
 		break;
 	case 'comboHrMatRep1':
 		comboHrMatRep();
+		break;
+	case 'comboHoraPracRep1':
+		comboHoraPracRep();
 		break;
 }	 
 ?>
