@@ -1564,6 +1564,10 @@ var inicioMaestro = function ()
 			}
 		});
     }
+    var imprimirPDF = function()
+    {
+    	alert("hola");
+    }
 	//Configuramos el evento del Tab
 	$("#salirTab").on("click",salir);
 	$("#solicitudestab").on("click",solAceptadas);
@@ -1599,6 +1603,7 @@ var inicioMaestro = function ()
 	$("#reportestab").on("click",tbReportes);
 	$("#btnListaAsistencia").on("click",listaAsistencia);
 	$("#btnRegresarRep").on("click",regresarRep);
+	$("#btnImprimir").on("click",imprimirPDF);
 	//conbos del menu de reportes
 	$("#cmbPeriodoRep").on("change",comboMatRep);
 	$("#cmbMateriaRep").on("change",comboHrMatRep);

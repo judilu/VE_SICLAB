@@ -43,18 +43,7 @@
 			<div class="row">
 				<div class="col s10 offset-s1">
 					<table  id ="tbListaAsistencia" class="bordered responsive-table">
-						<!-- <thead>
-							<tr>
-								<th>Número de control</th>
-								<th>Nombre</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>11170899</td>
-								<td>Moreno Zazueta Judith Guadalupe</td>
-							</tr>
-						</tbody> -->
+						
 					</table>
 				</div>
 			</div>
