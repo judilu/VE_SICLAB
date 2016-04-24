@@ -338,12 +338,99 @@ var inicio = function()
 				$("#accesoAlumno").hide();
 				$("#datosPracticas").hide();
 				$("#materialExterno").show("slow");
+				//materialPracticaExt();
+				consultaCalExterno();
 			}
 		}
 		else
 		{
 			sweetAlert("Número de contro incorrecto", "", "error");
 		}
+	}
+	var consultaCalExterno = function()
+	{
+		var f  = new Date();
+		var dd = f.getDate();
+		var mm = (f.getMonth())+1;
+		(dd<10) ? (dd="0"+dd) : dd;
+		(mm<10) ? (mm="0"+mm) : mm;
+		var fe  = (dd+"/"+mm+"/"+f.getFullYear());
+		var ncExterno 	= $("#txtNControl").val();
+		var parametros = "opc=consultaCalExt"+
+							"&fecha="+fe+
+							"&ncExterno="+ncExterno+
+							"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/alumnos.php",
+			data: parametros,
+			success: function(response)
+			{
+				if(response.respuesta)
+				{
+					materialPracticaExt();
+					$("#txtCveCalExt").val(response.calendarizacion);
+					$("#txtFechaActualEM").val(fe);
+				}
+				else
+				{
+					sweetAlert("No practicas calendarizadas en esta fecha", "", "error");
+				}
+			},
+			error: function(xhr, ajaxOptions,x)
+			{
+				console.log("Error de conexión");
+			}
+		});
+
+	}
+	var materialPracticaExt = function()
+	{
+		var f  = new Date();
+		var dd = f.getDate();
+		var mm = (f.getMonth())+1;
+		(dd<10) ? (dd="0"+dd) : dd;
+		(mm<10) ? (mm="0"+mm) : mm;
+		var fe  = (dd+"/"+mm+"/"+f.getFullYear());
+		$("#txtFechaActualEM").val(fe);
+		var ncExterno 	= $("#txtNControl").val();
+		var dependencia = $("#txtCarrera").val();
+		var parametros = "opc=consultaMaterialExterno"+
+							"&fecha="+fe+
+							"&nC="+ncExterno+
+							"&dependencia="+dependencia+
+							"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/alumnos.php",
+			data: parametros,
+			success: function(response)
+			{
+				if(response.respuesta)
+				{
+					$("#bodyArtExterno").append(response.renglones);
+					for (var i = 0; i < response.contador; i++) {
+						articulosSolicitadosAlumnos.push(response.materiales[i]);
+						numeroArticulos.push(response.cantidad[i]);
+						nombreArticulos.push(response.nombre[i]);
+					}
+				}
+				else
+				{
+					sweetAlert("No hay material asignado para la práctica", "", "error");
+				}
+			},
+			error: function(xhr, ajaxOptions,x)
+			{
+				console.log("Error de conexión");
+				console.log(xhr);
+			}
+		});
+
 	}
 	var materialPractica = function()
 	{
@@ -514,6 +601,59 @@ var inicio = function()
    				console.log("Error de conexión");
    			}
    		});
+	}
+	var guardaEntradaExterno = function()
+	{
+		var ncE = $("#txtNControl").val();
+		var f  = new Date();
+		var dd = f.getDate();
+		var mm = (f.getMonth())+1;
+		(dd<10) ? (dd="0"+dd) : dd;
+		(mm<10) ? (mm="0"+mm) : mm;
+		var fe  = (dd+"/"+mm+"/"+f.getFullYear());
+		var horaActual 				= new Date();
+		var hora 					=horaActual.getHours();
+		var minutos 				=horaActual.getMinutes();
+		(minutos<10) ? (minutos="0"+minutos) : minutos;
+		var horaEntrada			= hora + ":" + minutos;
+		var parametros 	= "opc=guardaEntradaExt"+
+						"&nControl="+ncE+
+						"&fecha="+fe+
+						"&hora="+horaEntrada+
+						"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/alumnos.php",
+			data: parametros,
+			success: function(response)
+			{
+				if(response.respuesta)
+				{
+   					if($("#chbElegirMaterial").is(':checked'))
+   					{
+   						sweetAlert("Registro de entrada guardado con éxito!", "Da click en el botón OK", "success");
+   						materialPractica();
+   					}
+   					else
+   					{
+   						sweetAlert("Registro de entrada guardado con éxito!", "Da click en el botón OK", "success");
+   						inicioRegistro();
+   					}
+   				}
+   				else
+   				{
+   					sweetAlert("No se registró la entrada", "", "error");
+   				}
+   			},
+   			error: function(xhr, ajaxOptions,x)
+   			{
+   				console.log("Error de conexión registro de entrada alumnos");
+   			}
+   		});		
+
+
 	}
 	var guardaEntradaAlumno = function()
 	{
@@ -807,6 +947,7 @@ var inicio = function()
 	$("#cmbMaestrosMat").on("change",horarioPractica);
 	$("#cmbHorariosPractica").on("change",nombrePracticaMaestro );
 	$("#btnEntradaAlumno").on("click",guardaEntradaAlumno);
+	$("#btnAceptarSinMat").on("click",guardaEntradaExterno);
 	$("#btnCancelarEntrada").on("click",cancelaEntrada);
 	$("#btnAgregarArtAlu").on("click",agregaArtAlumno);
 	$("#btnAceptarEleccionMat").on("click",guardaSolMaterial);

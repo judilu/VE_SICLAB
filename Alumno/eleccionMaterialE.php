@@ -1,7 +1,12 @@
 <div id="seccionMaterialE">
 	<h5>Elección de material</h5>
 	<div class="row">
-		<div class="col s3 offset-s1">Fecha: 01/12/2015</div>
+		<div class="input-field col s3">
+			<input placeholder="" id="txtFechaActualEM" type="text" class="validate" disabled>
+		</div>
+		<div class="input-field col s1">
+			<input placeholder="" id="txtCveCalExt" type="hidden" class="validate" disabled>
+		</div>
 	</div>
 	<div class="row">
 		<div class="col s3">
@@ -18,7 +23,7 @@
 		</div>
 	</div>
 	<p id="textoMaterial">Por favor, seleccione los articulos y la cantidad de ellos que necesitará para su práctica.</p>
-	<div class="row">
+	<!--<div class="row">
 		<div class="input-field col s2">
 			<input type="checkbox" id="chbElegirOtroMaterialDep">
 			<label for="chbElegirOtroMaterial">Otro material</label>
@@ -36,7 +41,7 @@
 		<div class="col s3">
 			<a id="btnAgregarArtDep" class="waves-effect waves-light btn amber darken-2" style="display:none"><i class="material-icons left">add</i>Agregar</a>
 		</div>
-	</div>
+	</div>-->
 	<div class="row">
 		<div class="col s10 offset-s1">
 			<table class="bordered" id="tbMaterialExterno">
