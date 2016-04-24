@@ -27,8 +27,8 @@ function consultaAlumno()
 	$respuesta		= false;
 	$nControl		= GetSQLValueString($_POST["nControl"],"text");
 	$ALUAPP 		= "";
-	$ALUAPM			="";
-	$ALUNOM			="";
+	$ALUAPM			= "";
+	$ALUNOM			= "";
 	$conexion 		= conectaBDSIE();
 	$consulta 		= sprintf("select ALUAPP, ALUAPM, ALUNOM from DALUMN where ALUCTR=%s limit 1",$nControl);
 	$res			= mysql_query($consulta);
@@ -46,7 +46,28 @@ function consultaAlumno()
 						);
 	print json_encode($arrayJSON);
 }
-
+function consultaExterno()
+{
+	$respuesta		= false;
+	$nControl		= GetSQLValueString($_POST["nControl"],"int");
+	$dependencia 	= "";
+	$encargado 		= "";
+	$conexion 		= conectaBDSICLAB();
+	$consulta 		= sprintf("select nombreDependencia,nombreEncargado 
+								from lbdependencias 
+								where claveDependencia=%d",$nControl);
+	$res			= mysql_query($consulta);
+	if($row = mysql_fetch_array($res))
+	{
+		$respuesta = true;
+		$dependencia=$row['nombreDependencia'];
+		$encargado 	=$row['nombreEncargado'];
+	}
+	$arrayJSON = array('respuesta' 		=> $respuesta,
+						'dependencia' 	=> $dependencia,
+						'encargado' 	=> $encargado);
+	print json_encode($arrayJSON);
+}
 function consultaCarrera()
 {
 	$respuesta		= false;
@@ -407,6 +428,9 @@ $opc = $_POST["opc"];
 switch ($opc){
 	case 'consultaAlumno':
 		consultaAlumno();
+	break;
+	case 'consultaExterno':
+		consultaExterno();
 	break;
 	case 'consultaCarrera':
 		consultaCarrera();

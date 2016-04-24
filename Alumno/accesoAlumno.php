@@ -46,7 +46,7 @@
 						<div class="row">
 							<div class="input-field col s12">
 								<input placeholder="" id="txtCarrera" type="text" class="validate" disabled>
-								<label for="txtCarrera">Carrera</label>
+								<label for="txtCarrera">Carrera o dependencia</label>
 							</div>
 						</div>
 						<div class="row">
@@ -112,9 +112,13 @@
 				</div>
 			</form>
 		</div>
+		<div id="materialExterno">
+			<?php include 'eleccionMaterialE.php';?>
+		</div>
 		<div id="datosPracticas">
 			<?php include 'datosPractica.php';?>
 		</div>
+		
 	</div>
 </body>
 </html>

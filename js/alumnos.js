@@ -4,47 +4,341 @@ var inicio = function()
 	var articulosSolicitadosAlumnos = new Array();
 	var numeroArticulos = new Array();
 	var nombreArticulos = new Array();
+	
+	var uno= function()
+	{
+		$("#txtNControl").val($("#txtNControl").val()+1);
+		str=$("#txtNControl").val();
+		if(str.length==8)
+		{
+			if ($("#rdoAlumno").is(':checked'))
+			{
+				consultaAlumno(str);
+			}
+			else
+			{
+				consultaExterno(str);
+			}
+		}
+
+	}
+	var dos= function()
+	{
+		$("#txtNControl").val($("#txtNControl").val()+2);
+		str=$("#txtNControl").val();
+		if(str.length==8)
+		{
+			if ($("#rdoAlumno").is(':checked'))
+			{
+				consultaAlumno(str);
+			}
+			else
+			{
+				consultaExterno(str);
+			}
+		}
+	}
+	var tres= function()
+	{
+		$("#txtNControl").val($("#txtNControl").val()+3);
+		str=$("#txtNControl").val();
+		if(str.length==8)
+		{
+			if ($("#rdoAlumno").is(':checked'))
+			{
+				consultaAlumno(str);
+			}
+			else
+			{
+				consultaExterno(str);
+			}
+		}
+	}
+	var cuatro= function()
+	{
+		$("#txtNControl").val($("#txtNControl").val()+4);
+		str=$("#txtNControl").val();
+		if(str.length==8)
+		{
+			if ($("#rdoAlumno").is(':checked'))
+			{
+				consultaAlumno(str);
+			}
+			else
+			{
+				consultaExterno(str);
+			}
+		}
+	}
+	var cinco= function()
+	{
+		$("#txtNControl").val($("#txtNControl").val()+5);
+		str=$("#txtNControl").val();
+		if(str.length==8)
+		{
+			if ($("#rdoAlumno").is(':checked'))
+			{
+				consultaAlumno(str);
+			}
+			else
+			{
+				consultaExterno(str);
+			}
+		}
+	}
+	var seis= function()
+	{
+		$("#txtNControl").val($("#txtNControl").val()+6);
+		str=$("#txtNControl").val();
+		if(str.length==8)
+		{
+			if ($("#rdoAlumno").is(':checked'))
+			{
+				consultaAlumno(str);
+			}
+			else
+			{
+				consultaExterno(str);
+			}
+		}
+	}
+	var siete= function()
+	{
+		$("#txtNControl").val($("#txtNControl").val()+7);
+		str=$("#txtNControl").val();
+		if(str.length==8)
+		{
+			if ($("#rdoAlumno").is(':checked'))
+			{
+				consultaAlumno(str);
+			}
+			else
+			{
+				consultaExterno(str);
+			}
+		}
+	}
+	var ocho= function()
+	{
+		$("#txtNControl").val($("#txtNControl").val()+8);
+		str=$("#txtNControl").val();
+		if(str.length==8)
+		{
+			if ($("#rdoAlumno").is(':checked'))
+			{
+				consultaAlumno(str);
+			}
+			else
+			{
+				consultaExterno(str);			
+			}
+		}
+	}
+	var nueve= function()
+	{
+		$("#txtNControl").val($("#txtNControl").val()+9);
+		str=$("#txtNControl").val();
+		if(str.length==8)
+		{
+			if ($("#rdoAlumno").is(':checked'))
+			{
+				consultaAlumno(str);
+			}
+			else
+			{
+				consultaExterno(str);
+			}
+		}
+	}
+	var cero= function()
+	{
+		$("#txtNControl").val($("#txtNControl").val()+0);
+		str=$("#txtNControl").val();
+		if(str.length==8)
+		{
+			if ($("#rdoAlumno").is(':checked'))
+			{
+				consultaAlumno(str);
+			}
+			else
+			{
+				consultaExterno(str);
+			}
+
+		}
+	}
+	var ma= function()
+	{
+		if ($("#rdoAlumno").is(':checked'))
+			{
+				if($("#txtNControl").val()=="")
+					$("#txtNControl").val("MA");
+				else
+				{
+					sweetAlert("Error", "El prefijo MA solo puede ir al inicio.", "error");
+				}
+			}
+			else
+			{
+				$("#btnMA").attr('disabled');
+			}
+		
+	}
+	var del= function()
+	{
+		var objEntrada = document.getElementById('txtNControl');
+		if(objEntrada.value.length > 0 && objEntrada.value!="MA")
+			objEntrada.value = objEntrada.value.substring(0,objEntrada.value.length-1);
+		else
+		{
+			if(objEntrada.value=="MA")
+				objEntrada.value = objEntrada.value.substring(objEntrada.value.length);
+		}
+	}
+
+	//FUNCIONES PHP
+	var consultaAlumno = function(str)
+	{
+		var parametros = "opc=consultaAlumno"+
+		"&nControl="+str+
+		"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/alumnos.php",
+			data: parametros,
+			success: function(response)
+			{
+				if(response.respuesta)
+				{
+					document.getElementById('txtNombre').focus();
+					$("#txtNombre").val(response.ALUAPP+" "+ response.ALUAPM+" "+response.ALUNOM);	
+					consultaCarrera(str);
+				}
+				else
+				{
+					sweetAlert("NO ENCONTRADO", "", "error");
+				}
+			},
+			error: function(xhr, ajaxOptions,x)
+			{
+				console.log("Error de conexión");
+			}
+		});
+	}
+	var consultaExterno = function(str)
+	{
+		var parametros = "opc=consultaExterno"+
+		"&nControl="+str+
+		"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/alumnos.php",
+			data: parametros,
+			success: function(response)
+			{
+				if(response.respuesta)
+				{
+					document.getElementById('txtNombre').focus();
+					$("#txtNombre").val(response.encargado);
+					$("#txtCarrera").val(response.dependencia);	
+				}
+				else
+				{
+					sweetAlert("NO ENCONTRADO", "", "error");
+				}
+			},
+			error: function(xhr, ajaxOptions,x)
+			{
+				console.log("Error de conexión");
+			}
+		});
+	}
+	var consultaCarrera = function(str)
+	{
+		var parametros = "opc=consultaCarrera"+
+		"&nControl="+str+
+		"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/alumnos.php",
+			data: parametros,
+			success: function(response)
+			{
+				if(response.respuesta)
+				{
+					document.getElementById('txtCarrera').focus();
+					$("#txtCarrera").val(response.CARNOM);
+					document.getElementById('txtSemestre').focus();	
+					$("#txtSemestre").val(response.CALNPE);
+					$("#txtNControl").attr("disabled","disabled");
+				}
+				else
+				{
+					sweetAlert("No tienes materias", "", "error");
+				}
+			},
+			error: function(xhr, ajaxOptions,x)
+			{
+				console.log("Error de conexión");
+			}
+		});
+	}
 	var practicaAlumnos = function()
 	{
 		if(($("#txtNControl").val())!=" " && ($("#txtNombre").val())!=" ") 
 		{
-			$("#accesoAlumno").hide();
-			$("#datosPracticas").show("slow");
-			var numeroControl = $("#txtNControl").val();
-			$("#txtNControlAlu").val(numeroControl.substr(0,8));
-			var numCtrl 	= $("#txtNControlAlu").val();
-			$("#txtNombreAlu").val($("#txtNombre").val());
-			var parametros = "opc=consultaMatAlumno"+
-			"&numeroControl="+numCtrl+
-			"&id="+Math.random();
-			$.ajax({
-				cache:false,
-				type: "POST",
-				dataType: "json",
-				url:"../data/alumnos.php",
-				data: parametros,
-				success: function(response)
-				{
-					if(response.respuesta)
+			if ($("#rdoAlumno").is(':checked'))
+			{
+				$("#accesoAlumno").hide();
+				$("#datosPracticas").show("slow");
+				var numeroControl = $("#txtNControl").val();
+				$("#txtNControlAlu").val(numeroControl.substr(0,8));
+				var numCtrl 	= $("#txtNControlAlu").val();
+				$("#txtNombreAlu").val($("#txtNombre").val());
+				var parametros = "opc=consultaMatAlumno"+
+				"&numeroControl="+numCtrl+
+				"&id="+Math.random();
+				$.ajax({
+					cache:false,
+					type: "POST",
+					dataType: "json",
+					url:"../data/alumnos.php",
+					data: parametros,
+					success: function(response)
 					{
-	       				$("#cmbMateriasAlumnos").html(" ");
-						for (var i = 0; i < response.contador; i++) 
+						if(response.respuesta)
 						{
-							$("#cmbMateriasAlumnos").append($("<option></option>").attr("value",response.claveMateria[i]).text(response.nombreMateria[i]));
-						}
-						$("#cmbMateriasAlumnos").trigger('contentChanged');
-						$('select').material_select();
-	   				}
-	   				else
-	   				{
-	   					sweetAlert("No hay materias disponibles", "", "error");
-	   				}
-	   			},
-	   			error: function(xhr, ajaxOptions,x)
-	   			{
-	   				console.log("Error de conexión datos practica");
-	   			}
-	   		});
+		       				$("#cmbMateriasAlumnos").html(" ");
+							for (var i = 0; i < response.contador; i++) 
+							{
+								$("#cmbMateriasAlumnos").append($("<option></option>").attr("value",response.claveMateria[i]).text(response.nombreMateria[i]));
+							}
+							$("#cmbMateriasAlumnos").trigger('contentChanged');
+							$('select').material_select();
+		   				}
+		   				else
+		   				{
+		   					sweetAlert("No hay materias disponibles", "", "error");
+		   				}
+		   			},
+		   			error: function(xhr, ajaxOptions,x)
+		   			{
+		   				console.log("Error de conexión datos practica");
+		   			}
+		   		});
+		   	}
+			else
+			{
+				$("#accesoAlumno").hide();
+				$("#datosPracticas").hide();
+				$("#materialExterno").show("slow");
+			}
 		}
 		else
 		{
@@ -113,183 +407,6 @@ var inicio = function()
 			}
 		});
 
-	}
-	var uno= function()
-	{
-		$("#txtNControl").val($("#txtNControl").val()+1);
-		str=$("#txtNControl").val();
-		if(str.length==8)
-		{
-			consultaAlumno(str);
-		}
-
-	}
-	var dos= function()
-	{
-		$("#txtNControl").val($("#txtNControl").val()+2);
-		str=$("#txtNControl").val();
-		if(str.length==8)
-		{
-			consultaAlumno(str);
-		}
-	}
-	var tres= function()
-	{
-		$("#txtNControl").val($("#txtNControl").val()+3);
-		str=$("#txtNControl").val();
-		if(str.length==8)
-		{
-			consultaAlumno(str);
-		}
-	}
-	var cuatro= function()
-	{
-		$("#txtNControl").val($("#txtNControl").val()+4);
-		str=$("#txtNControl").val();
-		if(str.length==8)
-		{
-			consultaAlumno(str);
-		}
-	}
-	var cinco= function()
-	{
-		$("#txtNControl").val($("#txtNControl").val()+5);
-		str=$("#txtNControl").val();
-		if(str.length==8)
-		{
-			consultaAlumno(str);
-		}
-	}
-	var seis= function()
-	{
-		$("#txtNControl").val($("#txtNControl").val()+6);
-		str=$("#txtNControl").val();
-		if(str.length==8)
-		{
-			consultaAlumno(str);
-		}
-	}
-	var siete= function()
-	{
-		$("#txtNControl").val($("#txtNControl").val()+7);
-		str=$("#txtNControl").val();
-		if(str.length==8)
-		{
-			consultaAlumno(str);
-		}
-	}
-	var ocho= function()
-	{
-		$("#txtNControl").val($("#txtNControl").val()+8);
-		str=$("#txtNControl").val();
-		if(str.length==8)
-		{
-			consultaAlumno(str);
-		}
-	}
-	var nueve= function()
-	{
-		$("#txtNControl").val($("#txtNControl").val()+9);
-		str=$("#txtNControl").val();
-		if(str.length==8)
-		{
-			consultaAlumno(str);
-		}
-	}
-	var cero= function()
-	{
-		$("#txtNControl").val($("#txtNControl").val()+0);
-		str=$("#txtNControl").val();
-		if(str.length==8)
-		{
-			consultaAlumno(str);
-
-		}
-	}
-	var ma= function()
-	{
-		if($("#txtNControl").val()=="")
-			$("#txtNControl").val("MA");
-		else
-		{
-			sweetAlert("Error", "El prefijo MA solo puede ir al inicio.", "error");
-		}
-	}
-	var del= function()
-	{
-		var objEntrada = document.getElementById('txtNControl');
-		if(objEntrada.value.length > 0 && objEntrada.value!="MA")
-			objEntrada.value = objEntrada.value.substring(0,objEntrada.value.length-1);
-		else
-		{
-			if(objEntrada.value=="MA")
-				objEntrada.value = objEntrada.value.substring(objEntrada.value.length);
-		}
-	}
-
-	//FUNCIONES PHP
-	var consultaAlumno = function(str)
-	{
-		var parametros = "opc=consultaAlumno"+
-		"&nControl="+str+
-		"&id="+Math.random();
-		$.ajax({
-			cache:false,
-			type: "POST",
-			dataType: "json",
-			url:"../data/alumnos.php",
-			data: parametros,
-			success: function(response)
-			{
-				if(response.respuesta)
-				{
-					document.getElementById('txtNombre').focus();
-					$("#txtNombre").val(response.ALUAPP+" "+ response.ALUAPM+" "+response.ALUNOM);	
-					consultaCarrera(str);
-				}
-				else
-				{
-					sweetAlert("NO ENCONTRADO", "", "error");
-				}
-			},
-			error: function(xhr, ajaxOptions,x)
-			{
-				console.log("Error de conexión");
-			}
-		});
-	}
-
-	var consultaCarrera = function(str)
-	{
-		var parametros = "opc=consultaCarrera"+
-		"&nControl="+str+
-		"&id="+Math.random();
-		$.ajax({
-			cache:false,
-			type: "POST",
-			dataType: "json",
-			url:"../data/alumnos.php",
-			data: parametros,
-			success: function(response)
-			{
-				if(response.respuesta)
-				{
-					document.getElementById('txtCarrera').focus();
-					$("#txtCarrera").val(response.CARNOM);
-					document.getElementById('txtSemestre').focus();	
-					$("#txtSemestre").val(response.CALNPE);
-					$("#txtNControl").attr("disabled","disabled");
-				}
-				else
-				{
-					sweetAlert("No tienes materias", "", "error");
-				}
-			},
-			error: function(xhr, ajaxOptions,x)
-			{
-				console.log("Error de conexión");
-			}
-		});
 	}
 	var maestroPractica = function()
 	{
@@ -434,10 +551,15 @@ var inicio = function()
 			{
 				if(response.respuesta)
 				{
-   					sweetAlert("Registro de entrada guardado con éxito!", "Da click en el botón OK", "success");
    					if($("#chbElegirMaterial").is(':checked'))
    					{
+   						sweetAlert("Registro de entrada guardado con éxito!", "Da click en el botón OK", "success");
    						materialPractica();
+   					}
+   					else
+   					{
+   						sweetAlert("Registro de entrada guardado con éxito!", "Da click en el botón OK", "success");
+   						inicioRegistro();
    					}
    				}
    				else
@@ -635,6 +757,7 @@ var inicio = function()
     			if(response.respuesta == true)
     			{
     				swal("Solicitud enviada con éxito!", "Da clic en el botón OK!", "success");
+    				inicioRegistro();
 				}
 				else
 				{
@@ -649,7 +772,19 @@ var inicio = function()
 		});
 
 	}
-
+ 	var inicioRegistro = function ()
+ 	{
+ 		$("#materialExterno").hide();
+ 		$("#datosPracticas").hide();
+ 		$("#materialAlumno").hide();
+ 		$("#accesoAlumno").show();
+ 		$("#txtNControl").val(" ");
+		$("#txtNombre").val(" ");
+		$("#txtCarrera").val(" ");
+		$("#txtSemestre").val(" ");
+		$("#txtNControl").removeAttr("disabled");
+		del();
+ 	}
 	$("#btnPracticaAlumnos").on("click",practicaAlumnos);
 	$("#btnMaterialAlumno").on("click",materialPractica);
 
@@ -675,5 +810,7 @@ var inicio = function()
 	$("#btnCancelarEntrada").on("click",cancelaEntrada);
 	$("#btnAgregarArtAlu").on("click",agregaArtAlumno);
 	$("#btnAceptarEleccionMat").on("click",guardaSolMaterial);
+	$("#btnCancelarEleccionMatDep").on("click",inicioRegistro);
+	$("#btnCancelarEleccionMat").on("click",inicioRegistro);
 }
 $(document).on("ready",inicio);

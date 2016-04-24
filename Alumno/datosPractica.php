@@ -1,5 +1,4 @@
 <div id="datosPractica2">
-	<?php require_once('../data/conexion.php');?>
 	<h5>Datos de la práctica</h5>
 	<div class="row">
 		<div class="col s12">
