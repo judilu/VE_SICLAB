@@ -1560,13 +1560,18 @@ var inicioMaestro = function ()
 			},
 			error: function(xhr, ajaxOptions,x)
 			{
-				console.log("Error de conexión comboPrac");	
+				console.log("Error de conexión comboPrac");
+				console.log(xhr);	
 			}
 		});
     }
     var imprimirPDF = function()
     {
     	alert("hola");
+    	//window.print();
+    	//$("#listaAsistencia").print(/*options*/);
+    });
+    	//listaAsistencia
     }
 	//Configuramos el evento del Tab
 	$("#salirTab").on("click",salir);
