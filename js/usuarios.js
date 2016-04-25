@@ -3,6 +3,15 @@ var inicio = function ()
 	var claveUsuario = -1;
 	var verificarUsuario = function()
 	{
+		//fecha del sistema
+		var f  = new Date();
+		var dd = f.getDate();
+		var mm = (f.getMonth())+1;
+		(dd<10) ? (dd="0"+dd) : dd;
+		(mm<10) ? (mm="0"+mm) : mm;
+		var fe  = (dd+"/"+mm+"/"+f.getFullYear());
+		$("#txtFechaAcceso").val(fe);
+		
 		var usu = $("#txtUsuario").val();
 		var cve = $("#txtClave").val();
 		if(usu!="" && cve!="")

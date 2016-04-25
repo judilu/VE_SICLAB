@@ -465,7 +465,49 @@ function calendarizacionExt($cveSol,$fecha)
 }
 function consultaMaterialExterno()
 {
-
+	$claveDep		= GetSQLValueString($_POST["nC"],"text");
+	$fecha 			= GetSQLValueString($_POST["fecha"],"text");
+	$claveCal 		= GetSQLValueString($_POST["calendarizacion"],"int");
+	$con 			= 0;
+	$rows			= array();
+	$renglones		= "";
+	$materiales 	= "";
+	$cantidad 		= "";
+	$nombre 		= "";
+	$conexion 		= conectaBDSICLAB();
+	$consulta		= sprintf("select ap.claveArticulo,ac.nombreArticulo,ap.cantidad 
+			from lbasignaarticulospracticas ap 
+			INNER JOIN lbarticuloscat ac on ap.claveArticulo=ac.claveArticulo 
+			WHERE ap.estatus = 'V' and ap.claveSolicitud=%s",$claveCal);
+		$res 			= mysql_query($consulta);
+		while($row = mysql_fetch_array($res))
+		{
+			$materiales .="'".($row["claveArticulo"])."',";
+			$cantidad 	.="'".($row["cantidad"])."',";
+			$nombre 	.="'".($row["nombreArticulo"])."',";
+			$rows[]=$row;
+			$respuesta = true;
+			$con++;
+		}
+		$materiales = (rtrim($materiales,","));
+		$cantidad = (rtrim($cantidad,","));
+		$nombre = (rtrim($nombre,","));
+		for($c= 0; $c< $con; $c++)
+		{
+			$renglones .= "<tr>";
+			$renglones .= "<td class='col s6'>".$rows[$c]["nombreArticulo"]."</td>";
+			$renglones .= "<td class='col s3'>".$rows[$c]["cantidad"]."</td>";
+			$renglones .= "<td class='col s3'><a name = '".$rows[$c]["claveArticulo"]."' class='btn-floating btn-large waves-effect red darken-1' id='btnEliminarArtAlu'><i class='material-icons'>delete</i></a></td>";
+			$renglones .= "</tr>";
+			$respuesta = true;
+		}
+		$arrayJSON = array('respuesta' => $respuesta, 
+			'renglones' => $renglones, 
+			'contador' => $con,
+			'materiales' => $materiales,
+			'cantidad' => $cantidad,
+			'nombre' => $nombre);
+		print json_encode($arrayJSON);
 }
 //Menú principal
 $opc = $_POST["opc"];

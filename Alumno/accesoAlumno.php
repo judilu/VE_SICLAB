@@ -9,7 +9,9 @@
 		<div id="accesoAlumno">
 			<form >
 				<div class="row">
-					<div class="col s2">Fecha: 01/12/2015</div>
+					<div class="col s2">
+						<input placeholder="" id="txtFechaAcceso" type="text" class="validate" disabled>
+					</div>
 					<div class="row">
 						<div class="col s3 offset-s9">
 							<h6>Entrada:</h6>

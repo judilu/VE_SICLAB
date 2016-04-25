@@ -395,13 +395,13 @@ var inicio = function()
 		(mm<10) ? (mm="0"+mm) : mm;
 		var fe  = (dd+"/"+mm+"/"+f.getFullYear());
 		$("#txtFechaActualEM").val(fe);
-		var ncExterno 	= $("#txtNControl").val();
-		var dependencia = $("#txtCarrera").val();
-		var parametros = "opc=consultaMaterialExterno"+
-							"&fecha="+fe+
-							"&nC="+ncExterno+
-							"&dependencia="+dependencia+
-							"&id="+Math.random();
+		var calendarizacion 	=$("#txtCveCalExt").val();
+		var ncExterno 			= $("#txtNControl").val();
+		var parametros 			= "opc=consultaMaterialExterno"+
+									"&fecha="+fe+
+									"&nC="+ncExterno+
+									"&calendarizacion="+calendarizacion+
+									"&id="+Math.random();
 		$.ajax({
 			cache:false,
 			type: "POST",
