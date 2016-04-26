@@ -35,7 +35,8 @@ var inicioMaestro = function ()
 					dataType: "json",
 					url:"../data/funciones.php",
 					data: parametros,
-					success: function(response){
+					success: function(response)
+					{
 						if(response.respuesta)
 						{
 							document.location.href= "acceso.php";
@@ -1300,6 +1301,9 @@ var inicioMaestro = function ()
 	    			//crear tabla de asistencia de alumnos
 	    			$("#tbListaAsistencia").html(" ");
 					$("#tbListaAsistencia").append(response.renglones);
+					//document.location.href= "../Maestro/asistencia.php";
+					//document.location.href ='../Maestro/asistencia.php';
+					window.open("../Maestro/reporteListas.php","asistencia","width=120,height=300,scrollbars=NO");
 	    		}
 	    		else
 	    		{
@@ -1328,37 +1332,7 @@ var inicioMaestro = function ()
 		$("#lista").hide();
 		$("#selecionarLista").show("slow");
 		//limpiar
-		$("#txtClaveMaestroRep2").val(" ");
-    	$("#txtNombreMaestroRep2").val(" ");
-    	$("#txtPeriodoRep").val(" ");
-	    $("#txtMateriaRep").val(" ");
-	    $("#txtHoraMatRep").val(" ");
-	    $("#txtPracticaRep").val(" ");
-	    $("#txtHoraPractRep").val(" ");
-	    $("#txtFechaPracticaRep2").val(" ");
-	    $("#txtFechaPracticaRep").val(" ");
-		//Combo Periodo
-		$("#cmbPeriodoRep").html(" ");
-		$("#cmbPeriodoRep").html("<option value='' disabled selected>Seleccione el Periodo</option>");
-		$('select').material_select();
-		//Combo de la materia
-		$("#cmbMateriaRep").html(" ");
-		$("#cmbMateriaRep").html("<option value='' disabled selected>Seleccione la materia</option>");
-		$('select').material_select();
-		//Combo hora materia
-		$("#cmbHoraMatRep").html(" ");
-		$("#cmbHoraMatRep").html("<option value='' disabled selected>Seleccione la hora</option>");
-		$('select').material_select();
-		//combo de practica
-		$("#cmbPracticaRep").html(" ");
-		$("#cmbPracticaRep").html("<option value='' disabled selected>Seleccione la práctica</option>");
-		$('select').material_select();
-		//combo hora práctica
-		$("#cmbHoraPracticaRep").html(" ");
-		$("#cmbHoraPracticaRep").html("<option value='' disabled selected>Seleccione la hora</option>");
-		$('select').material_select();
-		//limpiar tabla
-		$("#tbListaAsistencia").html("");
+		tbReportes();
 	}
 	var comboMatRep = function()
 	{
@@ -1567,11 +1541,7 @@ var inicioMaestro = function ()
     }
     var imprimirPDF = function()
     {
-    	alert("hola");
-    	//window.print();
-    	//$("#listaAsistencia").print(/*options*/);
-    });
-    	//listaAsistencia
+    	window.print();
     }
 	//Configuramos el evento del Tab
 	$("#salirTab").on("click",salir);
