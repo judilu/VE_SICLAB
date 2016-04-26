@@ -465,41 +465,47 @@ function calendarizacionExt($cveSol,$fecha)
 }
 function consultaMaterialExterno()
 {
+	$respuesta 		= false;
 	$claveDep		= GetSQLValueString($_POST["nC"],"text");
 	$fecha 			= GetSQLValueString($_POST["fecha"],"text");
+	$hora 			= GetSQLValueString($_POST["hora"],"text");
 	$claveCal 		= GetSQLValueString($_POST["calendarizacion"],"int");
-	$con 			= 0;
-	$rows			= array();
-	$renglones		= "";
-	$materiales 	= "";
-	$cantidad 		= "";
-	$nombre 		= "";
-	$conexion 		= conectaBDSICLAB();
-	$consulta		= sprintf("select ap.claveArticulo,ac.nombreArticulo,ap.cantidad 
-			from lbasignaarticulospracticas ap 
-			INNER JOIN lbarticuloscat ac on ap.claveArticulo=ac.claveArticulo 
-			WHERE ap.estatus = 'V' and ap.claveSolicitud=%s",$claveCal);
-		$res 			= mysql_query($consulta);
-		while($row = mysql_fetch_array($res))
-		{
-			$materiales .="'".($row["claveArticulo"])."',";
-			$cantidad 	.="'".($row["cantidad"])."',";
-			$nombre 	.="'".($row["nombreArticulo"])."',";
-			$rows[]=$row;
-			$respuesta = true;
-			$con++;
-		}
-		$materiales = (rtrim($materiales,","));
-		$cantidad = (rtrim($cantidad,","));
-		$nombre = (rtrim($nombre,","));
-		for($c= 0; $c< $con; $c++)
-		{
-			$renglones .= "<tr>";
-			$renglones .= "<td class='col s6'>".$rows[$c]["nombreArticulo"]."</td>";
-			$renglones .= "<td class='col s3'>".$rows[$c]["cantidad"]."</td>";
-			$renglones .= "<td class='col s3'><a name = '".$rows[$c]["claveArticulo"]."' class='btn-floating btn-large waves-effect red darken-1' id='btnEliminarArtAlu'><i class='material-icons'>delete</i></a></td>";
-			$renglones .= "</tr>";
-			$respuesta = true;
+	$claveSol 		= consultaSolicitud($claveCal,$fecha);
+	if(insertaPedido($fecha,$hora,$claveCal,$claveDep))
+	{
+		$con 			= 0;
+		$rows			= array();
+		$renglones		= "";
+		$materiales 	= "";
+		$cantidad 		= "";
+		$nombre 		= "";
+		$conexion 		= conectaBDSICLAB();
+		$consulta		= sprintf("select ap.claveArticulo,ac.nombreArticulo,ap.cantidad 
+				from lbasignaarticulospracticas ap 
+				INNER JOIN lbarticuloscat ac on ap.claveArticulo=ac.claveArticulo 
+				WHERE ap.estatus = 'V' and ap.claveSolicitud=%s",$claveSol);
+			$res 			= mysql_query($consulta);
+			while($row = mysql_fetch_array($res))
+			{
+				$materiales .="'".($row["claveArticulo"])."',";
+				$cantidad 	.="'".($row["cantidad"])."',";
+				$nombre 	.="'".($row["nombreArticulo"])."',";
+				$rows[]=$row;
+				$respuesta = true;
+				$con++;
+			}
+			$materiales = (rtrim($materiales,","));
+			$cantidad = (rtrim($cantidad,","));
+			$nombre = (rtrim($nombre,","));
+			for($c= 0; $c< $con; $c++)
+			{
+				$renglones .= "<tr>";
+				$renglones .= "<td class='col s6'>".$rows[$c]["nombreArticulo"]."</td>";
+				$renglones .= "<td class='col s3'>".$rows[$c]["cantidad"]."</td>";
+				$renglones .= "<td class='col s3'><a name = '".$rows[$c]["claveArticulo"]."' class='btn-floating btn-large waves-effect red darken-1' id='btnEliminarArtAlu'><i class='material-icons'>delete</i></a></td>";
+				$renglones .= "</tr>";
+				$respuesta = true;
+			}
 		}
 		$arrayJSON = array('respuesta' => $respuesta, 
 			'renglones' => $renglones, 
@@ -508,6 +514,84 @@ function consultaMaterialExterno()
 			'cantidad' => $cantidad,
 			'nombre' => $nombre);
 		print json_encode($arrayJSON);
+}
+function consultaSolicitud($claveCal,$fecha)
+{
+	$calendarizacion 	= $claveCal;
+	$fechaAsignada 		= $fecha;
+	$conexion 			= conectaBDSICLAB();
+	$consulta			= sprintf("select claveSolicitud 
+									from lbcalendarizaciones
+									WHERE claveCalendarizacion=%s and fechaAsignada=%s",$calendarizacion,$fechaAsignada);
+	$res			= mysql_query($consulta);
+	if($row = mysql_fetch_array($res))
+	{
+		return (int)($row["claveSolicitud"]);
+	}
+	else
+	{
+		return 0;
+	}
+
+}
+function guardaEntradaExt()
+{
+	$periodo 		= '"2161"';//periodoActual();
+	$claveCal		= GetSQLValueString($_POST["calendarizacion"],"int");
+	$fecha 			= GetSQLValueString($_POST["fecha"],"text");
+	$hora 			= GetSQLValueString($_POST["hora"],"text");
+	$numControl 	= GetSQLValueString($_POST["nControl"],"int");
+	$conexion 		= conectaBDSICLAB();
+	$query  		= sprintf("insert into lbentradasexternos values(%s,%s,%s,%s,%s)",$periodo,$numControl,$fecha,$hora,$claveCal);
+	$res 	 	=  mysql_query($query);
+	if(mysql_affected_rows()>0)
+		$respuesta = true; 
+	
+	$arrayJSON = array('respuesta' => $respuesta);
+	print json_encode($arrayJSON);
+}
+function guardaEntradaExtMat($claveCal,$numeroDep,$fecha,$hora)
+{
+	$periodo 		= '"2161"';//periodoActual();
+	$clave 			= $claveCal;
+	$numDep 		= $numeroDep;
+	$fechaE 		= $fecha;
+	$horaE 			= $hora;
+	$conexion 		= conectaBDSICLAB();
+	$query  		= sprintf("insert into lbentradasexternos values(%s,%s,%s,%s,%d)",$periodo,$fechaE,$horaE,$numDep,$clave);
+	$res 	 	=  mysql_query($query);
+	if(mysql_affected_rows()>0)
+	{
+		return true; 
+	}
+	return false;
+}
+function guardaSolicitudExterno()
+{
+	$respuesta 		= false;
+	$periodo 		= '"2161"';//periodoActual();
+	$claveCal		= GetSQLValueString($_POST["claveCal"],"int");
+	$numeroDep		= GetSQLValueString($_POST["numC"],"text");
+	$fecha			= GetSQLValueString($_POST["fecha"],"text");
+	$hora			= GetSQLValueString($_POST["hora"],"text");
+	$respuesta2 	= guardaEntradaExtMat($claveCal,$numeroDep,$fecha,$hora);
+	$clavePrestamo 	= consultaClavePrestamo($claveCal,$numeroDep);
+	$listaArt		= $_POST['listaArt'];
+	$cantArt		= $_POST['cantArt'];
+	$arrayArt 		= explode(',',$listaArt); 
+	$arrayCant 		= explode(',',$cantArt); 
+	$cantidad 		= count($arrayArt);
+	for ($i=0; $i < $cantidad ; $i++) { 
+		$conexion 	= conectaBDSICLAB();
+		$consulta	= sprintf("insert into lbsolicitudarticulos values(%s,%s,%s,%s,%s)",'""',
+			$arrayArt[$i],$clavePrestamo,$arrayCant[$i],'"S"');
+		$res 		= mysql_query($consulta);
+		if(mysql_affected_rows()>0)
+			$respuesta = true;
+	}
+	$arrayJSON = array('respuesta' => $respuesta,
+						'respuesta2' => $respuesta2);
+	print json_encode($arrayJSON);
 }
 //Menú principal
 $opc = $_POST["opc"];
@@ -539,6 +623,9 @@ switch ($opc){
 	case 'guardaEntrada1':
 	guardaEntrada();
 	break;
+	case 'guardaEntradaExt':
+		guardaEntradaExt();
+	break;
 	case 'consultaNomAlumno':
 	consultaAlumno();
 	break;
@@ -559,6 +646,9 @@ switch ($opc){
 	break;
 	case 'consultaCalExt':
 	consultaCalExt();
+	break;
+	case 'guardaSolicitudExterno':
+		guardaSolicitudExterno();
 	break;
 } 
 ?>

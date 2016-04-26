@@ -302,8 +302,8 @@ var inicio = function()
 				var numCtrl 	= $("#txtNControlAlu").val();
 				$("#txtNombreAlu").val($("#txtNombre").val());
 				var parametros = "opc=consultaMatAlumno"+
-				"&numeroControl="+numCtrl+
-				"&id="+Math.random();
+								"&numeroControl="+numCtrl+
+								"&id="+Math.random();
 				$.ajax({
 					cache:false,
 					type: "POST",
@@ -338,7 +338,6 @@ var inicio = function()
 				$("#accesoAlumno").hide();
 				$("#datosPracticas").hide();
 				$("#materialExterno").show("slow");
-				//materialPracticaExt();
 				consultaCalExterno();
 			}
 		}
@@ -370,9 +369,9 @@ var inicio = function()
 			{
 				if(response.respuesta)
 				{
-					materialPracticaExt();
 					$("#txtCveCalExt").val(response.calendarizacion);
 					$("#txtFechaActualEM").val(fe);
+					materialPracticaExt(response.calendarizacion,ncExterno);
 				}
 				else
 				{
@@ -386,7 +385,7 @@ var inicio = function()
 		});
 
 	}
-	var materialPracticaExt = function()
+	var materialPracticaExt = function(calendarizacion)
 	{
 		var f  = new Date();
 		var dd = f.getDate();
@@ -394,13 +393,24 @@ var inicio = function()
 		(dd<10) ? (dd="0"+dd) : dd;
 		(mm<10) ? (mm="0"+mm) : mm;
 		var fe  = (dd+"/"+mm+"/"+f.getFullYear());
+		var horaActual 				= new Date();
+		var hora 					=horaActual.getHours();
+		var minutos 				=horaActual.getMinutes();
+		(minutos<10) ? (minutos="0"+minutos) : minutos;
+		var hora					= hora + ":" + minutos;
+
 		$("#txtFechaActualEM").val(fe);
-		var calendarizacion 	=$("#txtCveCalExt").val();
+		var claveCal 			= calendarizacion;
 		var ncExterno 			= $("#txtNControl").val();
+		var nombreDep 			= $("#txtNombre").val();
+		$("#bodyArtExterno").html("");
+		$("#txtNumeroControlDep").val(ncExterno);
+		$("#txtNombreEncargadoDep").val(nombreDep);
 		var parametros 			= "opc=consultaMaterialExterno"+
 									"&fecha="+fe+
+									"&hora="+hora+
 									"&nC="+ncExterno+
-									"&calendarizacion="+calendarizacion+
+									"&calendarizacion="+claveCal+
 									"&id="+Math.random();
 		$.ajax({
 			cache:false,
@@ -427,7 +437,6 @@ var inicio = function()
 			error: function(xhr, ajaxOptions,x)
 			{
 				console.log("Error de conexión");
-				console.log(xhr);
 			}
 		});
 
@@ -604,7 +613,8 @@ var inicio = function()
 	}
 	var guardaEntradaExterno = function()
 	{
-		var ncE = $("#txtNControl").val();
+		var ncE = $("#txtNumeroControlDep").val();
+		var cal = $("#txtCveCalExt").val();
 		var f  = new Date();
 		var dd = f.getDate();
 		var mm = (f.getMonth())+1;
@@ -618,6 +628,7 @@ var inicio = function()
 		var horaEntrada			= hora + ":" + minutos;
 		var parametros 	= "opc=guardaEntradaExt"+
 						"&nControl="+ncE+
+						"&calendarizacion="+cal+
 						"&fecha="+fe+
 						"&hora="+horaEntrada+
 						"&id="+Math.random();
@@ -912,6 +923,56 @@ var inicio = function()
 		});
 
 	}
+	var guardaSolMatExt = function()
+	{
+		//fecha del sistema
+		var f  = new Date();
+		var dd = f.getDate();
+		var mm = (f.getMonth())+1;
+		(dd<10) ? (dd="0"+dd) : dd;
+		(mm<10) ? (mm="0"+mm) : mm;
+		var fe  = (dd+"/"+mm+"/"+f.getFullYear());
+		//hora del sistema
+		var horaActual 				= new Date();
+		var hora 					=horaActual.getHours();
+		var minutos 				=horaActual.getMinutes();
+		(minutos<10) ? (minutos="0"+minutos) : minutos;
+		var horaEntrada				= hora + ":" + minutos;
+		var listaArt 		= articulosSolicitadosAlumnos;
+		var cantArt 		= numeroArticulos;
+		var claveCal 		= $("#txtCveCalExt").val();
+		var nc 				= $("#txtNumeroControlDep").val();
+		var parametros = "opc=guardaSolicitudExterno"+
+							"&listaArt="+listaArt+
+							"&cantArt="+cantArt+
+							"&claveCal="+claveCal+
+							"&fecha="+fe+
+							"&hora="+horaEntrada+
+							"&numC="+nc+
+    						"&id="+Math.random();
+		$.ajax({
+    		cache:false,
+    		type: "POST",
+    		dataType: "json",
+    		url:"../data/alumnos.php",
+    		data: parametros,
+    		success: function(response){
+    			if(response.respuesta && response.respuesta2)
+    			{
+    				swal("Solicitud enviada con éxito!", "Da clic en el botón OK!", "success");
+    				inicioRegistro();
+				}
+				else
+				{
+					sweetAlert("No se envió la solicitud de material", "", "error");
+				}
+			},
+			error: function(xhr, ajaxOptions,x)
+			{
+				console.log("Error de conexión");
+			}
+		});
+	}
  	var inicioRegistro = function ()
  	{
  		$("#materialExterno").hide();
@@ -951,7 +1012,7 @@ var inicio = function()
 	$("#btnCancelarEntrada").on("click",cancelaEntrada);
 	$("#btnAgregarArtAlu").on("click",agregaArtAlumno);
 	$("#btnAceptarEleccionMat").on("click",guardaSolMaterial);
-	$("#btnCancelarEleccionMatDep").on("click",inicioRegistro);
 	$("#btnCancelarEleccionMat").on("click",inicioRegistro);
+	$("#btnAceptarEleccionMatDep").on("click",guardaSolMatExt);
 }
 $(document).on("ready",inicio);

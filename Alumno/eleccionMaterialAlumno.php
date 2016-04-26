@@ -51,8 +51,8 @@
 	</div>
 	<div class="row">
 		<div class="col s6 offset-s4">
-			<button class="btn waves-effect waves-light  green darken-2" type="submit" name="action" id="btnAceptarEleccionMat">Aceptar
-			</button>
+			<a class="btn waves-effect waves-light  green darken-2" type="submit" name="action" id="btnAceptarEleccionMat">Aceptar
+			</a>
 			<a class="waves-effect waves-light btn red darken-1" id="btnCancelarEleccionMat">Cancelar</a>
 		</div>
 	</div>
