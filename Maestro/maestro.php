@@ -7,7 +7,7 @@
 <body>
 	<div id="menuMaestro" class="body2">
 		<div class="row">
-			<div class="col s12">
+			<div class="col s12" id="tabsMaestro">
 				<ul class="tabs">
 					<li id= "solicitudestab" class="tab col s3 active"><a id="soliAceptadas" href="#solicitudes">Solicitudes</a></li>
 					<li id="reportestab" class="tab col s3"><a href="#reportes">Reportes</a></li>
