@@ -593,6 +593,7 @@
 		$("#verMasSolicitud").hide("slow");
 		$("#aceptarSolLab").hide("slow");
 		$("#guardarSolicitud").hide("slow");
+		$("#tbPendientesLab").html("");
 		var parametros 	= "opc=pendientesLab1"+"&id="+Math.random();
 		$.ajax({
 			cache:false,
@@ -603,7 +604,6 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
-					$("#tbPendientesLab").html("");
 					$("#tbPendientesLab").append(response.renglones);
 					$("#tbPendientesLab #btnCalendarizado").on("click",aceptarSolicitudLab);
 					$("#tbPendientesLab #btnVerMas").on("click",verMas);
@@ -623,6 +623,7 @@
 	{
 		$("#sPendientesLab").hide("slow");
 		$("#verMasSolicitud2").hide("slow");
+		$("#tbAceptadasLab").html("");
 		var claveCal = $(this).attr('name');
 		var parametros 	= "opc=aceptadasLab1"+"&id="+Math.random();
 		$.ajax({
@@ -634,7 +635,6 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
-					$("#tbAceptadasLab").html("");
 					$("#tbAceptadasLab").append(response.renglones);
 					$("#tbAceptadasLab a").on("click",verMas2);
 				}

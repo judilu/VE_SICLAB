@@ -1,11 +1,12 @@
 <?php
 require_once('../data/conexion.php');
+require_once('../data/funciones.php');
 function usuario ()
 {
 	session_start();
 	$_SESSION['nombre'] = GetSQLValueString($_POST['clave1'],"text");
 }
-function salir()
+/*function salir()
 {
 	session_start();
 	session_destroy();
@@ -38,6 +39,37 @@ function existeSolLab ($clave)
 			return true;
 		}
 		return false;
+}*/
+function nomMae($clave)
+{
+	$claveUsuario 	= $clave;
+	$maestro 		= claveMaestro($claveUsuario);
+	$conexion 		= conectaBDSIE();
+	$consulta 		= sprintf("select PERCVE, PERNOM, PERAPE from DPERSO where PERCVE =%d",$maestro);
+	$res			= mysql_query($consulta);
+	if($row = mysql_fetch_array($res))
+	{
+		return $row["PERNOM"]." ".$row["PERAPE"];
+	}
+	else
+	{
+		return "";
+	}
+}
+function nombreMat($clave)
+{
+	$claveMat 	= GetSQLValueString($clave,"text");
+	$conexion	= conectaBDSIE();
+	$consulta	= sprintf("select MATCVE, MATNCO from DMATER where MATCVE=%s",$claveMat);
+	$res 		= mysql_query($consulta);
+	if($row = mysql_fetch_array($res))
+	{
+		return $row["MATNCO"];
+	}
+	else
+	{
+		return "";
+	}
 }
 //pendiente de terminar
 function pendientesLaboratorio()
@@ -50,9 +82,16 @@ function pendientesLaboratorio()
 		$con 		= 0;
 		$rows		= array();
 		$renglones	= "";
+		$maestro 	= "";
+		$percve 	= "";
+		$nomMaestro = "";
+		$nomMat 	= "";
 		$solPendientesLab ="";
 		$conexion 	= conectaBDSICLAB();
-		$consulta	= sprintf("select s.claveSolicitud,s.GPOCVE,p.tituloPractica,s.fechaSolicitud,s.horaSolicitud from lbusuarios as u INNER JOIN lbsolicitudlaboratorios as s ON u.claveUsuario =s.claveUsuario INNER JOIN lbpracticas as p ON p.clavePractica = s.clavePractica");
+		$consulta	= sprintf("select s.claveSolicitud,s.MATCVE,p.tituloPractica,s.fechaSolicitud,s.horaSolicitud,s.claveUsuario 
+								from lbusuarios as u 
+								INNER JOIN lbsolicitudlaboratorios as s ON u.claveUsuario =s.claveUsuario 
+								INNER JOIN lbpracticas as p ON p.clavePractica = s.clavePractica");
 		$res 		= mysql_query($consulta);
 		$renglones	.= "<thead>";
 		$renglones	.= "<tr>";
@@ -67,6 +106,7 @@ function pendientesLaboratorio()
 		
 		while($row = mysql_fetch_array($res))
 		{
+
 			$solPendientesLab .="'".($row["claveSolicitud"])."',";
 			$rows[]=$row;
 			$respuesta = true;
@@ -75,10 +115,14 @@ function pendientesLaboratorio()
 		$solPendientesLab = (rtrim($solPendientesLab,","));
 		for($c= 0; $c< $con; $c++)
 		{
+			$maestro 	= $rows[$c]["claveUsuario"];
+			$nomMaestro = nomMae($maestro);
+			$cveGpo 	= $rows[$c]["MATCVE"];
+			$nomMat 	= nombreMat($cveGpo);
 			$renglones .= "<tbody>";
 			$renglones .= "<tr>";
-			$renglones .= "<td>".$rows[$c]["claveSolicitud"]."</td>";
-			$renglones .= "<td>".$rows[$c]["GPOCVE"]."</td>";
+			$renglones .= "<td>".$nomMaestro."</td>";
+			$renglones .= "<td>".$nomMat."</td>";
 			$renglones .= "<td>".$rows[$c]["tituloPractica"]."</td>";
 			$renglones .= "<td>".$rows[$c]["fechaSolicitud"]."</td>";
 			$renglones .= "<td>".$rows[$c]["horaSolicitud"]."</td>";
@@ -105,7 +149,7 @@ function verMas()
 	session_start();
 	if(!empty($_SESSION['nombre']))
 	{
-		$clave 		= GetSQLValueString($_POST["clave"],"text");
+		$clave 			= GetSQLValueString($_POST["clave"],"text");
 		$renglones		="";
 		$fechaSolicitud	="";
 		$horaSolicitud	="";
