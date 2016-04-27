@@ -493,8 +493,13 @@
 	{
 		$("#verPrincipal").hide("slow");
 		$("#solicitudesPendientesLab2").hide("slow");
+		$("#aceptarSolLab").show("slow");
+		$("#guardarSolicitud").show("slow");
+		$("#verMasSolicitud").show("slow");
 		var claveSol= $(this).attr('name');
-		var parametros 	= "opc=obtenerDatosSolLab1"+"&clave="+claveSol+"&id="+Math.random();
+		var parametros 	= "opc=obtenerDatosSolLab1"+
+							"&clave="+claveSol+
+							"&id="+Math.random();
 		$.ajax({
 			cache:false,
 			type: "POST",
@@ -517,9 +522,7 @@
 				alert("Error de conexión aceptar solicitud de laboratorio");
 			}
 		});
- 		$("#aceptarSolLab").show("slow");
-		$("#guardarSolicitud").show("slow");
-		$("#verMasSolicitud").show("slow");
+
 
 	}
 	//funcion para guardar una solicitud de laboratorio
@@ -527,16 +530,12 @@
 		var claveSol	 = $("#txtClaveSol").val();
 		var fechaAsignada= $("#txtFechaAsignada").val();
 		var horaAsignada = $("#txtHoraAsignada").val();
-		var firmaJefe 	 = $("#txtFirmaJefe").val();
+		var firmaJefe 	 = "0000";
 		var comentarios  = $("#txtComentariosSol").val();
-		var estatus= "NR";
-		var claveCal= "";
-		if (($("#txtFirmaJefe").val())!="" && ($("#txtClaveSol").val())!="" && ($("#txtComentariosSol").val())!="") 
+		if (($("#txtClaveSol").val())!="" && ($("#txtComentariosSol").val())!="" && ($("#txtFechaAsignada").val())!="" && ($("#txtHoraAsignada").val())!="") 
 		{
 			var parametros 	= "opc=guardaSolicitudLab1"
 								+"&clave="+claveSol
-								+"&estatus="+estatus
-								+"&claveCal="+claveCal
 								+"&fecha="+fechaAsignada
 								+"&hora="+horaAsignada
 								+"&firmaJefe="+firmaJefe
@@ -552,6 +551,7 @@
 					if(response.respuesta == true)
 					{
 						sweetAlert("La solicitud fue calendarizada con éxito!", "Da click en el botón OK", "success");
+						sLaboratorioPendientes();
 					}
 					else
 						sweetAlert("La solicitud no se calendarizó!", " ", "error");
@@ -565,6 +565,7 @@
 	//funcion para eliminar una solicitud de laboratorio
 	var eliminarSolLab = function(){
 		var claveSol= $(this).attr('name');
+		$(this).closest('tr').remove();
 		var parametros 	= "opc=eliminaSolicitudLab1"
 						+"&clave="+claveSol
 						+"&id="+Math.random();
@@ -680,8 +681,9 @@
 			{
 				alert("Error de conexión realizadas");
 			}
-		});	
+		});
 		$("#verMasSolicitud").show("slow");
+		$("#verPrincipal").show("slow");	
 	}
 	var verMas2 = function()
 	{		
@@ -717,6 +719,7 @@
 			}
 		});	
 		$("#verMasSolicitud2").show("slow");
+		$("#verPrincipal2").show("slow");
 	}
 	//Inventario
 	var listaArticulos = function()

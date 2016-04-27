@@ -4,15 +4,11 @@
 		<div class="row">
 			<div class="input-field col s3">
 				<input placeholder=" " id="txtFechaAsignada" type="text" class="validate">
-				<label for="txtFecha">Fecha asignada</label>
+				<label for="txtFecha">Fecha solicitada</label>
 			</div>
 			<div class="input-field col s3">
 				<input placeholder=" " id="txtHoraAsignada" type="text" class="validate">
-				<label for="txtHora">Hora asignada</label>
-			</div>
-			<div class="input-field col s3">
-				<input id="txtFirmaJefe" type="text" class="validate">
-				<label for="txtFirmaJefe">Firma electrónica</label>
+				<label for="txtHora">Hora solicitada</label>
 			</div>
 		</div>
 		<div class="row">

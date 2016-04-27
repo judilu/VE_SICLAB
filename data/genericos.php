@@ -59,7 +59,7 @@ function nombreMat($clave)
 		return "";
 	}
 }
-//pendiente de terminar
+//Solicitudes pendientes de laboratorio
 function pendientesLaboratorio()
 {
 	$respuesta 	= false;
@@ -131,7 +131,7 @@ function pendientesLaboratorio()
 		'renglones' => $renglones);
 	print json_encode($arrayJSON);
 }
-//ver mas y ver mas dos falta regresar los datos de las consultas a las pantallas
+//Ver mas de las solicitudes pendientes del laboratorio
 function verMas()
 {
 	$respuesta 		= false;
@@ -139,19 +139,20 @@ function verMas()
 	if(!empty($_SESSION['nombre']))
 	{
 		$clave 			= GetSQLValueString($_POST["clave"],"text");
-		$renglones		="";
-		$fechaSolicitud	="";
-		$horaSolicitud	="";
-		$con 			="";
-		$grupo			="";
-		$nombrePractica ="";
-		$nombreArticulo ="";
-		$cantidad 		="";
-		$rows		= array();
+		$renglones		= "";
+		$fechaSolicitud	= "";
+		$horaSolicitud	= "";
+		$con 			= "";
+		$maestro		= "";
+		$nombrePractica = "";
+		$nombreArticulo = "";
+		$cantidad 		= "";
+		$usuario 		= 0;
+		$rows			= array();
 		$conexion 		= conectaBDSICLAB();
 		if(existeSolLabG($clave))
 		{
-			$consulta  		= sprintf("select a.fechaSolicitud,a.horaSolicitud,a.MATCVE,c.tituloPractica, b.nombreArticulo, d.cantidad 
+			$consulta  		= sprintf("select a.fechaSolicitud,a.horaSolicitud,a.MATCVE,c.tituloPractica, b.nombreArticulo, d.cantidad, a.claveUsuario
 				from lbarticuloscat as b INNER JOIN lbasignaarticulospracticas as d ON b.claveArticulo=d.claveArticulo
 			 INNER JOIN lbsolicitudlaboratorios as a ON d.claveSolicitud=a.claveSolicitud 
 			 INNER JOIN lbpracticas as c ON a.clavePractica=c.clavePractica
@@ -166,10 +167,11 @@ function verMas()
 
 			while($row = mysql_fetch_array($res))
 			{	
-				$respuesta = true;
+				$respuesta		= true;
 				$fechaSolicitud = $row["fechaSolicitud"];
-				$horaSolicitud = $row["horaSolicitud"];
-				$grupo = $row["GPOCVE"];
+				$horaSolicitud 	= $row["horaSolicitud"];
+				$usuario 		= $row["claveUsuario"];
+				$maestro 		= nomMae($usuario);
 				$nombrePractica = $row["tituloPractica"];
 				$rows[]=$row;
 				$con++;
@@ -189,9 +191,14 @@ function verMas()
 	}
 	else
 	{
-		//salir();
+		salir();
 	}
-	$arrayJSON = array('respuesta' => $respuesta, 'fecha' =>$fechaSolicitud, 'hora' => $horaSolicitud,'maestro' => $grupo, 'practica' => $nombrePractica, 'renglones' => $renglones);
+	$arrayJSON = array('respuesta' => $respuesta, 
+						'fecha' =>$fechaSolicitud, 
+						'hora' => $horaSolicitud,
+						'maestro' => $maestro, 
+						'practica' => $nombrePractica, 
+						'renglones' => $renglones);
 		print json_encode($arrayJSON);
 }
 //obtiene los datos de la solicitud para mostrar en la pantalla guardaSolLab
@@ -201,7 +208,7 @@ function obtenerDatosSolLab()
 	session_start();
 	if(!empty($_SESSION['nombre']))
 	{
-		$clave 		= GetSQLValueString($_POST["clave"],"text");
+		$clave 			= GetSQLValueString($_POST["clave"],"text");
 		$fecha 			= "";
 		$hora 			= "";
 		$conexion 		= conectaBDSICLAB();
@@ -219,7 +226,7 @@ function obtenerDatosSolLab()
 	}
 	else
 	{
-		//salir();
+		salir();
 	}
 	$arrayJSON = array('respuesta' => $respuesta, 'fecha' => $fecha, 'hora' => $hora);
 		print json_encode($arrayJSON);
@@ -227,15 +234,12 @@ function obtenerDatosSolLab()
 //Se inserta la solicitud en la tabla lbcalendarizaciones
 function guardaSolicitudLab()
 {
-	//falta obtener el periodo
 	$respuesta 		= false;
 	session_start();
 	if(!empty($_SESSION['nombre']))
 	{
 		$periodo 		= periodoActual();
-		$clave 			= GetSQLValueString($_POST["clave"],"text");
-		$claveCal		= GetSQLValueString($_POST["claveCal"],"text");
-		$estatus 		= GetSQLValueString($_POST["estatus"],"text");
+		$clave 			= GetSQLValueString($_POST["clave"],"int");
 		$fecha 			= GetSQLValueString($_POST["fecha"],"text");
 		$hora 			= GetSQLValueString($_POST["hora"],"text");
 		$firmaJefe 		= GetSQLValueString($_POST["firmaJefe"],"int");
@@ -243,7 +247,7 @@ function guardaSolicitudLab()
 		$conexion 		= conectaBDSICLAB();
 		if(existeSolLabG($clave))
 		{
-			$consulta  		= sprintf("insert into lbcalendarizaciones values(%s,%s,%s,%s,%d,%s,%s,%s)",$periodo,$claveCal,$fecha,$hora,$firmaJefe,$estatus,$comentarios,$clave);
+			$consulta  		= sprintf("insert into lbcalendarizaciones values(%s,%d,%s,%s,%d,%s,%d,%s)",$periodo,'""',$fecha,$hora,$firmaJefe,$comentarios,$clave,'""');
 			$res 	 	=  mysql_query($consulta);
 			if(mysql_affected_rows()>0)
 			$respuesta = true; 
@@ -251,37 +255,38 @@ function guardaSolicitudLab()
 	}
 	else
 	{
-		//salir();
+		salir();
 	}
 	$arrayJSON = array('respuesta' => $respuesta);
 		print json_encode($arrayJSON);
 }
-//eliminar una solicitud de laboratorio, pendiente por las relaciones
-//no se realiza aun
+//eliminar una solicitud de laboratorio
 function eliminaSolicitudLab()
 {
 	$respuesta 		= false;
 	session_start();
 	if(!empty($_SESSION['nombre']))
 	{
-		$clave 		= GetSQLValueString($_POST["clave"],"text");
+		$clave 			= GetSQLValueString($_POST["clave"],"int");
 		$conexion 		= conectaBDSICLAB();
 		if(existeSolLabG($clave))
 		{
-			$consulta  	= sprintf("delete from lbasignaarticulospracticas,lbsolicitudlaboratorios where claveSolicitud=%s",$clave);
+			$consulta  	= sprintf("update lbsolicitudlaboratorios set estatus='B' where claveSolicitud=%d",$clave);
 			$res 	 	=  mysql_query($consulta);
-			/*$consulta2 = sprintf("delete from lbsolicitudlaboratorios where claveSolicitud=%s",$clave)
-			$res2 	 	=  mysql_query($consulta2);*/
-			if($res)
+			if(mysql_affected_rows()>0)
 			{
-				$respuesta = true;
-
+				$consulta2 = sprintf("update lbasignaarticulospracticas set estatus='B'where claveSolicitud=%d",$clave);
+				$res2 	 	=  mysql_query($consulta2);
+				if(mysql_affected_rows()>0)
+				{
+					$respuesta = true;
+				}
 			}
 		}
 	}
 	else
 	{
-		//salir();
+		salir();
 	}
 	$arrayJSON = array('respuesta' => $respuesta);
 		print json_encode($arrayJSON);
@@ -293,12 +298,16 @@ function aceptadasLaboratorio()
 	session_start();
 	if(!empty($_SESSION['nombre']))
 	{ 
-		$con 		= 0;
-		$rows		= array();
-		$renglones	= "";
-		$solAceptadasLab ="";
-		$conexion 	= conectaBDSICLAB();
-		$consulta	= sprintf("select s.claveSolicitud,s.MATCVE,p.tituloPractica,s.fechaSolicitud,s.horaSolicitud,s.claveUsuario 
+		$con 				= 0;
+		$rows				= array();
+		$renglones			= "";
+		$nombreMateria 		= "";
+		$claveMateria 		= 0;
+		$nombreMaestro 		= "";
+		$claveMaestro 		= 0;
+		$solAceptadasLab 	= "";
+		$conexion 			= conectaBDSICLAB();
+		$consulta			= sprintf("select s.claveSolicitud,s.MATCVE,p.tituloPractica,s.fechaSolicitud,s.horaSolicitud,s.claveUsuario 
 								from lbusuarios as u 
 								INNER JOIN lbsolicitudlaboratorios as s ON u.claveUsuario =s.claveUsuario 
 								INNER JOIN lbpracticas as p ON p.clavePractica = s.clavePractica
@@ -327,8 +336,12 @@ function aceptadasLaboratorio()
 		{
 			$renglones .= "<tbody>";
 			$renglones .= "<tr>";
-			$renglones .= "<td>".$rows[$c]["claveSolicitud"]."</td>";
-			$renglones .= "<td>".$rows[$c]["MATCVE"]."</td>";
+			$claveMaestro 	= $rows[$c]["claveUsuario"];
+			$nombreMaestro 	= nomMae($claveMaestro);
+			$renglones .= "<td>".$nombreMaestro."</td>";
+			$claveMateria 	= $rows[$c]["MATCVE"];
+			$nombreMateria 	= nombreMat($claveMateria);
+			$renglones .= "<td>".$nombreMateria."</td>";
 			$renglones .= "<td>".$rows[$c]["tituloPractica"]."</td>";
 			$renglones .= "<td>".$rows[$c]["fechaSolicitud"]."</td>";
 			$renglones .= "<td>".$rows[$c]["horaSolicitud"]."</td>";
@@ -340,7 +353,7 @@ function aceptadasLaboratorio()
 	}
 	else
 	{
-		//salir();
+		salir();
 	}
 	$arrayJSON = array('respuesta' => $respuesta,
 		'renglones' => $renglones);
@@ -353,23 +366,26 @@ function verMas2()
 	if(!empty($_SESSION['nombre']))
 	{
 		$claveCal 		= GetSQLValueString($_POST["clave"],"text");
-		$renglones		="";
-		$fechaAsignada	="";
-		$horaAsignada	="";
-		$con 			="";
-		$grupo			="";
-		$practica 		="";
-		$nombreArticulo ="";
-		$cantidad 		="";
-		$rows		= array();
+		$renglones		= "";
+		$fechaAsignada	= "";
+		$horaAsignada	= "";
+		$con 			= "";
+		$maestro		= "";
+		$cveMaestro		= 0;
+		$practica 		= "";
+		$nombreArticulo = "";
+		$cantidad 		= "";
+		$rows			= array();
 		$conexion 		= conectaBDSICLAB();
 
 		if(existeSolLabG($claveCal))
 		{
-			$consulta  		= sprintf("select a.claveCalendarizacion, a.fechaAsignada, a.horaAsignada, s.GPOCVE, b.nombreArticulo, d.cantidad 
-			from lbarticuloscat as b INNER JOIN lbasignaarticulospracticas as d ON b.claveArticulo=d.claveArticulo
+			$consulta  		= sprintf("select a.claveCalendarizacion, a.fechaAsignada, a.horaAsignada, s.GPOCVE, b.nombreArticulo, d.cantidad, s.claveUsuario,c.tituloPractica
+			from lbarticuloscat as b 
+			INNER JOIN lbasignaarticulospracticas as d ON b.claveArticulo=d.claveArticulo
 			INNER JOIN lbsolicitudlaboratorios as s ON d.claveSolicitud=s.claveSolicitud 
 			INNER JOIN lbcalendarizaciones as a ON s.claveSolicitud=a.claveSolicitud 
+			INNER JOIN lbpracticas as c ON a.clavePractica=c.clavePractica
 			where s.claveSolicitud=%s",$claveCal);
 			$renglones	.= "<thead>";
 			$renglones	.= "<tr>";
@@ -381,12 +397,13 @@ function verMas2()
 
 			while($row = mysql_fetch_array($res))
 			{	
-				$respuesta = true;
-				$fechaAsignada = $row["fechaAsignada"];
-				$horaAsignada = $row["horaAsignada"];
-				$grupo = $row["GPOCVE"];
-				$practica= $row["claveCalendarizacion"];
-				$rows[]=$row;
+				$respuesta 		= true;
+				$fechaAsignada 	= $row["fechaAsignada"];
+				$horaAsignada 	= $row["horaAsignada"];
+				$cveMaestro		= $row["claveUsuario"];
+				$maestro 		= nomMae($cveMaestro);
+				$practica 		= $row["tituloPractica"];
+				$rows[] 		=$row;
 				$con++;
 				
 			}
@@ -406,8 +423,12 @@ function verMas2()
 	{
 		//salir();
 	}
-	$arrayJSON = array('respuesta' => $respuesta, 'fechaAsignada' =>$fechaAsignada, 'horaAsignada' => $horaAsignada,
-		'maestro' => $grupo, 'practica' => $practica, 'renglones' => $renglones);
+	$arrayJSON = array('respuesta' => $respuesta, 
+						'fechaAsignada' =>$fechaAsignada, 
+						'horaAsignada' => $horaAsignada,
+						'maestro' => $maestro, 
+						'practica' => $practica, 
+						'renglones' => $renglones);
 		print json_encode($arrayJSON);
 }
 function listaArticulos()

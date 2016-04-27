@@ -5,21 +5,21 @@
 				<h5>Información general</h5>
 			</div>
 			<div class="input-field col s3 offset-s3">
-				<input placeholder=" " id="txtFecha2" type="text" class="validate">
+				<input placeholder=" " id="txtFecha2" type="text" class="validate" disabled>
 				<label for="txtFecha1">Fecha</label>
 			</div>
 			<div class="input-field col s3">
-				<input placeholder=" " id="txtHora2" type="text" class="validate">
+				<input placeholder=" " id="txtHora2" type="text" class="validate" disabled>
 				<label for="txtHora1">Hora</label>
 			</div>
 		</div>
 		<div class="row">
 			<div class="input-field col s6">
-				<input placeholder=" " id="txtMaestro2" type="text" class="validate">
+				<input placeholder=" " id="txtMaestro2" type="text" class="validate" disabled>
 				<label for="txtMaestro1" class="active">Maestro</label>
 			</div>
-			<div class="input-field col s5 offset-s1">
-				<input placeholder=" " id="txtPractica2" type="text" class="validate">
+			<div class="input-field col s5 offset-s1"> 
+				<input placeholder=" " id="txtPractica2" type="text" class="validate" disabled>
 				<label for="txtPractica1">Nombre de la práctica</label>
 			</div>
 		</div>

@@ -6,21 +6,21 @@
 			</div>
 			
 			<div class="input-field col s3 offset-s3">
-				<input placeholder=" " id="txtFechaVM1" type="text" class="validate">
+				<input placeholder=" " id="txtFechaVM1" type="text" class="validate" disabled>
 				<label for="txtFecha">Fecha</label>
 			</div>
 			<div class="input-field col s3">
-				<input placeholder=" " id="txtHoraVM1" type="text" class="validate">
+				<input placeholder=" " id="txtHoraVM1" type="text" class="validate" disabled>
 				<label for="txtHora">Hora</label>
 			</div>
 		</div>
 		<div class="row">
 			<div class="input-field col s6">
-				<input placeholder=" " id="txtMaestroVM1" type="text" class="validate">
+				<input placeholder=" " id="txtMaestroVM1" type="text" class="validate" disabled>
 				<label for="txtMaestro" class="active">Maestro</label>
 			</div>
 			<div class="input-field col s5 offset-s1">
-				<input placeholder=" " id="txtPracticaVM1" type="text" class="validate">
+				<input placeholder=" " id="txtPracticaVM1" type="text" class="validate" disabled>
 				<label for="txtPractica">Nombre de la práctica</label>
 			</div>
 		</div>
