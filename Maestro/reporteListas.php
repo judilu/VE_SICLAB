@@ -30,12 +30,22 @@
 				</div>
 			</div>
 			<div class="col">
-				
+				<div class="row">
+					<h5>Código: XXX-XX-XX</h5>
+				</div>
+				<div class="row">
+					<h5>Revisión:1</h5>
+				</div>
+				<div class="row">
+					Página 1 de x
+				</div>
 			</div>
 		</div>
 	</header>
 	<div class="listaAsistencia">
-		<h5>Lista de asistencia</h5>
+		<h5>INSTITUTO TECNOLOGICO DE CULIACAN</h5>
+		<h5>Departamento:</h5><h5 id="lbNomDepto">Metal-Mecanica</h5>
+		<h5 id="lbNomLab">Nombre del laboratorio</h5>
 		<div class="row">
 			<div class="col s12">
 				<div class="row">
@@ -53,11 +63,15 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="input-field col s9">
-						<input disabled placeholder="" id="txtMateriaRep" type="text" class="validate">
-						<label class="active" for="txtMateriaRep">Materia</label>
-					</div>
-					<div class="input-field col s3">
+					<div class="input-field col s6">
+					<input disabled placeholder="" id="txtCarreraRep" type="text" class="validate">
+					<label class="active" for="txtCarreraRep">Carrera</label>
+				</div>
+				<div class="input-field col s4">
+					<input disabled placeholder="" id="txtMateriaRep" type="text" class="validate">
+					<label class="active" for="txtMateriaRep">Materia</label>
+				</div>
+					<div class="input-field col s2">
 						<input disabled placeholder="" id="txtHoraMatRep" type="text" class="validate">
 						<label class="active" for="txtHoraMatRep">Hora de la materia</label>
 					</div>

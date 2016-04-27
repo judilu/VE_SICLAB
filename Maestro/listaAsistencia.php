@@ -17,11 +17,15 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="input-field col s9">
+				<div class="input-field col s7">
+					<input disabled placeholder="" id="txtCarreraRep" type="text" class="validate">
+					<label class="active" for="txtCarreraRep">Carrera</label>
+				</div>
+				<div class="input-field col s4">
 					<input disabled placeholder="" id="txtMateriaRep" type="text" class="validate">
 					<label class="active" for="txtMateriaRep">Materia</label>
 				</div>
-				<div class="input-field col s3">
+				<div class="input-field col s1">
 					<input disabled placeholder="" id="txtHoraMatRep" type="text" class="validate">
 					<label class="active" for="txtHoraMatRep">Hora de la materia</label>
 				</div>

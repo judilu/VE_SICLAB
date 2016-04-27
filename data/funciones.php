@@ -39,6 +39,23 @@ function nomMat ($claves)
 		return "";
 	}
 }
+function nomCarr ($cve,$gpo,$mat,$pe)
+{
+	$carrera 	= "";
+	$clave 		= $cve;
+	$maestro 	= claveMaestro($clave);
+	$grupo 		= $gpo;
+	$materia 	= $mat;
+	$periodo 	= $pe;
+	$conexion	= conectaBDSIE();
+	$consulta	= sprintf("select c.CARNOM from DGRUPO g INNER JOIN DCARRE c on g.CARCVE = c.CARCVE where g.PERCVE =%d and g.GPOCVE =%s and g.MATCVE =%s and g.PDOCVE =%s",$maestro,$grupo,$materia,$periodo);
+	$res 		= mysql_query($consulta); 
+	if($row = mysql_fetch_array($res))
+	{
+		$carrera = $row["CARNOM"];
+	}
+	return $carrera;	
+}
 function existeCal ($clave)
 {
 	$claveCal	= $clave;

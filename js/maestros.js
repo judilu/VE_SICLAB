@@ -1240,7 +1240,8 @@ var inicioMaestro = function ()
 			},
 			error: function(xhr, ajaxOptions,x)
 			{
-				console.log("Error de conexión datosMaestro");	
+				console.log("Error de conexión reportes");
+				console.log(xhr);	
 			}
 		});
 	}
@@ -1298,6 +1299,7 @@ var inicioMaestro = function ()
 	    			$("#txtPracticaRep").val($("#cmbPracticaRep option:selected").text());
 	    			$("#txtHoraPractRep").val($("#cmbHoraPracticaRep option:selected").text());
 	    			$("#txtFechaPracticaRep2").val($("#txtFechaPracticaRep").val());
+	    			$("#txtCarreraRep").val(response.carrera);
 	    			//crear tabla de asistencia de alumnos
 	    			$("#tbListaAsistencia").html(" ");
 					$("#tbListaAsistencia").append(response.renglones);
@@ -1323,7 +1325,8 @@ var inicioMaestro = function ()
 			},
 			error: function(xhr, ajaxOptions,x)
 			{
-				console.log("Error de conexión datosMaestro");	
+				console.log("Error de conexión datos Maestro");
+				console.log(xhr);	
 			}
 		});
 	}
