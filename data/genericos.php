@@ -14,20 +14,8 @@ function usuario ()
 	$arrayJSON = array('respuesta' => $respuesta);
 	print json_encode($arrayJSON);
 }
-function existeSol ($clave)
-{
-		$claveSol	= $clave;
-		$conexion 	= conectaBDSICLAB();
-		$consulta 	= sprintf("select claveCalendarizacion from lbcalendarizaciones 
-			where claveCalendarizacion =%s",$claveSol);
-		$res 		= mysql_query($consulta); 
-		if($row = mysql_fetch_array($res))
-		{
-			return true;
-		}
-		return false;
-}
-function existeSolLab ($clave)
+*/
+function existeSolLabG ($clave)
 {
 		$claveSol	= $clave;
 		$conexion 	= conectaBDSICLAB();
@@ -39,7 +27,7 @@ function existeSolLab ($clave)
 			return true;
 		}
 		return false;
-}*/
+}
 function nomMae($clave)
 {
 	$claveUsuario 	= $clave;
@@ -91,7 +79,8 @@ function pendientesLaboratorio()
 		$consulta	= sprintf("select s.claveSolicitud,s.MATCVE,p.tituloPractica,s.fechaSolicitud,s.horaSolicitud,s.claveUsuario 
 								from lbusuarios as u 
 								INNER JOIN lbsolicitudlaboratorios as s ON u.claveUsuario =s.claveUsuario 
-								INNER JOIN lbpracticas as p ON p.clavePractica = s.clavePractica");
+								INNER JOIN lbpracticas as p ON p.clavePractica = s.clavePractica
+								where s.estatus='V' and NOT EXISTS (select * from lbcalendarizaciones as c where c.claveSolicitud=s.claveSolicitud)");
 		$res 		= mysql_query($consulta);
 		$renglones	.= "<thead>";
 		$renglones	.= "<tr>";
@@ -136,7 +125,7 @@ function pendientesLaboratorio()
 	}
 	else
 	{
-		//salir();
+		salir();
 	}
 	$arrayJSON = array('respuesta' => $respuesta,
 		'renglones' => $renglones);
@@ -160,15 +149,13 @@ function verMas()
 		$cantidad 		="";
 		$rows		= array();
 		$conexion 		= conectaBDSICLAB();
-//se necesita agregar un estatus en lbsolicitudlaboratorios ya que 
-//no se sabe si no fue aceptada, si esta calendarizada o aun esta pendiente
-		if(existeSolLab($clave))
+		if(existeSolLabG($clave))
 		{
-			$consulta  		= sprintf("select a.fechaSolicitud,a.horaSolicitud,a.GPOCVE,c.tituloPractica, b.nombreArticulo, d.cantidad 
+			$consulta  		= sprintf("select a.fechaSolicitud,a.horaSolicitud,a.MATCVE,c.tituloPractica, b.nombreArticulo, d.cantidad 
 				from lbarticuloscat as b INNER JOIN lbasignaarticulospracticas as d ON b.claveArticulo=d.claveArticulo
 			 INNER JOIN lbsolicitudlaboratorios as a ON d.claveSolicitud=a.claveSolicitud 
 			 INNER JOIN lbpracticas as c ON a.clavePractica=c.clavePractica
-				where a.claveSolicitud =%s",$clave);
+				where a.claveSolicitud =%s AND NOT EXISTS(select claveCalendarizacion from lbcalendarizaciones where claveSolicitud=%s)",$clave,$clave);
 			$renglones	.= "<thead>";
 			$renglones	.= "<tr>";
 			$renglones	.= "<th data-field='nombreArt'>Nombre del artículo</th>";
@@ -218,7 +205,7 @@ function obtenerDatosSolLab()
 		$fecha 			= "";
 		$hora 			= "";
 		$conexion 		= conectaBDSICLAB();
-		if(existeSolLab($clave))
+		if(existeSolLabG($clave))
 		{
 			$consulta  	= sprintf("select fechaSolicitud,horaSolicitud from lbsolicitudlaboratorios where claveSolicitud=%s",$clave);
 			$res 	 	=  mysql_query($consulta);
@@ -254,7 +241,7 @@ function guardaSolicitudLab()
 		$firmaJefe 		= GetSQLValueString($_POST["firmaJefe"],"int");
 		$comentarios	= GetSQLValueString($_POST["comentarios"],"text");
 		$conexion 		= conectaBDSICLAB();
-		if(existeSolLab($clave))
+		if(existeSolLabG($clave))
 		{
 			$consulta  		= sprintf("insert into lbcalendarizaciones values(%s,%s,%s,%s,%d,%s,%s,%s)",$periodo,$claveCal,$fecha,$hora,$firmaJefe,$estatus,$comentarios,$clave);
 			$res 	 	=  mysql_query($consulta);
@@ -279,7 +266,7 @@ function eliminaSolicitudLab()
 	{
 		$clave 		= GetSQLValueString($_POST["clave"],"text");
 		$conexion 		= conectaBDSICLAB();
-		if(existeSolLab($clave))
+		if(existeSolLabG($clave))
 		{
 			$consulta  	= sprintf("delete from lbasignaarticulospracticas,lbsolicitudlaboratorios where claveSolicitud=%s",$clave);
 			$res 	 	=  mysql_query($consulta);
@@ -311,9 +298,11 @@ function aceptadasLaboratorio()
 		$renglones	= "";
 		$solAceptadasLab ="";
 		$conexion 	= conectaBDSICLAB();
-		$consulta	= sprintf("select s.claveSolicitud,s.GPOCVE,p.tituloPractica,s.fechaSolicitud,s.horaSolicitud 
-			from lbpracticas as p INNER JOIN lbsolicitudlaboratorios as s ON p.clavePractica=s.clavePractica 
-			INNER JOIN lbcalendarizaciones as c ON s.claveSolicitud=c.claveSolicitud");
+		$consulta	= sprintf("select s.claveSolicitud,s.MATCVE,p.tituloPractica,s.fechaSolicitud,s.horaSolicitud,s.claveUsuario 
+								from lbusuarios as u 
+								INNER JOIN lbsolicitudlaboratorios as s ON u.claveUsuario =s.claveUsuario 
+								INNER JOIN lbpracticas as p ON p.clavePractica = s.clavePractica
+								where s.estatus='V' and EXISTS (select * from lbcalendarizaciones as c where c.claveSolicitud=s.claveSolicitud and c.estatus='')");
 		$res 		= mysql_query($consulta);
 		$renglones	.= "<thead>";
 		$renglones	.= "<tr>";
@@ -339,7 +328,7 @@ function aceptadasLaboratorio()
 			$renglones .= "<tbody>";
 			$renglones .= "<tr>";
 			$renglones .= "<td>".$rows[$c]["claveSolicitud"]."</td>";
-			$renglones .= "<td>".$rows[$c]["GPOCVE"]."</td>";
+			$renglones .= "<td>".$rows[$c]["MATCVE"]."</td>";
 			$renglones .= "<td>".$rows[$c]["tituloPractica"]."</td>";
 			$renglones .= "<td>".$rows[$c]["fechaSolicitud"]."</td>";
 			$renglones .= "<td>".$rows[$c]["horaSolicitud"]."</td>";
@@ -375,7 +364,7 @@ function verMas2()
 		$rows		= array();
 		$conexion 		= conectaBDSICLAB();
 
-		if(existeSolLab($claveCal))
+		if(existeSolLabG($claveCal))
 		{
 			$consulta  		= sprintf("select a.claveCalendarizacion, a.fechaAsignada, a.horaAsignada, s.GPOCVE, b.nombreArticulo, d.cantidad 
 			from lbarticuloscat as b INNER JOIN lbasignaarticulospracticas as d ON b.claveArticulo=d.claveArticulo

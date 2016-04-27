@@ -488,7 +488,7 @@
 	}
 	//Laboratorios
 	//solicitudes pendientes de laboratorio...
-	//funcion para aceptar una solicitud, introduciendo datos fltantes para agendarla
+	//funcion para aceptar una solicitud, introduciendo datos faltantes para agendarla
 	var aceptarSolicitudLab = function()
 	{
 		$("#verPrincipal").hide("slow");
@@ -652,9 +652,9 @@
 	{		
 		$("#solicitudesPendientesLab2").hide("slow");
 		//contenido dinamico
-		var realid = $(this).attr("name");
+		var clave = $(this).attr("name");
 		var parametros = "opc=verMasLab1"
-						+"&clave="+realid
+						+"&clave="+clave
 						+"&id="+Math.random();
 		$.ajax({
 			cache:false,
@@ -663,12 +663,12 @@
 			url:"../data/genericos.php",
 			data: parametros,
 			success: function(response){
-				if(response.respuesta == true)
+				if(response.respuesta)
 				{
-					$("#txtFecha1").val(response.fecha);
-					$("#txtHora1").val(response.hora);
-					$("#txtMaestro1").val(response.maestro);
-					$("#txtPractica1").val(response.practica);
+					$("#txtFechaVM1").val(response.fecha);
+					$("#txtHoraVM1").val(response.hora);
+					$("#txtMaestroVM1").val(response.maestro);
+					$("#txtPracticaVM1").val(response.practica);
 					$("#tbMaterialesPendientesLab").append(response.renglones);
 				}
 				else
@@ -1311,7 +1311,7 @@
 	$("#btnVerMas2").on("click",verMas2);
 	$("#btnAceptaSolLab").on("click",sGuardaCanderalizada);
 	$("#btnCancelarSolLab").on("click",sLaboratorioPendientes);
-	//Inventario **solo faltan las peticiones
+	//Inventario 
 	$("#tabInventario").on("click",listaArticulos);
 	$("#btnArticulos").on("click",listaArticulos);
 	$("#btnAlta").on("click",altaArticulos);
