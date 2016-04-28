@@ -6,7 +6,7 @@ function usuario ()
 	session_start();
 	$_SESSION['nombre'] = GetSQLValueString($_POST['clave1'],"text");
 }
-/*function salir()
+function salir()
 {
 	session_start();
 	session_destroy();
@@ -14,7 +14,7 @@ function usuario ()
 	$arrayJSON = array('respuesta' => $respuesta);
 	print json_encode($arrayJSON);
 }
-*/
+
 function existeSolLabG ($clave)
 {
 		$claveSol	= $clave;
@@ -365,7 +365,7 @@ function verMas2()
 	session_start();
 	if(!empty($_SESSION['nombre']))
 	{
-		$claveCal 		= GetSQLValueString($_POST["clave"],"text");
+		$claveCal 		= GetSQLValueString($_POST["clave"],"int");
 		$renglones		= "";
 		$fechaAsignada	= "";
 		$horaAsignada	= "";
@@ -382,11 +382,11 @@ function verMas2()
 		{
 			$consulta  		= sprintf("select a.claveCalendarizacion, a.fechaAsignada, a.horaAsignada, s.GPOCVE, b.nombreArticulo, d.cantidad, s.claveUsuario,c.tituloPractica
 			from lbarticuloscat as b 
-			INNER JOIN lbasignaarticulospracticas as d ON b.claveArticulo=d.claveArticulo
-			INNER JOIN lbsolicitudlaboratorios as s ON d.claveSolicitud=s.claveSolicitud 
-			INNER JOIN lbcalendarizaciones as a ON s.claveSolicitud=a.claveSolicitud 
-			INNER JOIN lbpracticas as c ON a.clavePractica=c.clavePractica
-			where s.claveSolicitud=%s",$claveCal);
+			INNER JOIN lbasignaarticulospracticas as d ON b.claveArticulo = d.claveArticulo
+			INNER JOIN lbsolicitudlaboratorios as s ON d.claveSolicitud = s.claveSolicitud 
+			INNER JOIN lbcalendarizaciones as a ON s.claveSolicitud = a.claveSolicitud 
+			INNER JOIN lbpracticas as c ON s.clavePractica = c.clavePractica
+			where s.claveSolicitud=%d ",$claveCal);
 			$renglones	.= "<thead>";
 			$renglones	.= "<tr>";
 			$renglones	.= "<th data-field='nombreArt'>Nombre del artículo</th>";
@@ -394,7 +394,6 @@ function verMas2()
 			$renglones	.= "</tr>";
 			$renglones	.= "</thead>";
 			$res 	 	=  mysql_query($consulta);
-
 			while($row = mysql_fetch_array($res))
 			{	
 				$respuesta 		= true;
@@ -403,9 +402,8 @@ function verMas2()
 				$cveMaestro		= $row["claveUsuario"];
 				$maestro 		= nomMae($cveMaestro);
 				$practica 		= $row["tituloPractica"];
-				$rows[] 		=$row;
+				$rows[] 		= $row;
 				$con++;
-				
 			}
 			for($c= 0; $c< $con; $c++)
 			{
@@ -421,7 +419,7 @@ function verMas2()
 	}
 	else
 	{
-		//salir();
+		salir();
 	}
 	$arrayJSON = array('respuesta' => $respuesta, 
 						'fechaAsignada' =>$fechaAsignada, 
@@ -473,7 +471,7 @@ function listaArticulos()
 	}
 	else
 	{
-		//salir();
+		salir();
 	}
 	$arrayJSON = array('respuesta' => $respuesta,
 		'renglones' => $renglones);
@@ -513,7 +511,7 @@ function altaInventario1 ()
 	}
 	else
 	{
-		//salir();
+		salir();
 	}
 	$salidaJSON = array('respuesta' => $respuesta,
 						'idu' => $identificadorArticulo);

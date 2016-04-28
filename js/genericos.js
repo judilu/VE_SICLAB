@@ -690,6 +690,7 @@
 		$("#solicitudesAceptadasLab2").hide("slow");
 		//contenido dinamico
 		var claveCal = $(this).attr("name");
+		$("#tbMaterialesAceptadasLab").html("");
 		var parametros = "opc=verMasLab2"
 						+"&clave="+claveCal
 						+"&id="+Math.random();
