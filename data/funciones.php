@@ -312,14 +312,13 @@ function comboMatHr ()
 function comboPract()
 {
 	$materia 		= GetSQLValueString($_POST["materia"],"text");
-	$periodo 		= GetSQLValueString($_POST["periodo"],"text");
 	$respuesta 		= false;
 	$comboPrac 		= array();
 	$comboCvePrac 	= "";
 	$comboTitPrac 	= "";
 	$con 			= 0;
 	$conexion		= conectaBDSICLAB();
-	$consulta		= sprintf("select p.clavePractica, p.tituloPractica from lbpracticas p inner join lbasignapracticas ap on p.clavePractica = ap.clavePractica where p.estatus = 'V' and ap.MATCVE =%s and ap.PDOCVE =%s",$materia,$periodo);
+	$consulta		= sprintf("select p.clavePractica, p.tituloPractica from lbpracticas p inner join lbasignapracticas ap on p.clavePractica = ap.clavePractica where p.estatus = 'V' and ap.MATCVE =%s",$materia);
 	$res 			= mysql_query($consulta);
 	while($row = mysql_fetch_array($res))
 	{
