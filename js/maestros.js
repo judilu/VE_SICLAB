@@ -1264,7 +1264,6 @@ var inicioMaestro = function ()
 		{
 			//contenido dinamico
 			var periodo 	= $("#cmbPeriodoRep").val();
-			alert(periodo);
 			var materia 	= $("#cmbMateriaRep").val();
 			var h			= $("#cmbHoraMatRep option:selected").text();
 			var horaMat 	= parseInt(h.substring(0,2));
@@ -1306,9 +1305,8 @@ var inicioMaestro = function ()
 		    			//crear tabla de asistencia de alumnos
 		    			$("#tbListaAsistencia").html(" ");
 						$("#tbListaAsistencia").append(response.renglones);
-						//document.location.href= "../Maestro/asistencia.php";
-						//document.location.href ='../Maestro/asistencia.php';
-						window.open("../Maestro/reporteListas.php","asistencia","width=120,height=300,scrollbars=NO");
+						//Abrir ventana en otro lado
+						window.open("../Maestro/reporteListas.php?"+"cveMaestro="+$("#txtClaveMaestroRep2").val()+"&nomMaestro="+$("#txtNombreMaestroRep2").val()+"&periodo="+$("#txtPeriodoRep").val()+"&materia="+$("#txtMateriaRep").val()+"&horaMat="+$("#txtHoraMatRep").val()+"&fechaPrac="+$("#txtFechaPracticaRep2").val()+"&fechaPrac="+$("#txtFechaPracticaRep2").val()+"&carrera="+$("#txtCarreraRep").val(),"asistencia","width=120,height=300,scrollbars=NO");
 		    		}
 		    		else
 		    		{

@@ -11,7 +11,7 @@
 	<script src="../js/jquery-2.2.0.js"></script>
 	<script src="../js/materialize.min.js"></script>
 	<script src="../sweetalert-master/dist/sweetalert.min.js"></script>
-	<script src="../js/maestros.js"></script>
+	<script src="../js/reportesMaestro.js"></script>
 </head>
 <body>
 	<header>
