@@ -63,14 +63,16 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="input-field col s6">
-					<input disabled placeholder="" id="txtCarreraRp" type="text" class="validate">
-					<label class="active" for="txtCarreraRp">Carrera</label>
+					<div class="input-field col s12">
+						<input disabled placeholder="" id="txtCarreraRp" type="text" class="validate">
+						<label class="active" for="txtCarreraRp">Carrera</label>
+					</div>
 				</div>
-				<div class="input-field col s4">
-					<input disabled placeholder="" id="txtMateriaRp" type="text" class="validate">
-					<label class="active" for="txtMateriaRp">Materia</label>
-				</div>
+				<div class="row">
+					<div class="input-field col s10">
+						<input disabled placeholder="" id="txtMateriaRp" type="text" class="validate">
+						<label class="active" for="txtMateriaRp">Materia</label>
+					</div>
 					<div class="input-field col s2">
 						<input disabled placeholder="" id="txtHoraMatRp" type="text" class="validate">
 						<label class="active" for="txtHoraMatRp">Hora de la materia</label>
@@ -89,6 +91,13 @@
 						<input disabled placeholder="" id= "txtFechaPracticaRp2" type="text" class="validate">
 						<label class="active" for="txtFechaPracticaRp2">Fecha práctica</label>
 					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col s10 offset-s1">
+					<table  id ="tbListaAsistenciaRp" class="bordered responsive-table">
+						
+					</table>
 				</div>
 			</div>  
 		</div>

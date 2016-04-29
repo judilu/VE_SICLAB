@@ -1306,7 +1306,7 @@ var inicioMaestro = function ()
 		    			$("#tbListaAsistencia").html(" ");
 						$("#tbListaAsistencia").append(response.renglones);
 						//Abrir ventana en otro lado
-						window.open("../Maestro/reporteListas.php?"+"cveMaestro="+$("#txtClaveMaestroRep2").val()+"&nomMaestro="+$("#txtNombreMaestroRep2").val()+"&periodo="+$("#txtPeriodoRep").val()+"&materia="+$("#txtMateriaRep").val()+"&horaMat="+$("#txtHoraMatRep").val()+"&fechaPrac="+$("#txtFechaPracticaRep2").val()+"&fechaPrac="+$("#txtFechaPracticaRep2").val()+"&carrera="+$("#txtCarreraRep").val(),"asistencia","width=120,height=300,scrollbars=NO");
+						window.open("../Maestro/reporteListas.php?"+"periodo="+periodo+"&cveMaestro="+$("#txtClaveMaestroRep2").val()+"&nomMaestro="+$("#txtNombreMaestroRep2").val()+"&carrera="+$("#txtCarreraRep").val()+"&nomMateria="+$("#txtMateriaRep").val()+"&nomPractica="+$("#txtPracticaRep").val()+"&materia="+materia+"&horaMat="+horaMat+"&fechaPrac="+fecha+"&practica="+practica+"&horaPrac="+horaPract,"asistencia","width=120,height=300,scrollbars=NO");
 		    		}
 		    		else
 		    		{
@@ -1549,10 +1549,6 @@ var inicioMaestro = function ()
 			}
 		});
     }
-    var imprimirPDF = function()
-    {
-    	window.print();
-    }
 	//Configuramos el evento del Tab
 	$("#salirTab").on("click",salir);
 	$("#solicitudestab").on("click",solAceptadas);
@@ -1588,7 +1584,6 @@ var inicioMaestro = function ()
 	$("#reportestab").on("click",tbReportes);
 	$("#btnListaAsistencia").on("click",listaAsistencia);
 	$("#btnRegresarRep").on("click",regresarRep);
-	$("#btnImprimir").on("click",imprimirPDF);
 	//conbos del menu de reportes
 	$("#cmbPeriodoRep").on("change",comboMatRep);
 	$("#cmbMateriaRep").on("change",comboHrMatRep);
