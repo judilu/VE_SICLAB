@@ -557,8 +557,12 @@ function listaAlumnos()
 	$practica	= GetSQLValueString($_POST["practica"],"int");
 	$fecha 		= GetSQLValueString($_POST["fecha"],"text");
 	$hrPrac 	= GetSQLValueString($_POST["horaPract"],"text");
-	$cal 		= (int)(existCal($clave,$periodo,$materia,$gpo,$practica,$fecha,$hrPrac));
+	$resultado 		=(existCal($clave,$periodo,$materia,$gpo,$practica,$fecha,$hrPrac));
+	$cal 		= (int)$resultado['cal'];
+	$sol 		= (int)$resultado['sol'];
 	$carrera	= nomCarr($clave,$gpo,$materia,$periodo);
+	$depLab 	= deptoLab($sol);
+	$depto 		= ((int)$depLab["depto"]);
 	if ($cal != 0) 
 	{
 		$conexion 	= conectaBDSICLAB();
@@ -597,7 +601,9 @@ function listaAlumnos()
 	}
 	$arrayJSON = array('respuesta' => $respuesta,
 						'renglones' => $renglones,
-						'carrera' => $carrera);
+						'carrera' => $carrera,
+						'nomLab' => $depLab["nomLab"],
+						'depto' => $depto);
 	print json_encode($arrayJSON);
 }
 //Menú principal

@@ -1292,7 +1292,7 @@ var inicioMaestro = function ()
 	    		{
 	    			if (response.respuesta==true) 
 	    			{
-	    				//llenar datos
+	    				//llenar datos	
 	    				$("#txtClaveMaestroRep2").val($("#txtClaveMaestroRep").val());
 	    				$("#txtNombreMaestroRep2").val($("#txtNombreMaestroRep").val());
 	    				$("#txtPeriodoRep").val($("#cmbPeriodoRep option:selected").text());
@@ -1306,7 +1306,7 @@ var inicioMaestro = function ()
 		    			$("#tbListaAsistencia").html(" ");
 						$("#tbListaAsistencia").append(response.renglones);
 						//Abrir ventana en otro lado
-						window.open("../Maestro/reporteListas.php?"+"periodo="+periodo+"&cveMaestro="+$("#txtClaveMaestroRep2").val()+"&nomMaestro="+$("#txtNombreMaestroRep2").val()+"&carrera="+$("#txtCarreraRep").val()+"&nomMateria="+$("#txtMateriaRep").val()+"&nomPractica="+$("#txtPracticaRep").val()+"&materia="+materia+"&horaMat="+horaMat+"&fechaPrac="+fecha+"&practica="+practica+"&horaPrac="+horaPract,"asistencia","width=120,height=300,scrollbars=NO");
+						window.open("../Maestro/reporteListas.php?"+"periodo="+periodo+"&nomLab="+response.nomLab+"&nomDepto="+response.depto+"&cveMaestro="+$("#txtClaveMaestroRep2").val()+"&nomMaestro="+$("#txtNombreMaestroRep2").val()+"&carrera="+$("#txtCarreraRep").val()+"&nomMateria="+$("#txtMateriaRep").val()+"&nomPractica="+$("#txtPracticaRep").val()+"&materia="+materia+"&horaMat="+horaMat+"&fechaPrac="+fecha+"&practica="+practica+"&horaPrac="+horaPract,"asistencia","width=120,height=300,scrollbars=NO");
 		    		}
 		    		else
 		    		{

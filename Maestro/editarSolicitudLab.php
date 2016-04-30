@@ -57,8 +57,7 @@
 					<div class="row">
 						<div class="input-field col s6 offset-s1">
 							<select id="cmbMaterialCatE">
-								<!-- <option value="" disabled selected>Seleccione el material</option>
-								<option value="110">ALUMINIO</option> -->
+								
 							</select>
 							<label>Materiales</label>
 						</div>

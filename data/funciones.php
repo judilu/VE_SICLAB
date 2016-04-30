@@ -18,6 +18,37 @@ function periodoActual ()
 		return $row["PARFOL1"];
 	}
 }
+//treae el nombre del laboratorio y el departamento
+function deptoLab($s)
+{
+	$sol 			= $s;
+	$nomLab 		= "";
+	$depto 			= "";
+	$conexion 		= conectaBDSICLAB();
+	$consulta 		= sprintf("select l.nombreLaboratorio, l.DEPCVE from lbsolicitudlaboratorios s inner join lblaboratorios l on s.claveLaboratorio = s.claveLaboratorio where s.claveSolicitud =%d",$sol);
+	$res			= mysql_query($consulta);
+	if($row = mysql_fetch_array($res))
+	{
+		$nomLab = $row["nombreLaboratorio"];
+		$depto  = $row["DEPCVE"];
+	}
+	$resultado = array('nomLab' => $nomLab,
+						'depto' => $depto );
+	return $resultado;
+}
+function nomDepto($d)
+{
+	$depto 			= GetSQLValueString($d,"int");
+	$nomDep 		= "";
+	$conexion 		= conectaBDSIE();
+	$consulta 		= sprintf("select DEPNOM from DDEPTO where DEPCVE =%d",$depto);
+	$res			= mysql_query($consulta);
+	if($row = mysql_fetch_array($res))
+	{
+		$depto  = $row["DEPCVE"];
+	}
+	return $depto;
+}
 //trae el nombre corto de las materias segun una clave
 function nomMat ($claves)
 {
@@ -69,7 +100,7 @@ function existeCal ($clave)
 	return false;
 }
 function existCal($clave,$p,$mat,$gpo,$pract,$f,$hr)
-{
+{	
 	$maestro	= $clave;
 	$periodo 	= $p;
 	$materia 	= $mat;
@@ -78,17 +109,21 @@ function existCal($clave,$p,$mat,$gpo,$pract,$f,$hr)
 	$fecha 		= $f;
 	$hora 		= $hr;
 	$cal 		= 0;
+	$sol 		= 0;
 	$conexion 	= conectaBDSICLAB();
-	$consulta 	= sprintf("select c.claveCalendarizacion from lbcalendarizaciones c inner join lbsolicitudlaboratorios s on c.claveSolicitud = s.claveSolicitud where s.claveUsuario=%d and s.PDOCVE=%s and s.MATCVE=%s and s.GPOCVE=%s and s.clavePractica=%d and c.fechaAsignada=%s and c.horaAsignada=%s and c.estatus = 'R'",$maestro,$periodo,$materia,$grupo,$practica,$fecha,$hora);
+	$consulta 	= sprintf("select c.claveCalendarizacion, c.claveSolicitud from lbcalendarizaciones c inner join lbsolicitudlaboratorios s on c.claveSolicitud = s.claveSolicitud where s.claveUsuario=%d and s.PDOCVE=%s and s.MATCVE=%s and s.GPOCVE=%s and s.clavePractica=%d and c.fechaAsignada=%s and c.horaAsignada=%s and c.estatus = 'R'",$maestro,$periodo,$materia,$grupo,$practica,$fecha,$hora);
 	$res 		= mysql_query($consulta); 
 	if($res)
 	{
 		if($row = mysql_fetch_array($res))
 		{
-			$cal = $row["claveCalendarizacion"];
+			$cal = (int)$row["claveCalendarizacion"];
+			$sol = (int)$row["claveSolicitud"];
 		}
 	}
-	return $cal;
+	$resultado = array('cal' => $cal,
+						'sol' => $sol);
+	return $resultado;
 }
 function numerosControl($nums)
 {

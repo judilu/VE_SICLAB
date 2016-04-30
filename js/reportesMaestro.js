@@ -5,8 +5,9 @@ var inicioreporte = function ()
 	{
 		var variables = obtenerDatos();
 		console.log(variables);
+		$("#txtDepto").html(variables['nomDepto']);
+		$("#txtLaboratorioRp").html(variables['nomLab']);
 		//llenar datos
-		
 		$("#txtClaveMaestroRp").val(variables['cveMaestro']);
 		$("#txtNombreMaestroRp").val(variables['nomMaestro']);
 		$("#txtPeriodoRp").val(variables['periodo']);
@@ -43,9 +44,9 @@ var inicioreporte = function ()
     	window.print();
     }//Termina función para imprimir pantalla de reporte
 	
+	//Inicio función para construir la tabla
 	var llenarTabla = function(periodo,materia,horaMat,practica,fechaPrac,horaPrac)
 	{	
-		console.log("3entro");
 		var p 		= periodo;
 		var m 		= materia;
 		var hrmat 	= horaMat;
@@ -60,6 +61,7 @@ var inicioreporte = function ()
 								"&fecha="+fcPr+
 								"&horaPract="+hrPr+
 								"&id="+Math.random();
+			console.log(parametros);
 			$.ajax({
 	    		cache:false,
 	    		type: "POST",

@@ -16,39 +16,40 @@
 <body>
 	<header>
 		<div class="row col s12">
-			<div class="col s2">
+			<div class="col s2 cuadro fuente centrado">
 				<img id="LogoTec" src="../img/logo.png" alt="">
 			</div>
-			<div class="col s6">
+			<div class="col s6 bajo fuente">
 				<div class="row">
 					Nombre del documentos: Formato<br>
 					Control de asistencia de práctica de
 					laboratorio realizada
-				</div>
-				<div class="row">
 					Referencia a la norma ISO
 				</div>
 			</div>
-			<div class="col s4">
+			<div class="col s4 cuadro fuente">
 				<div class="row">
 					Código: XXX-XX-XX
 				</div>
 				<div class="row">
-					Revisión:1
-				</div>
-				<div class="row">
-					Página 1 de x
+					Revisión:1 <br>
+					Página 1 de X
 				</div>
 			</div>
 		</div>
 	</header>
 	<div class="listaAsistencia">
-		INSTITUTO TECNOLOGICO DE CULIACAN <br>
-		Departamento: Metal-Mecanica <br>
-		Nombre del laboratorio <br>
+		<div class="fuente centrado">
+			INSTITUTO TECNOLOGICO DE CULIACAN <br>
+			<div class="input-field col s8">
+				<input disabled placeholder="" id="txtDepto" type="text" class="validate fuente">
+				<label class="active fuente"for="txtDepto">Departamento:</label>
+				<input disabled placeholder="" id="txtLaboratorioRp" type="text" class="validate fuente">
+			</div>
+		</div>
 		<div class="row">
 			<div class="col s12">
-				<div class="row">
+				<div class="row fuente">
 					<div class="input-field col s2">
 						<input disabled placeholder="" id="txtClaveMaestroRp" type="text" class="validate">
 						<label class="active"for="txtClaveMaestroRp">Clave</label>
@@ -62,13 +63,13 @@
 						<label class="active" for="txtPeriodoRp">Periodo</label>
 					</div>
 				</div>
-				<div class="row">
+				<div class="row fuente">
 					<div class="input-field col s12">
 						<input disabled placeholder="" id="txtCarreraRp" type="text" class="validate">
 						<label class="active" for="txtCarreraRp">Carrera</label>
 					</div>
 				</div>
-				<div class="row">
+				<div class="row fuente">
 					<div class="input-field col s10">
 						<input disabled placeholder="" id="txtMateriaRp" type="text" class="validate">
 						<label class="active" for="txtMateriaRp">Materia</label>
@@ -78,7 +79,7 @@
 						<label class="active" for="txtHoraMatRp">Hora de la materia</label>
 					</div>
 				</div>
-				<div class="row">
+				<div class="row fuente">
 					<div class="input-field col s7">
 						<input disabled placeholder="" id="txtPracticaRp" type="text" class="validate">
 						<label class="active" for="txtPracticaRp">Práctica</label>
