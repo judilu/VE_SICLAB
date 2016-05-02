@@ -6,7 +6,7 @@ function usuario ()
 	session_start();
 	$_SESSION['nombre'] = GetSQLValueString($_POST['clave1'],"text");
 }
-function salir()
+function salirG()
 {
 	session_start();
 	session_destroy();
@@ -125,7 +125,7 @@ function pendientesLaboratorio()
 	}
 	else
 	{
-		salir();
+		salirG();
 	}
 	$arrayJSON = array('respuesta' => $respuesta,
 		'renglones' => $renglones);
@@ -191,7 +191,7 @@ function verMas()
 	}
 	else
 	{
-		salir();
+		salirG();
 	}
 	$arrayJSON = array('respuesta' => $respuesta, 
 						'fecha' =>$fechaSolicitud, 
@@ -226,7 +226,7 @@ function obtenerDatosSolLab()
 	}
 	else
 	{
-		salir();
+		salirG();
 	}
 	$arrayJSON = array('respuesta' => $respuesta, 'fecha' => $fecha, 'hora' => $hora);
 		print json_encode($arrayJSON);
@@ -255,7 +255,7 @@ function guardaSolicitudLab()
 	}
 	else
 	{
-		salir();
+		salirG();
 	}
 	$arrayJSON = array('respuesta' => $respuesta);
 		print json_encode($arrayJSON);
@@ -286,7 +286,7 @@ function eliminaSolicitudLab()
 	}
 	else
 	{
-		salir();
+		salirG();
 	}
 	$arrayJSON = array('respuesta' => $respuesta);
 		print json_encode($arrayJSON);
@@ -353,7 +353,7 @@ function aceptadasLaboratorio()
 	}
 	else
 	{
-		salir();
+		salirG();
 	}
 	$arrayJSON = array('respuesta' => $respuesta,
 		'renglones' => $renglones);
@@ -419,7 +419,7 @@ function verMas2()
 	}
 	else
 	{
-		salir();
+		salirG();
 	}
 	$arrayJSON = array('respuesta' => $respuesta, 
 						'fechaAsignada' =>$fechaAsignada, 
@@ -471,7 +471,7 @@ function listaArticulos()
 	}
 	else
 	{
-		salir();
+		salirG();
 	}
 	$arrayJSON = array('respuesta' => $respuesta,
 		'renglones' => $renglones);
@@ -511,7 +511,7 @@ function altaInventario1 ()
 	}
 	else
 	{
-		salir();
+		salirG();
 	}
 	$salidaJSON = array('respuesta' => $respuesta,
 						'idu' => $identificadorArticulo);
@@ -627,7 +627,7 @@ function listaMantenimiento()
 	}
 	else
 	{
-		//salir();
+		//salirG();
 	}
 	$arrayJSON = array('respuesta' => $respuesta,
 		'renglones' => $renglones);
@@ -743,7 +743,7 @@ function peticionesPendientesArt()
 	}
 	else
 	{
-		//salir();
+		//salirG();
 	}
 	$arrayJSON = array('respuesta' => $respuesta,
 		'renglones' => $renglones);
@@ -765,7 +765,7 @@ function aceptaPeticionArticulos()
 	}
 	else
 	{
-		//salir();
+		//salirG();
 	}
 	$arrayJSON = array('respuesta' => $respuesta);
 	print json_encode($arrayJSON);
@@ -953,7 +953,7 @@ function buscaArtSolicitud($prestamo,$idu)
 	}
 	else
 	{
-		//salir();
+		//salirG();
 	}
 	$arrayJSON = array('respuesta' => $respuesta);
 		print json_encode($arrayJSON);
@@ -1158,7 +1158,7 @@ function guardaDevolucion()
 	}
 	else
 	{
-		//salir();
+		//salirG();
 	}
 	$arrayJSON = array('respuesta' => $respuesta);
 		print json_encode($arrayJSON);
@@ -1231,7 +1231,7 @@ function guardaSancion()
 	}
 	else
 	{
-		//salir();
+		//salirG();
 	}
 	$arrayJSON = array('respuesta' => $respuesta);
 		print json_encode($arrayJSON);
@@ -1294,7 +1294,7 @@ function listaAlumnosSancionados()
 	}
 	else
 	{
-		//salir();
+		//salirG();
 	}
 	$salidaJSON = array('respuesta' => $respuesta, 'renglones' => $renglones);
 	print json_encode($salidaJSON);
@@ -1309,7 +1309,7 @@ function quitaSanciones()
 	}
 	else
 	{
-		//salir();
+		//salirG();
 	}
 	$arrayJSON = array('respuesta' => $respuesta);
 		print json_encode($arrayJSON);
@@ -1338,7 +1338,7 @@ function guardaPeticionArticulos()
 	}
 	else
 	{
-		//salir();
+		//salirG();
 	}
 	$arrayJSON = array('respuesta' => $respuesta);
 		print json_encode($arrayJSON);
@@ -1527,7 +1527,7 @@ switch ($opc){
 	quitaSanciones();
 	break;
 	case 'salir1':
-	salir();
+	salirG();
 	break;
 	case 'guardaPeticionArticulos1':
 	guardaPeticionArticulos();
