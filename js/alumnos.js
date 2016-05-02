@@ -766,10 +766,10 @@ var inicio = function()
     	nombreArticulos.push(artNom);
 		numeroArticulos.push(numArt);
     	articulosSolicitadosAlumnos.push(articuloCve); 	
-    	var parametros = "opc=agregarArtAlu1"+
-    						"&artNom="+artNom+
-    						"&artCve="+articuloCve+
-    						"&numArt="+numArt+
+    	var parametros = "opc=construirTablaArt1"+
+    						"&articulosSolicitados="+articulosSolicitadosAlumnos+
+    						"&nombreArticulos="+nombreArticulos+
+    						"&numeroArticulos="+numeroArticulos+
     						"&id="+Math.random();
     	$.ajax({
     		cache:false,
