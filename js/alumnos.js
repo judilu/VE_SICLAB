@@ -315,6 +315,7 @@ var inicio = function()
 						if(response.respuesta)
 						{
 		       				$("#cmbMateriasAlumnos").html(" ");
+		       				$("#cmbMateriasAlumnos").html("<option value='' disabled selected>Seleccione la materia</option>");
 							for (var i = 0; i < response.contador; i++) 
 							{
 								$("#cmbMateriasAlumnos").append($("<option></option>").attr("value",response.claveMateria[i]).text(response.nombreMateria[i]));
@@ -324,12 +325,16 @@ var inicio = function()
 		   				}
 		   				else
 		   				{
+		   					$("#cmbMateriasAlumnos").html(" ");
+		       				$("#cmbMateriasAlumnos").html("<option value='' disabled selected>Seleccione la materia</option>");
+		   					$('select').material_select();
 		   					sweetAlert("No hay materias disponibles", "", "error");
 		   				}
 		   			},
 		   			error: function(xhr, ajaxOptions,x)
 		   			{
 		   				console.log("Error de conexión datos practica");
+		   				console.log(xhr);
 		   			}
 		   		});
 		   	}
@@ -521,6 +526,7 @@ var inicio = function()
 				if(response.respuesta)
 				{
    					$("#cmbMaestrosMat").html(" ");
+   					$("#cmbMaestrosMat").html("<option value='' disabled selected>Seleccione el maestro</option>");
 						for (var i = 0; i < response.contador; i++) 
 						{
 							$("#cmbMaestrosMat").append($("<option></option>").attr("value",response.claveMaestro[i]).text(response.nombreMaestro[i]));
@@ -530,6 +536,9 @@ var inicio = function()
    				}
    				else
    				{
+   					$("#cmbMaestrosMat").html("<option value='' disabled selected>Seleccione el maestro</option>");
+   					$("#cmbMaestrosMat").trigger('contentChanged');
+					$('select').material_select();
    					sweetAlert("Maestro incorrecto", "", "error");
    				}
    			},
@@ -556,12 +565,17 @@ var inicio = function()
 				if(response.respuesta)
 				{
    					$("#cmbNombrePracticas").html(" ");
-						$("#cmbNombrePracticas").append($("<option></option>").attr("value",response.clavePractica).text(response.nombrePractica));
-						$("#cmbNombrePracticas").trigger('contentChanged');
-						$('select').material_select();
+   					$("#cmbNombrePracticas").html("<option value='' disabled selected>Seleccione la práctica</option>");
+					$("#cmbNombrePracticas").append($("<option></option>").attr("value",response.clavePractica).text(response.nombrePractica));
+					$("#cmbNombrePracticas").trigger('contentChanged');
+					$('select').material_select();
    				}
    				else
    				{
+   					$("#cmbNombrePracticas").html(" ");
+   					$("#cmbNombrePracticas").html("<option value='' disabled selected>Seleccione la práctica</option>");
+   					$("#cmbNombrePracticas").trigger('contentChanged');
+					$('select').material_select();
    					sweetAlert("No hay practicas asignadas a esa hora", "", "error");
    				}
    			},
@@ -593,10 +607,11 @@ var inicio = function()
 			data: parametros,
 			success: function(response)
 			{
+				$("#cmbHorariosPractica").html(" ");
+				$("#cmbHorariosPractica").html("<option value='' disabled selected>Seleccione la hora</option>");
 				if(response.respuesta)
 				{
-   					$("#cmbHorariosPractica").html(" ");
-						$("#cmbHorariosPractica").append($("<option></option>").attr("value",response.clavePractica).text(response.horaPractica));
+   						$("#cmbHorariosPractica").append($("<option></option>").attr("value",response.clavePractica).text(response.horaPractica));
 						$("#cmbHorariosPractica").trigger('contentChanged');
 						$('select').material_select();
    				}

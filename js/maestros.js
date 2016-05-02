@@ -358,7 +358,8 @@ var inicioMaestro = function ()
 				}
 			},
 			error: function(xhr, ajaxOptions,x){
-				console.log("Error de conexión combomat");	
+				console.log("Error de conexión combomat");
+				console.log(xhr);	
 			}
 		});
 	}//termina función de llenar combo de elegir articulos

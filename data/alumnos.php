@@ -93,7 +93,7 @@ function consultaMateriasAlumno()
 {
 	$numControl 	= GetSQLValueString($_POST["numeroControl"],"text");
 	$resp 	 		= false;
-	$periodo 		= periodoActual();
+	$periodo 		= '2161';
 	$contador		= 0;
 	$comboMat 		= array();
 	$claveMat 		= "";
