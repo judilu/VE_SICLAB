@@ -187,7 +187,7 @@ function consultaPractica()
 function consultaHoraPractica()
 {
 	$claveMaestro 	= GetSQLValueString($_POST["claveMaestro"],"int");
-	$fechaActual 	= "'20/03/2016'";//GetSQLValueString($_POST["fecha"],"text");
+	$fechaActual 	= GetSQLValueString($_POST["fecha"],"text");
 	$claveUsu 		= claveUsuario($claveMaestro);				
 	$resp 	 		= false;
 	$periodo 		= periodoActual();
@@ -206,7 +206,7 @@ function consultaHoraPractica()
 	{
 		$clavePractica 	=$row["claveCalendarizacion"];
 		$horaPractica	=$row["horaAsignada"];
-		$resp 		 		= true;
+		$resp 		 	= true;
 		$contador ++;
 	}
 	$arrayJSON = array('respuesta' => $resp,
@@ -259,6 +259,7 @@ function consultaMaterialPractica()
 	$numeroCtrl		= GetSQLValueString($_POST["nC"],"text");
 	if(insertaPedido($fecha,$hora,$claveCal,$numeroCtrl))
 	{
+		$claveSol 		= consultaSolicitud($claveCal,$fecha);
 		$con 			= 0;
 		$rows			= array();
 		$renglones		= "";
@@ -269,7 +270,7 @@ function consultaMaterialPractica()
 		$consulta		= sprintf("select ap.claveArticulo,ac.nombreArticulo,ap.cantidad 
 			from lbasignaarticulospracticas ap 
 			INNER JOIN lbarticuloscat ac on ap.claveArticulo=ac.claveArticulo 
-			WHERE ap.estatus = 'V' and ap.claveSolicitud=%s",$claveCal);
+			WHERE ap.estatus = 'V' and ap.claveSolicitud=%s",$claveSol);
 		$res 			= mysql_query($consulta);
 		while($row = mysql_fetch_array($res))
 		{

@@ -720,6 +720,7 @@ var inicio = function()
    					if($("#chbElegirMaterial").is(':checked'))
    					{
    						sweetAlert("Registro de entrada guardado con éxito!", "Da click en el botón OK", "success");
+   						alert("hola judith");
    						materialPractica();
    					}
    					else
