@@ -429,6 +429,10 @@ function verMas2()
 						'renglones' => $renglones);
 		print json_encode($arrayJSON);
 }
+function claveLab($responsable)
+{
+
+}
 function listaArticulos()
 {
 	$respuesta 	= false;
@@ -436,13 +440,14 @@ function listaArticulos()
 	if(!empty($_SESSION['nombre']))
 	{ 
 		$responsable= $_SESSION['nombre'];
+		$claveLab 	= obtieneCveLab($responsable);
 		$art 		= "";
 		$articulos 	= "";
 		$con 		= 0;
 		$rows		= array();
 		$renglones	= "";
 		$conexion 	= conectaBDSICLAB();
-		$consulta	= sprintf("select A.claveArticulo,B.nombreArticulo, C.cantidad from lbarticulos as A inner join lbarticuloscat as B ON A.claveArticulo=B.claveArticulo inner join lbinventarios as C ON B.claveArticulo=C.claveArticulo where A.estatus='V' GROUP BY C.claveArticulo",$responsable);
+		$consulta	= sprintf("select B.claveArticulo,B.nombreArticulo,COUNT(A.claveArticulo) as cantidad FROM lbarticulos as A inner join lbarticuloscat as B ON A.claveArticulo=B.claveArticulo INNER JOIN lbasignaarticulos C ON A.identificadorArticulo=C.indentificadorArticulo WHERE C.claveLaboratorio =%s GROUP BY A.claveArticulo",$claveLab);
 		$res 		= mysql_query($consulta);
 		$renglones	.= "<thead>";
 		$renglones	.= "<tr>";
@@ -1223,7 +1228,6 @@ function guardaSancion()
 		$consulta  		= sprintf("insert into lbasignasanciones values(%s,%d,%d,%s,%s,%s,%s,%s,%s,%s)",
 							$periodo,'""',$claveSancion,$numControl,$fecha,'"dd/mm/aaaa"',$comentario,$idArt,$cveLab,'"P"');
 		$res 	 		=  mysql_query($consulta);
-		var_dump($consulta);
 			if(mysql_affected_rows()>0)
 			{
 				$respuesta = true;
@@ -1349,8 +1353,9 @@ function obtieneCveLab($clave)
 	$conexion		= conectaBDSICLAB();
 	$consulta 		= sprintf("select claveLaboratorio 
 								from lbresponsables 
-								where claveUsuario=%s",$cveResp);
+								where claveUsuario=%d",$cveResp);
 	$res 			= mysql_query($consulta);
+	var_dump($consulta);
 	if($row = mysql_fetch_array($res))
 	{
 		return (int)($row["claveLaboratorio"]);
