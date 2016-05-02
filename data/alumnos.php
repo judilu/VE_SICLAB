@@ -251,7 +251,6 @@ function insertaPedido($fecha,$hora,$clave,$numCtrl)
 function consultaMaterialPractica()
 {
 	$respuesta 		= false;
-	
 	$periodo 		= periodoActual();
 	$claveCal		= GetSQLValueString($_POST["clave"],"int");
 	$fecha 			= GetSQLValueString($_POST["fecha"],"text");
@@ -274,9 +273,9 @@ function consultaMaterialPractica()
 		$res 			= mysql_query($consulta);
 		while($row = mysql_fetch_array($res))
 		{
-			$materiales .="'".($row["claveArticulo"])."',";
-			$cantidad 	.="'".($row["cantidad"])."',";
-			$nombre 	.="'".($row["nombreArticulo"])."',";
+			$materiales .=/*"'".*/($row["claveArticulo"]).",";
+			$cantidad 	.=/*"'".*/($row["cantidad"]).",";
+			$nombre 	.=/*"'".*/($row["nombreArticulo"]).",";
 			$rows[]=$row;
 			$respuesta = true;
 			$con++;

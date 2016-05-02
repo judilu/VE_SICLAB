@@ -489,12 +489,19 @@ var inicio = function()
 			{
 				if(response.respuesta)
 				{
+					//hacer arreglos
+					articulosSolicitadosAlumnos = (response.materiales).split(",");
+					numeroArticulos = (response.cantidad).split(",");
+					nombreArticulos = (response.nombre).split(",");
 					$("#bodyArtAlumno").append(response.renglones);
-					for (var i = 0; i < response.contador; i++) {
+					/*for (var i = 0; i < response.contador; i++) 
+					{
+						console.log(response.materiales[0]);
 						articulosSolicitadosAlumnos.push(response.materiales[i]);
 						numeroArticulos.push(response.cantidad[i]);
 						nombreArticulos.push(response.nombre[i]);
-					}
+					}*/
+					$("#bodyArtAlumno #btnEliminarArtAlu").on("click",eliminarArtAlumno);
 				}
 				else
 				{
@@ -720,7 +727,6 @@ var inicio = function()
    					if($("#chbElegirMaterial").is(':checked'))
    					{
    						sweetAlert("Registro de entrada guardado con éxito!", "Da click en el botón OK", "success");
-   						alert("hola judith");
    						materialPractica();
    					}
    					else
@@ -850,6 +856,8 @@ var inicio = function()
 	}
 	var eliminarArtAlumno = function()
 	{
+		console.log(articulosSolicitadosAlumnos);
+		console.log(nombreArticulos);
     	var artEliminar = ($(this).attr('name'));
     	var i = buscaIndice(articulosSolicitadosAlumnos,artEliminar);
     	nombreArticulos = eliminar2(nombreArticulos,i);

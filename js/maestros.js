@@ -63,6 +63,7 @@ var inicioMaestro = function ()
 	//Empieza función de solicitudes Aceptadas
 	var solAceptadas = function()
 	{
+		$("#tbSolAceptadas").html(" ");
 		//ocultar los div
 		$("#sNuevaMaestro").hide();
 		$("#sPendientesMaestro").hide();
