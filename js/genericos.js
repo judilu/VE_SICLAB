@@ -29,9 +29,10 @@
 					cache:false,
 					type: "POST",
 					dataType: "json",
-					url:"../data/genericos.php",
+					url:"../data/funciones.php",
 					data: parametros,
-					success: function(response){
+					success: function(response)
+					{
 						if(response.respuesta)
 						{
 							document.location.href= "acceso.php";
@@ -49,10 +50,10 @@
 			} 
 			else 
 			{
+				solAceptadas();
 				swal("OK..!","Aún sigues en el sistema", "error");
 			} 
-		}
-		);
+		});
 	}
 	//Prestamos de matertial a alumnos y externos
 	var prestamosPendientes = function()
