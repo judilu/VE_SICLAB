@@ -315,7 +315,7 @@ var inicio = function()
 						if(response.respuesta)
 						{
 		       				$("#cmbMateriasAlumnos").html(" ");
-		       				$("#cmbMateriasAlumnos").html("<option value='' disabled selected>Seleccione la materia</option>");
+		       				$("#cmbMateriasAlumnos").html("<option value='' disabled selected>Selecciona la materia</option>");
 							for (var i = 0; i < response.contador; i++) 
 							{
 								$("#cmbMateriasAlumnos").append($("<option></option>").attr("value",response.claveMateria[i]).text(response.nombreMateria[i]));
@@ -326,7 +326,7 @@ var inicio = function()
 		   				else
 		   				{
 		   					$("#cmbMateriasAlumnos").html(" ");
-		       				$("#cmbMateriasAlumnos").html("<option value='' disabled selected>Seleccione la materia</option>");
+		       				$("#cmbMateriasAlumnos").html("<option value='' disabled selected>Selecciona la materia</option>");
 		   					$('select').material_select();
 		   					sweetAlert("No hay materias disponibles", "", "error");
 		   				}
@@ -494,18 +494,12 @@ var inicio = function()
 					numeroArticulos = (response.cantidad).split(",");
 					nombreArticulos = (response.nombre).split(",");
 					$("#bodyArtAlumno").append(response.renglones);
-					/*for (var i = 0; i < response.contador; i++) 
-					{
-						console.log(response.materiales[0]);
-						articulosSolicitadosAlumnos.push(response.materiales[i]);
-						numeroArticulos.push(response.cantidad[i]);
-						nombreArticulos.push(response.nombre[i]);
-					}*/
 					$("#bodyArtAlumno #btnEliminarArtAlu").on("click",eliminarArtAlumno);
 				}
 				else
 				{
-					sweetAlert("No hay material asignado para la práctica", "", "error");
+					$("#bodyArtAlumno").html("");
+					//sweetAlert("No hay material asignado para la práctica", "", "error");
 				}
 			},
 			error: function(xhr, ajaxOptions,x)
@@ -533,7 +527,7 @@ var inicio = function()
 				if(response.respuesta)
 				{
    					$("#cmbMaestrosMat").html(" ");
-   					$("#cmbMaestrosMat").html("<option value='' disabled selected>Seleccione el maestro</option>");
+   					$("#cmbMaestrosMat").html("<option value='' disabled selected>Selecciona el maestro</option>");
 						for (var i = 0; i < response.contador; i++) 
 						{
 							$("#cmbMaestrosMat").append($("<option></option>").attr("value",response.claveMaestro[i]).text(response.nombreMaestro[i]));
@@ -543,7 +537,7 @@ var inicio = function()
    				}
    				else
    				{
-   					$("#cmbMaestrosMat").html("<option value='' disabled selected>Seleccione el maestro</option>");
+   					$("#cmbMaestrosMat").html("<option value='' disabled selected>Selecciona el maestro</option>");
    					$("#cmbMaestrosMat").trigger('contentChanged');
 					$('select').material_select();
    					sweetAlert("Maestro incorrecto", "", "error");
@@ -572,7 +566,7 @@ var inicio = function()
 				if(response.respuesta)
 				{
    					$("#cmbNombrePracticas").html(" ");
-   					$("#cmbNombrePracticas").html("<option value='' disabled selected>Seleccione la práctica</option>");
+   					$("#cmbNombrePracticas").html("<option value='' disabled selected>Selecciona la práctica</option>");
 					$("#cmbNombrePracticas").append($("<option></option>").attr("value",response.clavePractica).text(response.nombrePractica));
 					$("#cmbNombrePracticas").trigger('contentChanged');
 					$('select').material_select();
@@ -580,7 +574,7 @@ var inicio = function()
    				else
    				{
    					$("#cmbNombrePracticas").html(" ");
-   					$("#cmbNombrePracticas").html("<option value='' disabled selected>Seleccione la práctica</option>");
+   					$("#cmbNombrePracticas").html("<option value='' disabled selected>Selecciona la práctica</option>");
    					$("#cmbNombrePracticas").trigger('contentChanged');
 					$('select').material_select();
    					sweetAlert("No hay practicas asignadas a esa hora", "", "error");
@@ -615,7 +609,7 @@ var inicio = function()
 			success: function(response)
 			{
 				$("#cmbHorariosPractica").html(" ");
-				$("#cmbHorariosPractica").html("<option value='' disabled selected>Seleccione la hora</option>");
+				$("#cmbHorariosPractica").html("<option value='' disabled selected>Selecciona la hora</option>");
 				if(response.respuesta)
 				{
    						$("#cmbHorariosPractica").append($("<option></option>").attr("value",response.clavePractica).text(response.horaPractica));
@@ -782,10 +776,14 @@ var inicio = function()
     			{		    	
     				$("#txtNumArtMat").val("1");
     				$("#bodyArtAlumno").append(response.renglones);
+					checkOtroArticulo();
 					$("#bodyArtAlumno #btnEliminarArtAlu").on("click",eliminarArtAlumno);
 				}
 				else
-					sweetAlert("No se agregó el articulo", "", "error");
+				{
+					$("#bodyArtAlumno").html("");
+					//sweetAlert("No se agregó el articulo", "", "error");
+				}
 			},
 			error: function(xhr, ajaxOptions,x){
 				console.log("Error de conexión articulo agregado");	
@@ -794,7 +792,8 @@ var inicio = function()
 	}
 	var checkOtroArticulo = function()
 	{
-		var claveCal = $("#cmbHorariosPractica").val();
+		var claveSol = 5;//$("#cmbHorariosPractica").val();
+		console.log(claveSol);
 		if ($("#chbElegirOtroMaterial").is(':checked'))
 		{
 			$(".select-dropdown").removeAttr("disabled");
@@ -802,7 +801,7 @@ var inicio = function()
 			$("#txtNumArtMat").removeAttr("disabled");
 			$("#btnAgregarArtAlu").show();
 			var parametros = "opc=materialesDisponibles1"+
-							"&claveCal="+claveCal+
+							"&claveSol="+claveSol+
     						"&id="+Math.random();
 			$.ajax({
 	    		cache:false,
@@ -814,6 +813,7 @@ var inicio = function()
 	    			if(response.respuesta == true)
 	    			{
 	    				$("#cmbMaterialesLab").html(" ");
+						$("#cmbMaterialesLab").html("<option value='' disabled selected>Selecciona el material</option>");
 							for (var i = 0; i < response.contador; i++) 
 							{
 								$("#cmbMaterialesLab").append($("<option></option>").attr("value",response.claveArticulo[i]).text(response.nombreArticulo[i]));
@@ -823,7 +823,10 @@ var inicio = function()
 					}
 					else
 					{
-						sweetAlert("No hay hay mas articulos en el laboratorio", "", "error");
+						$("#cmbMaterialesLab").html(" ");
+						$("#cmbMaterialesLab").html(" ");
+					$("#cmbMaterialesLab").html("<option value='' disabled selected>Selecciona el material</option>");
+						sweetAlert("No hay hay mas articulos en el laboratorio s", "", "error");
 					}
 				},
 				error: function(xhr, ajaxOptions,x)
@@ -885,7 +888,8 @@ var inicio = function()
 				}//termina if
 				else
 				{
-					sweetAlert("No se eliminó el articulo", "", "error");
+					$("#bodyArtAlumno").html("");
+					//sweetAlert("No se eliminó el articulo", "", "error");
 				}
 			},
 			error: function(xhr, ajaxOptions,x)
@@ -999,6 +1003,10 @@ var inicio = function()
 	}
  	var inicioRegistro = function ()
  	{
+ 		//limpiar variables
+ 		articulosSolicitadosAlumnos = Array("");
+ 		nombreArticulos = Array("");
+ 		numeroArticulos = Array("");
  		$("#materialExterno").hide();
  		$("#datosPracticas").hide();
  		$("#materialAlumno").hide();
@@ -1009,6 +1017,8 @@ var inicio = function()
 		$("#txtSemestre").val(" ");
 		$("#txtNControl").removeAttr("disabled");
 		del();
+		//mostrar 
+		materialPractica();
  	}
 	$("#btnPracticaAlumnos").on("click",practicaAlumnos);
 	$("#btnMaterialAlumno").on("click",materialPractica);
