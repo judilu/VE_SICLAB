@@ -1130,7 +1130,7 @@
 				}
 				else
 					{
-						sweetAlert("Error", "No hay peticiones de articulos!", "error");
+						sweetAlert("No hay artículos..!", " ", "error");
 					}
 			},
 			error: function(xhr, ajaxOptions,x){
@@ -1176,6 +1176,33 @@
 		$("#menuMtto").hide("slow");
 		$("#pantallaInventario").hide("slow");
 		$("#peticionesPendientes").hide("slow");
+		var parametros= "opc=comboArtPeticiones1"
+						+"&id="+Math.random();
+			$.ajax({
+				cache:false,
+				type: "POST",
+				dataType: "json",
+				url:'../data/genericos.php',
+				data: parametros,
+				success: function(response){
+					if(response.respuesta == true)
+					{
+						for (var i = 0; i < response.contador; i++) 
+						{
+							$("#cmbNombreArtPeticiones").append($("<option></option>").attr("value",response.cveArt[i]).text(response.nombreArt[i]));
+						}
+						$("#cmbNombreArtPeticiones").trigger('contentChanged');
+						$('select').material_select();
+					}
+					else
+					{
+						sweetAlert("Error", "No se pudo enviar la solicitud!", "error");
+					}
+				},
+				error: function(xhr, ajaxOptions,x){
+					sweetAlert("Error", "Error de conexión enviar petición artículo", "error");
+				}
+			});
 		$("#peticionesArticulos").show("slow");
 		$("input").val("");
 		$("textarea").val("");

@@ -429,10 +429,6 @@ function verMas2()
 						'renglones' => $renglones);
 		print json_encode($arrayJSON);
 }
-function claveLab($responsable)
-{
-
-}
 function listaArticulos()
 {
 	$respuesta 	= false;
@@ -440,7 +436,7 @@ function listaArticulos()
 	if(!empty($_SESSION['nombre']))
 	{ 
 		$responsable= $_SESSION['nombre'];
-		$claveLab 	= obtieneCveLab($responsable);
+		$claveLab 	= GetSQLValueString(obtieneCveLab($responsable),"text");
 		$art 		= "";
 		$articulos 	= "";
 		$con 		= 0;
@@ -484,7 +480,6 @@ function listaArticulos()
 }
 function altaInventario1 ()
 {
-	//$cveUsuario		= GetSQLValueString($_POST[""],"text");
 	$respuesta 	= false;
 	session_start();
 	if(!empty($_SESSION['nombre']))
@@ -701,6 +696,36 @@ function buscaArticuloMtto()
 		);
 	print json_encode($salidaJSON);
 }
+function tipoUsuario($claveUsuario)
+{
+	$cve 			= $claveUsuario;
+	$conexion 		= conectaBDSICLAB();
+	$consulta		= sprintf("select tipoUsuario from lbusuarios where claveUsuario=%s",$cve);
+	$res 			= mysql_query($consulta);
+	if($row = mysql_fetch_array($res))
+	{
+		return $row["tipoUsuario"];
+	}
+	else
+	{
+		return 0;
+	}
+}
+function labResponsable($claveUsuario)
+{
+	$cve 			= $claveUsuario;
+	$conexion 		= conectaBDSICLAB();
+	$consulta		= sprintf("select claveLaboratorio from lbresponsables where claveUsuario=%s",$cve);
+	$res 			= mysql_query($consulta);
+	if($row = mysql_fetch_array($res))
+	{
+		return $row["claveLaboratorio"];
+	}
+	else
+	{
+		return 0;
+	}
+}
 function peticionesPendientesArt()
 {
 	$respuesta 	= false;
@@ -708,16 +733,31 @@ function peticionesPendientesArt()
 	if(!empty($_SESSION['nombre']))
 	{ 
 		$responsable= $_SESSION['nombre'];
+		$labCve 	= obtieneCveLab($responsable);
+		$depto 		= obtieneDepto($labCve);
+		$tipoUsuario= tipoUsuario($responsable);
 		$art 		= "";
 		$articulos 	= "";
 		$con 		= 0;
 		$rows		= array();
 		$renglones	= "";
+		$nombreLaboratorio = "";
 		$conexion 	= conectaBDSICLAB();
-		$consulta	= sprintf("select p.clavePedido,p.DEPCVE,p.nombreArticulo,p.cantidad 
+		if($tipoUsuario = 1)
+		{
+			$consulta	= sprintf("select p.clavePedido,p.DEPCVE,p.nombreArticulo,p.cantidad 
 								from lbpedidos p 
-								where estatus='P'",$responsable);
-		$res 		= mysql_query($consulta);
+								where estatus='P' and DEPCVE=%s",$depto);
+			$res 		= mysql_query($consulta);
+		}
+		else
+		{
+			$consulta	= sprintf("select p.clavePedido,p.DEPCVE,p.nombreArticulo,p.cantidad 
+								from lbpedidos p 
+								where estatus='P' and DEPCVE=%s",$depto);
+			$res 		= mysql_query($consulta);
+		}
+		
 		$renglones	.= "<thead>";
 		$renglones	.= "<tr>";
 		$renglones	.= "<th data-field='laboratorio'>Laboratorio</th>";
@@ -748,11 +788,26 @@ function peticionesPendientesArt()
 	}
 	else
 	{
-		//salirG();
+		salirG();
 	}
 	$arrayJSON = array('respuesta' => $respuesta,
 		'renglones' => $renglones);
 	print json_encode($arrayJSON);
+}
+function nombreLab($claveLab)
+{
+	$cve 			= $claveLab
+	$conexion 		= conectaBDSICLAB();
+	$consulta		= sprintf("select nombreLaboratorio from lblaboratorios where claveLaboratorio=%s",$cve);
+	$res 			= mysql_query($consulta);
+	if($row = mysql_fetch_array($res))
+	{
+		return $row["nombreLaboratorio"];
+	}
+	else
+	{
+		return 0;
+	}
 }
 function aceptaPeticionArticulos()
 {
@@ -1240,7 +1295,7 @@ function guardaSancion()
 	$arrayJSON = array('respuesta' => $respuesta);
 		print json_encode($arrayJSON);
 }
-function actualizaPrendiente()
+function actualizaPendiente()
 {
 
 }
@@ -1331,18 +1386,19 @@ function guardaPeticionArticulos()
 		$modelo 		= GetSQLValueString($_POST["modelo"],"text");
 		$motivo 		= GetSQLValueString($_POST["motivo"],"text");
 		$fecha 			= GetSQLValueString($_POST["fecha"],"text");
-		$depto 			= "1234";
+		$cveLab 		= obtieneCveLab($responsable);
+		$depto 			= obtieneDepto($cveLab);
 		$firma 			= "0000";
 		$periodo 		= periodoActual();
 		$conexion 		= conectaBDSICLAB();
-		$consulta  		= sprintf("insert into lbpedidos values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",$periodo,'""',$fecha,$depto,$firma,$responsable,$nombreArticulo,$cantidad,$motivo,$marca,$modelo,'"P"');
+		$consulta  		= sprintf("insert into lbpedidos values(%s,%s,%s,%d,%s,%s,%s,%s,%s,%s,%s,%s)",$periodo,'""',$fecha,$depto,$firma,$responsable,$nombreArticulo,$cantidad,$motivo,$marca,$modelo,'"P"');
 		$res 	 		=  mysql_query($consulta);
 			if(mysql_affected_rows()>0)
 				$respuesta = true; 
 	}
 	else
 	{
-		//salirG();
+		salirG();
 	}
 	$arrayJSON = array('respuesta' => $respuesta);
 		print json_encode($arrayJSON);
@@ -1353,12 +1409,11 @@ function obtieneCveLab($clave)
 	$conexion		= conectaBDSICLAB();
 	$consulta 		= sprintf("select claveLaboratorio 
 								from lbresponsables 
-								where claveUsuario=%d",$cveResp);
+								where claveUsuario=%s",$cveResp);
 	$res 			= mysql_query($consulta);
-	var_dump($consulta);
 	if($row = mysql_fetch_array($res))
 	{
-		return (int)($row["claveLaboratorio"]);
+		return $row["claveLaboratorio"];
 	}
 	else
 	{
@@ -1367,7 +1422,7 @@ function obtieneCveLab($clave)
 }
 function obtieneDepto($claveLab)
 {
-	$cveLab 		= $claveLab;
+	$cveLab 		= GetSQLValueString($claveLab,"text");
 	$conexion		= conectaBDSICLAB();
 	$consulta 		= sprintf("select DEPCVE 
 								from lblaboratorios 
@@ -1375,7 +1430,7 @@ function obtieneDepto($claveLab)
 	$res 			= mysql_query($consulta);
 	if($row = mysql_fetch_array($res))
 	{
-		return (int)($row["DEPCVE"]);
+		return $row["DEPCVE"];
 	}
 	else
 	{
@@ -1435,11 +1490,42 @@ function listaArticulosAlta()
 						'contador' => $contador);
 	print json_encode($arrayJSON);
 }
-function identificadorArt()
+function comboArtPeticiones()
 {
-	
-
-
+	$resp 	 		= false;
+	session_start();
+	if(!empty($_SESSION['nombre']))
+	{
+		$responsable= $_SESSION['nombre'];
+		$claveLab 	= GetSQLValueString(obtieneCveLab($responsable),"text");
+		$art 		= "";
+		$articulos 	= "";
+		$con 		= 0;
+		$comboArt	= array();
+		$conexion 	= conectaBDSICLAB();
+		$consulta	= sprintf("select B.claveArticulo,B.nombreArticulo
+					FROM lbarticulos as A inner join lbarticuloscat as B ON A.claveArticulo=B.claveArticulo INNER JOIN lbasignaarticulos C ON A.identificadorArticulo=C.indentificadorArticulo WHERE C.claveLaboratorio =%s GROUP BY A.claveArticulo",$claveLab);
+		$res 		= mysql_query($consulta);
+		if($res)
+		{
+			while($row = mysql_fetch_array($res))
+			{
+				$comboArt[] = $row;
+				$respuesta = true;
+				$con++;
+			}
+			for ($i=0; $i < $con ; $i++)
+			{ 
+				$art[] 	=$comboArt[$i]["claveArticulo"];
+				$articulos[] 	=$comboArt[$i]["nombreArticulo"];
+			}
+		}
+	}
+	$arrayJSON = array('respuesta' => $respuesta,
+						'cveArt' => $art, 
+						'nombreArt' => $articulos, 
+						'contador' => $con);
+	print json_encode($arrayJSON);
 }
 //Menú principal
 $opc = $_POST["opc"];
@@ -1539,6 +1625,9 @@ switch ($opc){
 	break;
 	case 'listaArtAlta':
 	listaArticulosAlta();
+	break;
+	case 'comboArtPeticiones1':
+	comboArtPeticiones();
 	break;
 } 
 ?>

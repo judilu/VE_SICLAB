@@ -4,16 +4,7 @@
 			<div class="input-field col s4">
 				<select id="cmbNombreArtPeticiones">
 					<option value="" disabled selected>Seleccione</option>
-					<?php						
-					require_once('../data/conexion.php');
-
-					$conexion		= conectaBDSICLAB();
-					$consulta 		= sprintf("select * from lbarticuloscat");
-					$res 			= mysql_query($consulta);
-					while($row = mysql_fetch_array($res))
-					{
-						echo '<option value="'.$row["claveArticulo"].'">'.$row["nombreArticulo"].'</option>';
-					}?>
+					
 				</select>
 				<label>Nombre del artículo</label>
 			</div>
