@@ -22,6 +22,19 @@ function claveUsuario($clavePersona)
 		return 0;
 	}
 }
+function consultaLab($claveSol)
+{
+	$sol 		= $claveSol;
+	$lab 		= "";
+	$conexion 	= conectaBDSICLAB();
+	$consulta 	= sprintf("select claveLaboratorio from lbsolicitudlaboratorios WHERE claveSolicitud =%d",$sol);
+	$res		= mysql_query($consulta);
+	if($row = mysql_fetch_array($res))
+	{
+		$lab = $row["claveLaboratorio"];
+	}
+	return $lab;	
+}
 function consultaAlumno()
 {
 	$respuesta		= false;
@@ -301,7 +314,7 @@ function consultaMaterialPractica()
 		print json_encode($arrayJSON);
 	}
 }
-function agregarArtAlumno()
+/*function agregarArtAlumno()
 {
 	$cveArt 	= GetSQLValueString($_POST['artCve'],"text");
 	$num 	 	= GetSQLValueString($_POST['numArt'],"int");
@@ -316,29 +329,18 @@ function agregarArtAlumno()
 	$arrayJSON = array('respuesta' => $respuesta,
 		'renglones' => $renglones);
 	print json_encode($arrayJSON);
-}
+}*/
 function materialesDisponibles()
 {
-	$claveCal 		= GetSQLValueString($_POST['claveCal'],"int");
+	$claveSol 		= GetSQLValueString($_POST['claveSol'],"int");
 	$resp 	 		= false;
 	$contador		= 0;
-	$laboratorio 	= "'CCDM'";
+	$laboratorio 	= GetSQLValueString(consultaLab($claveSol),"text");
 	$comboArticulos	= array();
 	$claveArt 		= "";
 	$nombreArt		= "";
 	$conexion		= conectaBDSICLAB();
-	$consulta 		= sprintf("select a.claveArticulo,ac.nombreArticulo 
-		from lbasignaarticulos aa 
-		INNER JOIN lbarticulos a on aa.indentificadorArticulo=a.identificadorArticulo 
-		INNER JOIN lbarticuloscat ac on a.claveArticulo=ac.claveArticulo 
-		LEFT JOIN (
-			select * from lbasignaarticulospracticas aap 
-			where aap.claveSolicitud=(
-				SELECT c.claveSolicitud 
-				from lbcalendarizaciones c 
-				where c.claveCalendarizacion=%d)) as t 
-	on a.claveArticulo=t.claveArticulo  
-	where aa.claveLaboratorio=%s and t.claveSolicitud IS NULL",$claveCal,$laboratorio);
+	$consulta 		= sprintf("select DISTINCT (c.nombreArticulo), c.claveArticulo from lbarticuloscat c inner join lbarticulos a on a.claveArticulo = c.claveArticulo inner join lbasignaarticulos aa on aa.indentificadorArticulo = a.identificadorArticulo where aa.claveLaboratorio =%s and a.estatus = 'V'",$laboratorio);	
 	$res 			= mysql_query($consulta);
 	if($res)
 	{
@@ -359,6 +361,34 @@ function materialesDisponibles()
 	print json_encode($arrayJSON);
 
 }
+/*function comboEleArtAlu()
+{
+	$laboratorio 		= GetSQLValueString($_POST["laboratorio"],"text");
+	$respuesta 		= false;
+	$comboEleArt 	= array();
+	$comboCveArt 	= "";
+	$comboNomArt 	= "";
+	$con 			= 0;
+	$conexion		= conectaBDSICLAB();
+	$consulta		= sprintf("select DISTINCT (c.nombreArticulo), c.claveArticulo from lbarticuloscat c inner join lbarticulos a on a.claveArticulo = c.claveArticulo inner join lbasignaarticulos aa on aa.indentificadorArticulo = a.identificadorArticulo where aa.claveLaboratorio =%s and a.estatus = 'V'",$laboratorio);
+	$res 			= mysql_query($consulta);
+	while($row = mysql_fetch_array($res))
+	{
+			$comboEleArt[]  = $row;
+			$respuesta = true;
+			$con++;
+	}
+	for ($i=0; $i < $con ; $i++)
+	{ 
+		$comboCveArt[] 	=$comboEleArt[$i]["claveArticulo"];
+		$comboNomArt[] 	=$comboEleArt[$i]["nombreArticulo"];
+	}
+	$arrayJSON = array('respuesta' => $respuesta,
+						'comboCveArt' => $comboCveArt, 
+						'comboNomArt' => $comboNomArt, 
+						'con' => $con);
+	print json_encode($arrayJSON);
+}*/
 function consultaClavePrestamo($clave,$numCtrl)
 {
 	$responsable	= "6";
@@ -401,9 +431,12 @@ function guardaSolicitudAlumno()
 }
 function construirTablaArt()
 {
-	$cveArt[] 	= $_POST['articulosSolicitados'];
-	$nomArt[] 	= $_POST['nombreArticulos'];
-	$num[] 		= $_POST['numeroArticulos'];
+	$cve 		= $_POST['articulosSolicitados'];
+	$nom 		= $_POST['nombreArticulos'];
+	$num 		= $_POST['numeroArticulos'];
+	$cveArt 	= explode(",",$cve);
+	$nomArt 	= explode(",",$nom);
+	$numArt 	= explode(",",$num);
 	$n 			= count($cveArt);
 	$respuesta 	= false;
 	$renglones 	= "";
@@ -412,9 +445,9 @@ function construirTablaArt()
 		if ($cveArt[$i]!= "") 
 		{
 			$respuesta	= true;
-			$renglones	= "";
+			$renglones .= "";
 			$renglones .= "<td class='col s6'>".$nomArt[$i]."</td>";
-			$renglones .= "<td class='col s3'>".$num[$i]."</td>";
+			$renglones .= "<td class='col s3'>".$numArt[$i]."</td>";
 			$renglones .= "<td class='col s3'><a name ='".$cveArt[$i]."' class='btn-floating btn-large waves-effect waves-light red darken-1' id='btnEliminarArtAlu'><i class='material-icons'>delete</i></a></td>";
 			$renglones .= "</tr>";
 		}
@@ -487,9 +520,9 @@ function consultaMaterialExterno()
 			$res 			= mysql_query($consulta);
 			while($row = mysql_fetch_array($res))
 			{
-				$materiales .="'".($row["claveArticulo"])."',";
-				$cantidad 	.="'".($row["cantidad"])."',";
-				$nombre 	.="'".($row["nombreArticulo"])."',";
+				$materiales .=($row["claveArticulo"]).",";
+				$cantidad 	.=($row["cantidad"])."',";
+				$nombre 	.=($row["nombreArticulo"]).",";
 				$rows[]=$row;
 				$respuesta = true;
 				$con++;
@@ -632,9 +665,9 @@ switch ($opc){
 	case 'consultaMaterialPractica1':
 	consultaMaterialPractica();
 	break;
-	case 'agregarArtAlu1':
-	agregarArtAlumno();
-	break;
+	// case 'agregarArtAlu1':
+	// agregarArtAlumno();
+	// break;
 	case 'materialesDisponibles1':
 	materialesDisponibles();
 	break;
