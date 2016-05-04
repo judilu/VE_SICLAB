@@ -35,7 +35,7 @@ function claveUsuario1()
 	if($row = mysql_fetch_array($res))
 	{
 		$respuesta = true;
-		$claveUsuario = $row["claveUsuario"];
+		$claveUsuario = (int)$row["claveUsuario"];
 	}
 	$arrayJSON = array('respuesta' => $respuesta,
 						'claveUsuario' => $claveUsuario);

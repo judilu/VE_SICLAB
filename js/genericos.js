@@ -447,15 +447,17 @@
 	}
 	var guardarDevolucionPrestamo = function()
 	{
+		var f  = new Date();
+    	var dd = f.getDate();
+    	var mm = (f.getMonth())+1;
+    	(dd<10) ? (dd="0"+dd) : dd;
+    	(mm<10) ? (mm="0"+mm) : mm;
+    	var fe  = (dd+"/"+mm+"/"+f.getFullYear());
 		var horaActual 				= new Date();
-		var fechaActual				= new Date();
 		var hora 					=horaActual.getHours();
 		var minutos 				=horaActual.getMinutes();
-		var dia 					=fechaActual.getDate();
-		var mes 					=fechaActual.getMonth()+1;
-		var anno 					=fechaActual.getFullYear();
-		var horaDevolucion			= hora + ":" + minutos;
-		var fechaDevolucion 		= dia + "/" + mes + "/" + anno;
+		(minutos<10) ? (minutos="0"+minutos) : minutos;
+		var hora					= hora + ":" + minutos;
 
 		var identificadorArticulo 	= $(this).attr('name');
 		var clavePrestamo 			= $("#txtClavePrestamoDevolucion").val();
@@ -463,8 +465,8 @@
 		var parametros 		= "opc=guardaDevolucion1"
 							+"&clavePrestamo="+clavePrestamo
 							+"&identificadorArticulo="+identificadorArticulo
-							+"&horaDevolucion="+horaDevolucion
-							+"&fechaDevolucion="+fechaDevolucion
+							+"&horaDevolucion="+hora
+							+"&fechaDevolucion="+fe
 							+"&id="+Math.random();
 		$.ajax({
 				cache:false,
@@ -981,7 +983,8 @@
 	var listaArtMtto = function()
 	{
 		$("#sEnvioMtto").hide("slow");
-		var parametros 	= "opc=listaMantenimiento1"+"&id="+Math.random();
+		var parametros 	= "opc=listaMantenimiento1"+
+						"&id="+Math.random();
 		$.ajax({
 			cache:false,
 			type: "POST",
@@ -1048,33 +1051,28 @@
 		if(($("#txtCodigoBarrasMtto").val())!="" && ($("#txtLugarReparacionMtto").val())!=""
 			&& ($("#txtMotivoMtto").val())!="")
 		{
+			var f  = new Date();
+	    	var dd = f.getDate();
+	    	var mm = (f.getMonth())+1;
+	    	(dd<10) ? (dd="0"+dd) : dd;
+	    	(mm<10) ? (mm="0"+mm) : mm;
+	    	var fe  = (dd+"/"+mm+"/"+f.getFullYear());
 			var horaActual 				= new Date();
-			var fechaActual				= new Date();
 			var hora 					=horaActual.getHours();
 			var minutos 				=horaActual.getMinutes();
-			var dia 					=fechaActual.getDate();
-			var mes 					=fechaActual.getMonth()+1;
-			var anno 					=fechaActual.getFullYear();
+			(minutos<10) ? (minutos="0"+minutos) : minutos;
+			var hora					= hora + ":" + minutos;
 
 			var identificadorArticulo	= $("#txtCodigoBarrasMtto").val();//obtener el articulo a dar de baja
 			var observaciones 			= $("#txtMotivoMtto").val()
-			var periodo					= "67236";
-			var estatus					= "M";
-			var claveMovimiento			= " ";
-			var claveLab				= "1";
-			var horaMovimiento			= hora + ":" + minutos;
-			var fechaMovimiento 		= dia + "/" + mes + "/" + anno;
-			var respons 				= "1"
 			var parametros 	= "opc=mantenimientoArticulos1"
 							+"&identificadorArticulo="+identificadorArticulo
 							+"&observaciones="+observaciones
-							+"&horaMovimiento="+horaMovimiento
-							+"&fechaMovimiento="+fechaMovimiento
-							+"&periodo="+periodo
+							+"&horaMovimiento="+hora
+							+"&fechaMovimiento="+fe
 							+"&estatus="+estatus
 							+"&claveMovimiento="+claveMovimiento
 							+"&claveLab="+claveLab
-							+"&respons="+respons
 							+"&id="+Math.random();
 			$.ajax({
 				cache:false,
@@ -1130,7 +1128,7 @@
 				}
 				else
 					{
-						sweetAlert("No hay artículos..!", " ", "error");
+						sweetAlert("No hay pedidos de artículos..!", " ", "error");
 					}
 			},
 			error: function(xhr, ajaxOptions,x){
@@ -1157,7 +1155,6 @@
 					if(response.respuesta == true)
 					{
 						swal("Solicitud aceptada!", "Da clic en el botón OK!", "success");
-						peticionesPendientesArt();
 					}
 					else
 					{
@@ -1189,7 +1186,7 @@
 					{
 						for (var i = 0; i < response.contador; i++) 
 						{
-							$("#cmbNombreArtPeticiones").append($("<option></option>").attr("value",response.cveArt[i]).text(response.nombreArt[i]));
+							$("#cmbNombreArtPeticiones").append($("<option></option>").attr("value",response.nombreArt[i]).text(response.nombreArt[i]));
 						}
 						$("#cmbNombreArtPeticiones").trigger('contentChanged');
 						$('select').material_select();
@@ -1231,16 +1228,17 @@
 		{
 			nombreArticulo = $("#cmbNombreArtPeticiones").val();
 		}
-			var fechaActual				= new Date();
-			var dia 					=fechaActual.getDate();
-			var mes 					=fechaActual.getMonth()+1;
-			var anno 					=fechaActual.getFullYear();
+			var f  = new Date();
+	    	var dd = f.getDate();
+	    	var mm = (f.getMonth())+1;
+	    	(dd<10) ? (dd="0"+dd) : dd;
+	    	(mm<10) ? (mm="0"+mm) : mm;
+	    	var fe  = (dd+"/"+mm+"/"+f.getFullYear());
 
 			var cantidad 	= $("#txtCantidadPeticionArt").val();
 			var marca 		= $("#txtMarcaPeticionArt").val();
 			var modelo 		= $("#txtModeloPeticionArt").val();
 			var motivo 		= $("#txtMotivoPedidoArt").val();
-			var fecha 		= dia + "/" + mes + "/" + anno;
 
 			var parametros= "opc=guardaPeticionArticulos1"
 							+"&nombreArticulo="+nombreArticulo
@@ -1248,7 +1246,7 @@
 							+"&marca="+marca
 							+"&modelo="+modelo
 							+"&motivo="+motivo
-							+"&fecha="+fecha
+							+"&fecha="+fe
 							+"&id="+Math.random();
 			$.ajax({
 				cache:false,

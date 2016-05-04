@@ -3,8 +3,10 @@ require_once('../data/conexion.php');
 require_once('../data/funciones.php');
 function usuario ()
 {
+	$usuario = GetSQLValueString($_POST['clave1'],"int");
+	$usuario = substr($usuario, -2,1);
 	session_start();
-	$_SESSION['nombre'] = GetSQLValueString($_POST['clave1'],"text");
+	$_SESSION['nombre'] = (int)$usuario;
 }
 function salirG()
 {
@@ -64,8 +66,6 @@ function pendientesLaboratorio()
 {
 	$respuesta 	= false;
 	session_start();
-	if(!empty($_SESSION['nombre']))
-	{ 
 		$responsable= $_SESSION['nombre'];
 		$con 		= 0;
 		$rows		= array();
@@ -122,11 +122,6 @@ function pendientesLaboratorio()
 			$renglones .= "</tbody>";
 			$respuesta = true;
 		}
-	}
-	else
-	{
-		salirG();
-	}
 	$arrayJSON = array('respuesta' => $respuesta,
 		'renglones' => $renglones);
 	print json_encode($arrayJSON);
@@ -136,8 +131,6 @@ function verMas()
 {
 	$respuesta 		= false;
 	session_start();
-	if(!empty($_SESSION['nombre']))
-	{
 		$clave 			= GetSQLValueString($_POST["clave"],"text");
 		$renglones		= "";
 		$fechaSolicitud	= "";
@@ -188,11 +181,6 @@ function verMas()
 				$respuesta = true;
 			}
 		}
-	}
-	else
-	{
-		salirG();
-	}
 	$arrayJSON = array('respuesta' => $respuesta, 
 						'fecha' =>$fechaSolicitud, 
 						'hora' => $horaSolicitud,
@@ -206,8 +194,6 @@ function obtenerDatosSolLab()
 {
 	$respuesta 		= false;
 	session_start();
-	if(!empty($_SESSION['nombre']))
-	{
 		$clave 			= GetSQLValueString($_POST["clave"],"text");
 		$fecha 			= "";
 		$hora 			= "";
@@ -223,11 +209,6 @@ function obtenerDatosSolLab()
 				$hora	= $row["horaSolicitud"];
 			}
 		}
-	}
-	else
-	{
-		salirG();
-	}
 	$arrayJSON = array('respuesta' => $respuesta, 'fecha' => $fecha, 'hora' => $hora);
 		print json_encode($arrayJSON);
 }
@@ -236,8 +217,6 @@ function guardaSolicitudLab()
 {
 	$respuesta 		= false;
 	session_start();
-	if(!empty($_SESSION['nombre']))
-	{
 		$periodo 		= periodoActual();
 		$clave 			= GetSQLValueString($_POST["clave"],"int");
 		$fecha 			= GetSQLValueString($_POST["fecha"],"text");
@@ -252,11 +231,6 @@ function guardaSolicitudLab()
 			if(mysql_affected_rows()>0)
 			$respuesta = true; 
 		}
-	}
-	else
-	{
-		salirG();
-	}
 	$arrayJSON = array('respuesta' => $respuesta);
 		print json_encode($arrayJSON);
 }
@@ -265,8 +239,6 @@ function eliminaSolicitudLab()
 {
 	$respuesta 		= false;
 	session_start();
-	if(!empty($_SESSION['nombre']))
-	{
 		$clave 			= GetSQLValueString($_POST["clave"],"int");
 		$conexion 		= conectaBDSICLAB();
 		if(existeSolLabG($clave))
@@ -283,11 +255,6 @@ function eliminaSolicitudLab()
 				}
 			}
 		}
-	}
-	else
-	{
-		salirG();
-	}
 	$arrayJSON = array('respuesta' => $respuesta);
 		print json_encode($arrayJSON);
 }
@@ -296,8 +263,6 @@ function aceptadasLaboratorio()
 {
 	$respuesta 	= true;
 	session_start();
-	if(!empty($_SESSION['nombre']))
-	{ 
 		$con 				= 0;
 		$rows				= array();
 		$renglones			= "";
@@ -350,11 +315,6 @@ function aceptadasLaboratorio()
 			$renglones .= "</tbody>";
 			$respuesta = true;
 		}
-	}
-	else
-	{
-		salirG();
-	}
 	$arrayJSON = array('respuesta' => $respuesta,
 		'renglones' => $renglones);
 	print json_encode($arrayJSON);
@@ -363,8 +323,6 @@ function verMas2()
 {
 	$respuesta 		= false;
 	session_start();
-	if(!empty($_SESSION['nombre']))
-	{
 		$claveCal 		= GetSQLValueString($_POST["clave"],"int");
 		$renglones		= "";
 		$fechaAsignada	= "";
@@ -416,11 +374,6 @@ function verMas2()
 				$respuesta = true;
 			}
 		}
-	}
-	else
-	{
-		salirG();
-	}
 	$arrayJSON = array('respuesta' => $respuesta, 
 						'fechaAsignada' =>$fechaAsignada, 
 						'horaAsignada' => $horaAsignada,
@@ -433,8 +386,6 @@ function listaArticulos()
 {
 	$respuesta 	= false;
 	session_start();
-	if(!empty($_SESSION['nombre']))
-	{ 
 		$responsable= $_SESSION['nombre'];
 		$claveLab 	= GetSQLValueString(obtieneCveLab($responsable),"text");
 		$art 		= "";
@@ -469,11 +420,6 @@ function listaArticulos()
 			$renglones .= "</tbody>";
 			$respuesta = true;
 		}
-	}
-	else
-	{
-		salirG();
-	}
 	$arrayJSON = array('respuesta' => $respuesta,
 		'renglones' => $renglones);
 	print json_encode($arrayJSON);
@@ -482,8 +428,6 @@ function altaInventario1 ()
 {
 	$respuesta 	= false;
 	session_start();
-	if(!empty($_SESSION['nombre']))
-	{
 		$conexion					= conectaBDSICLAB();
 		$imagen						= GetSQLValueString($_POST["imagen"],"text");
 		$identificadorArticulo 		= "' '";
@@ -508,11 +452,6 @@ function altaInventario1 ()
 			$identificadorArticulo = mysql_insert_id($conexion);
 			$respuesta = true; 
 		}
-	}
-	else
-	{
-		salirG();
-	}
 	$salidaJSON = array('respuesta' => $respuesta,
 						'idu' => $identificadorArticulo);
 	print json_encode($salidaJSON);
@@ -522,8 +461,6 @@ function buscaArticulo()
 {
 	$respuesta 	= false;
 	session_start();
-	if(!empty($_SESSION['nombre']))
-	{ 
 		$responsable= $_SESSION['nombre'];
 		$identificadorArticulo= GetSQLValueString($_POST["identificadorArticulo"],"text");
 		$rows			= array();
@@ -556,7 +493,6 @@ function buscaArticulo()
 			$unidadMedida	= $row["unidadMedida"];
 			$tipoContenedor	= $row["tipoContenedor"];
 		}
-	}
 	$salidaJSON = array('respuesta' => $respuesta,
 		'modelo' => $modelo, 'numeroSerie' => $numeroSerie, 'nombreArticulo' => $nombreArticulo,
 		'marca' => $marca, 'fechaCaducidad' => $fechaCaducidad, 'descripcionArticulo' => $descripcionArticulo,
@@ -567,8 +503,6 @@ function bajaArticulos()
 {
 	$respuesta = false;
 	session_start();
-	if(!empty($_SESSION['nombre']))
-	{ 
 		$responsable= $_SESSION['nombre'];
 		$identificadorArticulo	= GetSQLValueString($_POST["identificadorArticulo"],"int");
 		$estatus				= GetSQLValueString($_POST["estatus"],"text");
@@ -578,27 +512,54 @@ function bajaArticulos()
 		$res = mysql_query($consulta1);
 		if(mysql_affected_rows()>0)
 			$respuesta = true;
-	}
 	$salidaJSON = array('respuesta' => $respuesta);
 	print json_encode($salidaJSON);
+}
+function arrayLabs($depto)
+{
+	$cveDep 	= $depto;
+	$labs 		= "";
+	$conexion 	= conectaBDSICLAB();
+	$consulta 	= sprintf("select claveLaboratorio from lblaboratorios where DEPCVE=%d",$cveDep);
+	$res 		= mysql_query($consulta);
+	while($row = mysql_fetch_array($res))
+	{
+		$labs 	.= "'".($row["claveLaboratorio"])."',";
+	}
+	$labs = (rtrim($labs,","));
+	return $labs;
 }
 function listaMantenimiento()
 {
 	$respuesta 	= false;
 	session_start();
-	if(!empty($_SESSION['nombre']))
-	{ 
 		$responsable= $_SESSION['nombre'];
+		$tipoUsuario= tipoUsuario($responsable);
+		$claveLab 	= GetSQLValueString(obtieneCveLab($responsable),"text");
 		$art 		= "";
 		$articulos 	= "";
 		$con 		= 0;
 		$rows		= array();
 		$renglones	= "";
-		$conexion 	= conectaBDSICLAB();
-		$consulta	= sprintf("select ma.claveMovimiento,B.nombreArticulo, C.identificadorArticulo from lbarticuloscat B
+		if($tipoUsuario = 5)
+		{
+			$depto 		= obtieneDepto($claveLab);
+			$labs 		= arrayLabs($depto);
+			$conexion 	= conectaBDSICLAB();
+			$consulta	= sprintf("select ma.claveMovimiento,B.nombreArticulo, C.identificadorArticulo from lbarticuloscat B
+				inner join lbarticulos as C ON B.claveArticulo=C.claveArticulo inner join lbmovimientosarticulos ma
+				ON ma.identificadorArticulo=C.identificadorArticulo where ma.estatus='M' and ma.claveLaboratorio in(%s)",$labs);
+			$res 		= mysql_query($consulta);
+		}
+		else
+		{
+			$conexion 	= conectaBDSICLAB();
+			$consulta	= sprintf("select ma.claveMovimiento,B.nombreArticulo, C.identificadorArticulo from lbarticuloscat B
 			inner join lbarticulos as C ON B.claveArticulo=C.claveArticulo inner join lbmovimientosarticulos ma
-			ON ma.identificadorArticulo=C.identificadorArticulo where ma.estatus='M'",$responsable);
-		$res 		= mysql_query($consulta);
+			ON ma.identificadorArticulo=C.identificadorArticulo where ma.estatus='M' and ma.claveLaboratorio=%s",$claveLab);
+			$res 		= mysql_query($consulta2);
+		}
+		
 		$renglones	.= "<thead>";
 		$renglones	.= "<tr>";
 		$renglones	.= "<th data-field='codigoBarras'>Identificador artículo</th>";
@@ -624,11 +585,6 @@ function listaMantenimiento()
 			$renglones .= "</tbody>";
 			$respuesta = true;
 		}
-	}
-	else
-	{
-		//salirG();
-	}
 	$arrayJSON = array('respuesta' => $respuesta,
 		'renglones' => $renglones);
 	print json_encode($arrayJSON);
@@ -637,28 +593,23 @@ function mantenimientoArticulos()
 {
 	$respuesta = false;
 	session_start();
-	if(!empty($_SESSION['nombre']))
-	{ 
 		$responsable 			= $_SESSION['nombre'];
-		$resp 					= GetSQLValueString($_POST["respons"],"text");
-		$periodo				= GetSQLValueString($_POST["periodo"],"text");
-		$estatus				= GetSQLValueString($_POST["estatus"],"text");
-		$claveMovimiento		= GetSQLValueString($_POST["claveMovimiento"],"text");
-		$claveLab				= GetSQLValueString($_POST["claveLab"],"text");
+		$periodo				= periodoActual();
+		$estatus				= '"M"';
+		$claveMovimiento		= 0;
+		$claveLab				= GetSQLValueString(obtieneCveLab($responsable),"text");
 		$identificadorArticulo	= GetSQLValueString($_POST["identificadorArticulo"],"int");
 		$observaciones			= GetSQLValueString($_POST["observaciones"],"text");
 		$fechaMovimiento		= GetSQLValueString($_POST["fechaMovimiento"],"text");
 		$horaMovimiento			= GetSQLValueString($_POST["horaMovimiento"],"text");
 		$conexion 	= conectaBDSICLAB();
 
-		$consulta 	= sprintf("insert into lbmovimientosarticulos values(%s,%s,%s,%s,%s,%s,%s,%s,%s)",
-						$periodo,$fechaMovimiento,$horaMovimiento,$resp,$identificadorArticulo,$observaciones,
+		$consulta 	= sprintf("insert into lbmovimientosarticulos values(%s,%s,%s,%s,%s,%s,%s,%d,%s)",
+						$periodo,$fechaMovimiento,$horaMovimiento,$responsable,$identificadorArticulo,$observaciones,
 						$estatus,$claveMovimiento,$claveLab);
-		//$consulta1	= sprintf("update lbmovimientosarticulos set estatus='M', where identificadorArticulo=%d",$identificadorArticulo,$responsable);
 		$res = mysql_query($consulta);
 		if(mysql_affected_rows()>0)
 			$respuesta = true;
-	}
 	$salidaJSON = array('respuesta' => $respuesta);
 	print json_encode($salidaJSON);
 }
@@ -666,8 +617,6 @@ function buscaArticuloMtto()
 {
 	$respuesta 	= false;
 	session_start();
-	if(!empty($_SESSION['nombre']))
-	{ 
 		$responsable= $_SESSION['nombre'];
 		$identificadorArticulo= GetSQLValueString($_POST["identificadorArticulo"],"text");
 		$modelo			= "";
@@ -689,7 +638,6 @@ function buscaArticuloMtto()
 			$marca		 	= $row["marca"];
 			$fechaCaducidad	= $row["fechaCaducidad"];
 		}
-	}
 	$salidaJSON = array('respuesta' => $respuesta
 		,'modelo' => $modelo, 'numeroSerie' => $numeroSerie, 'nombreArticulo' => $nombreArticulo,
 		'marca' => $marca, 'fechaCaducidad' => $fechaCaducidad
@@ -726,14 +674,28 @@ function labResponsable($claveUsuario)
 		return 0;
 	}
 }
+function deptoLabCve($cveDepto)
+{
+	$clave 			= $cveDepto;
+	$conexion 		= conectaBDSICLAB();
+	$consulta		= sprintf("select claveLaboratorio from lblaboratorios where DEPCVE=%s",$clave);
+	$res 			= mysql_query($consulta);
+	if($row = mysql_fetch_array($res))
+	{
+		return $row["claveLaboratorio"];
+	}
+	else
+	{
+		return 0;
+	}
+
+}
 function peticionesPendientesArt()
 {
 	$respuesta 	= false;
 	session_start();
-	if(!empty($_SESSION['nombre']))
-	{ 
 		$responsable= $_SESSION['nombre'];
-		$labCve 	= obtieneCveLab($responsable);
+		$labCve 	= GetSQLValueString(obtieneCveLab($responsable),"text");
 		$depto 		= obtieneDepto($labCve);
 		$tipoUsuario= tipoUsuario($responsable);
 		$art 		= "";
@@ -741,10 +703,11 @@ function peticionesPendientesArt()
 		$con 		= 0;
 		$rows		= array();
 		$renglones	= "";
+		$cveLab 	= "";
 		$nombreLaboratorio = "";
-		$conexion 	= conectaBDSICLAB();
-		if($tipoUsuario = 1)
+		if($tipoUsuario = 5)
 		{
+			$conexion 	= conectaBDSICLAB();
 			$consulta	= sprintf("select p.clavePedido,p.DEPCVE,p.nombreArticulo,p.cantidad 
 								from lbpedidos p 
 								where estatus='P' and DEPCVE=%s",$depto);
@@ -752,10 +715,11 @@ function peticionesPendientesArt()
 		}
 		else
 		{
-			$consulta	= sprintf("select p.clavePedido,p.DEPCVE,p.nombreArticulo,p.cantidad 
+			$conexion 	= conectaBDSICLAB();
+			$consulta2	= sprintf("select p.clavePedido,p.DEPCVE,p.nombreArticulo,p.cantidad 
 								from lbpedidos p 
-								where estatus='P' and DEPCVE=%s",$depto);
-			$res 		= mysql_query($consulta);
+								where estatus='P' and claveResponsable=%s",$responsable);
+			$res 		= mysql_query($consulta2);
 		}
 		
 		$renglones	.= "<thead>";
@@ -776,27 +740,24 @@ function peticionesPendientesArt()
 		$art = (rtrim($art,","));
 		for($c= 0; $c< $con; $c++)
 		{
+			$cveLab 	= deptoLabCve($rows[$c]["DEPCVE"]);
+			$nombreLaboratorio = nombreLab($cveLab);
 			$renglones .= "<tbody>";
 			$renglones .= "<tr>";
-			$renglones .= "<td>".$rows[$c]["DEPCVE"]."</td>";
+			$renglones .= "<td>".$nombreLaboratorio."</td>";
 			$renglones .= "<td>".$rows[$c]["nombreArticulo"]."</td>";
 			$renglones .= "<td>".$rows[$c]["cantidad"]."</td>";
 			$renglones .= "<td><a name ='".$rows[$c]["clavePedido"]."'class='btn-floating btn-large waves-effect green darken-2' id='btnAceptaPeticionArt'><i class='material-icons'>done</i></a></td>";
 			$renglones .= "</tbody>";
 			$respuesta = true;
 		}
-	}
-	else
-	{
-		salirG();
-	}
 	$arrayJSON = array('respuesta' => $respuesta,
 		'renglones' => $renglones);
 	print json_encode($arrayJSON);
 }
 function nombreLab($claveLab)
 {
-	$cve 			= $claveLab
+	$cve 			= GetSQLValueString($claveLab,"text");
 	$conexion 		= conectaBDSICLAB();
 	$consulta		= sprintf("select nombreLaboratorio from lblaboratorios where claveLaboratorio=%s",$cve);
 	$res 			= mysql_query($consulta);
@@ -813,8 +774,6 @@ function aceptaPeticionArticulos()
 {
 	$respuesta 	= false;
 	session_start();
-	if(!empty($_SESSION['nombre']))
-	{
 		$responsable 	= $_SESSION['nombre'];
 		$clavePedido 	= GetSQLValueString($_POST["clavePedido"],"text");
 		$conexion 		= conectaBDSICLAB();
@@ -822,11 +781,6 @@ function aceptaPeticionArticulos()
 		$res 			= mysql_query($consulta);
 		if(mysql_affected_rows()>0)
 				$respuesta = true;
-	}
-	else
-	{
-		//salirG();
-	}
 	$arrayJSON = array('respuesta' => $respuesta);
 	print json_encode($arrayJSON);
 }
@@ -834,8 +788,6 @@ function prestamosPendientes()
 {
 	$respuesta 	= false;
 	session_start();
-	if(!empty($_SESSION['nombre']))
-	{ 
 		$responsable= $_SESSION['nombre'];
 		$prestamo	= "";
 		$con 		= 0;
@@ -882,7 +834,6 @@ function prestamosPendientes()
 			$renglones .= "</tbody>";
 			$respuesta = true;
 		}
-	}
 	$salidaJSON = array('respuesta' => $respuesta, 
 						'renglones' => $renglones);
 	print json_encode($salidaJSON);
@@ -891,8 +842,6 @@ function atenderPrestamo()
 {
 	$respuesta 	= false;
 	session_start();
-	if(!empty($_SESSION['nombre']))
-	{ 
 		$responsable= $_SESSION['nombre'];
 		$prestamo	= "";
 		$clavePrestamo = GetSQLValueString($_POST["clavePrestamo"],"int");
@@ -932,7 +881,6 @@ function atenderPrestamo()
 			$renglones .= "</tbody>";
 			$respuesta = true;
 		}
-	}
 	$salidaJSON = array('respuesta' => $respuesta,
 						 'renglones' => $renglones, 
 						 'clavePrestamo' => $clavePrestamo);
@@ -942,8 +890,6 @@ function agregaArticulos()
 {
 	$respuesta 	= false;
 	session_start();
-	if(!empty($_SESSION['nombre']))
-	{ 
 		$responsable			= $_SESSION['nombre'];
 		$identificadorArticulo	= GetSQLValueString($_POST["identificadorArticulo"],"int");
 		$clavePrestamo			= GetSQLValueString($_POST["clavePrestamo"],"int");
@@ -962,7 +908,6 @@ function agregaArticulos()
 				$respuesta 	= true;
 			}
 		}
-	}
 	$salidaJSON = array('respuesta' => $respuesta,
 						 'idu' 		=> $idu,
 						 'nomArt' 	=> $nomArt);
@@ -990,8 +935,6 @@ function buscaArtSolicitud($prestamo,$idu)
  {
  	$respuesta 	= false;
 	session_start();
-	if(!empty($_SESSION['nombre']))
-	{
 		$responsable	= $_SESSION['nombre'];
 		$clavePrestamo	= GetSQLValueString($_POST["clavePrestamo"],"int");
 		$listaArt		= $_POST['listaArt'];
@@ -1010,11 +953,6 @@ function buscaArtSolicitud($prestamo,$idu)
 				}
 			}
 		}
-	}
-	else
-	{
-		//salirG();
-	}
 	$arrayJSON = array('respuesta' => $respuesta);
 		print json_encode($arrayJSON);
  }
@@ -1037,8 +975,6 @@ function eliminaPrestamoPendiente()
 {
 	$respuesta 	= false;
 	session_start();
-	if(!empty($_SESSION['nombre']))
-	{
 		$responsable 	= $_SESSION['nombre'];
 		$clavePrestamo	= GetSQLValueString($_POST["clavePrestamo"],"text");
 		$conexion 		= conectaBDSICLAB();
@@ -1047,7 +983,6 @@ function eliminaPrestamoPendiente()
 		$res 		= mysql_query($consulta);
 			if(mysql_affected_rows()>0)
 				$respuesta = true;
-	}
 	$salidaJSON = array('respuesta' => $respuesta);
 	print json_encode($salidaJSON);
 }
@@ -1055,8 +990,6 @@ function prestamosProceso()
 {
 	$respuesta 	= false;
 	session_start();
-	if(!empty($_SESSION['nombre']))
-	{ 
 		$responsable= $_SESSION['nombre'];
 		$prestamo	= "";
 		$con 		= 0;
@@ -1102,7 +1035,6 @@ function prestamosProceso()
 			$renglones .= "</tbody>";
 			$respuesta = true;
 		}
-	}
 	$salidaJSON = array('respuesta' => $respuesta, 'renglones' => $renglones);
 	print json_encode($salidaJSON);
 }
@@ -1126,8 +1058,6 @@ function devolucionPrestamo()
 {
 	$respuesta 	= false;
 	session_start();
-	if(!empty($_SESSION['nombre']))
-	{ 
 		$responsable 	= $_SESSION['nombre'];
 		$prestamo		= "";
 		$clavePrestamo 	= GetSQLValueString($_POST["clavePrestamo"],"int");
@@ -1172,7 +1102,6 @@ function devolucionPrestamo()
 			$renglones .= "</tbody>";
 			$respuesta = true;
 		}
-	}
 	$salidaJSON = array('respuesta' => $respuesta, 
 						'renglones' => $renglones, 
 						'clavePrestamo' => $clavePrestamo,
@@ -1200,14 +1129,11 @@ function guardaDevolucion()
 {
 	$respuesta 	= false;
 	session_start();
-	if(!empty($_SESSION['nombre']))
-	{
 		$responsable			= $_SESSION['nombre'];
 		$clavePrestamo 			= GetSQLValueString($_POST["clavePrestamo"],"text");
 		$identificadorArticulo 	= GetSQLValueString($_POST["identificadorArticulo"],"text");
 		$fecha 					= GetSQLValueString($_POST["fechaDevolucion"],"text");
 		$hora 					= GetSQLValueString($_POST["horaDevolucion"],"text");
-		$depto 					= "1234";
 		$periodo 				= periodoActual();
 		$conexion 				= conectaBDSICLAB();
 		$consulta  				= sprintf("insert into lbdevoluciones values(%s,%s,%s,%s,%s,%s)",
@@ -1215,11 +1141,6 @@ function guardaDevolucion()
 		$res 	 				=  mysql_query($consulta);
 			if(mysql_affected_rows()>0)
 				$respuesta = true; 
-	}
-	else
-	{
-		//salirG();
-	}
 	$arrayJSON = array('respuesta' => $respuesta);
 		print json_encode($arrayJSON);
 }
@@ -1227,8 +1148,6 @@ function aplicaSancion()
 {
 	$respuesta 	= false;
 	session_start();
-	if(!empty($_SESSION['nombre']))
-	{ 
 		$responsable 	= $_SESSION['nombre'];
 		$idArt 			= GetSQLValueString($_POST["identificador"],"text");
 		$clavePrestamo 	= GetSQLValueString($_POST["clavePrestamo"],"int");
@@ -1256,7 +1175,6 @@ function aplicaSancion()
 				$nombreSancion[] 	=$comboSanciones[$i]["nombreSancion"];
 			}
 		}
-	}
 	$arrayJSON = array('respuesta' => $respuesta,
 						'claveSancion' => $claveSancion, 
 						'nombreSancion' => $nombreSancion, 
@@ -1268,17 +1186,15 @@ function guardaSancion()
 {
 	$respuesta 	= false;
 	session_start();
-	if(!empty($_SESSION['nombre']))
-	{
 		$responsable 	= $_SESSION['nombre'];
-		$periodo 		= "2161";
+		$periodo 		= periodoActual();
 		$idArt 			= GetSQLValueString($_POST["idu"],"text");
 		$clavePrestamo 	= GetSQLValueString($_POST["clavePrestamo"],"int");
 		$numControl 	= GetSQLValueString($_POST["nc"],"text");
 		$claveSancion 	= GetSQLValueString($_POST["claveSancion"],"int");
 		$fecha 			= GetSQLValueString($_POST["fecha"],"text");
 		$comentario 	= GetSQLValueString($_POST["comentario"],"text");
-		$cveLab 		= obtieneCveLab($responsable);
+		$cveLab 		= GetSQLValueString(obtieneCveLab($responsable),"text");
 		$conexion 		= conectaBDSICLAB();
 		$consulta  		= sprintf("insert into lbasignasanciones values(%s,%d,%d,%s,%s,%s,%s,%s,%s,%s)",
 							$periodo,'""',$claveSancion,$numControl,$fecha,'"dd/mm/aaaa"',$comentario,$idArt,$cveLab,'"P"');
@@ -1287,24 +1203,13 @@ function guardaSancion()
 			{
 				$respuesta = true;
 			}	
-	}
-	else
-	{
-		//salirG();
-	}
 	$arrayJSON = array('respuesta' => $respuesta);
 		print json_encode($arrayJSON);
-}
-function actualizaPendiente()
-{
-
 }
 function listaAlumnosSancionados()
 {
 	$respuesta 	= false;
 	session_start();
-	if(!empty($_SESSION['nombre']))
-	{ 
 		$responsable= $_SESSION['nombre'];
 		$prestamo	= "";
 		$con 		= 0;
@@ -1350,11 +1255,6 @@ function listaAlumnosSancionados()
 			$renglones .= "</tbody>";
 			$respuesta = true;
 		}
-	}
-	else
-	{
-		//salirG();
-	}
 	$salidaJSON = array('respuesta' => $respuesta, 'renglones' => $renglones);
 	print json_encode($salidaJSON);
 }
@@ -1362,14 +1262,9 @@ function quitaSanciones()
 {
 	$respuesta 	= false;
 	session_start();
-	if(!empty($_SESSION['nombre']))
-	{ 
+
 		$respuesta = true;
-	}
-	else
-	{
-		//salirG();
-	}
+	
 	$arrayJSON = array('respuesta' => $respuesta);
 		print json_encode($arrayJSON);
 }
@@ -1377,8 +1272,6 @@ function guardaPeticionArticulos()
 {
 	$respuesta 		= false;
 	session_start();
-	if(!empty($_SESSION['nombre']))
-	{
 		$responsable	= $_SESSION['nombre'];
 		$nombreArticulo = GetSQLValueString($_POST["nombreArticulo"],"text");
 		$cantidad		= GetSQLValueString($_POST["cantidad"],"text");
@@ -1386,7 +1279,7 @@ function guardaPeticionArticulos()
 		$modelo 		= GetSQLValueString($_POST["modelo"],"text");
 		$motivo 		= GetSQLValueString($_POST["motivo"],"text");
 		$fecha 			= GetSQLValueString($_POST["fecha"],"text");
-		$cveLab 		= obtieneCveLab($responsable);
+		$cveLab 		= GetSQLValueString(obtieneCveLab($responsable),"text");
 		$depto 			= obtieneDepto($cveLab);
 		$firma 			= "0000";
 		$periodo 		= periodoActual();
@@ -1395,11 +1288,7 @@ function guardaPeticionArticulos()
 		$res 	 		=  mysql_query($consulta);
 			if(mysql_affected_rows()>0)
 				$respuesta = true; 
-	}
-	else
-	{
-		salirG();
-	}
+
 	$arrayJSON = array('respuesta' => $respuesta);
 		print json_encode($arrayJSON);
 }
@@ -1407,9 +1296,7 @@ function obtieneCveLab($clave)
 {
 	$cveResp 		= $clave;
 	$conexion		= conectaBDSICLAB();
-	$consulta 		= sprintf("select claveLaboratorio 
-								from lbresponsables 
-								where claveUsuario=%s",$cveResp);
+	$consulta 		= sprintf("select claveLaboratorio from lbresponsables where claveUsuario=%d",$cveResp);
 	$res 			= mysql_query($consulta);
 	if($row = mysql_fetch_array($res))
 	{
@@ -1422,7 +1309,7 @@ function obtieneCveLab($clave)
 }
 function obtieneDepto($claveLab)
 {
-	$cveLab 		= GetSQLValueString($claveLab,"text");
+	$cveLab 		= $claveLab;
 	$conexion		= conectaBDSICLAB();
 	$consulta 		= sprintf("select DEPCVE 
 								from lblaboratorios 
@@ -1442,10 +1329,8 @@ function listaArticulosAlta()
 {
 	$resp 	 		= false;
 	session_start();
-	if(!empty($_SESSION['nombre']))
-	{
 		$responsable 	= $_SESSION['nombre'];
-		$claveLab 		= obtieneCveLab($responsable);
+		$claveLab 		= GetSQLValueString(obtieneCveLab($responsable),"text");
 		$departamento 	= obtieneDepto($claveLab);
 		if ($departamento == 420) 
 		{
@@ -1483,7 +1368,6 @@ function listaArticulosAlta()
 				$claveMaterial[] 	=$comboMaterial[$i]["claveArticulo"];
 				$nombreMaterial[] 	=$comboMaterial[$i]["nombreArticulo"];
 			}
-	}
 	$arrayJSON = array('respuesta' => $resp,
 						'claveMaterial' => $claveMaterial,
 						'nombreMaterial' => $nombreMaterial, 
@@ -1494,8 +1378,6 @@ function comboArtPeticiones()
 {
 	$resp 	 		= false;
 	session_start();
-	if(!empty($_SESSION['nombre']))
-	{
 		$responsable= $_SESSION['nombre'];
 		$claveLab 	= GetSQLValueString(obtieneCveLab($responsable),"text");
 		$art 		= "";
@@ -1516,13 +1398,10 @@ function comboArtPeticiones()
 			}
 			for ($i=0; $i < $con ; $i++)
 			{ 
-				$art[] 	=$comboArt[$i]["claveArticulo"];
 				$articulos[] 	=$comboArt[$i]["nombreArticulo"];
 			}
 		}
-	}
-	$arrayJSON = array('respuesta' => $respuesta,
-						'cveArt' => $art, 
+	$arrayJSON = array('respuesta' => $respuesta, 
 						'nombreArt' => $articulos, 
 						'contador' => $con);
 	print json_encode($arrayJSON);
