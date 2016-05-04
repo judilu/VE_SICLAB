@@ -314,22 +314,6 @@ function consultaMaterialPractica()
 		print json_encode($arrayJSON);
 	}
 }
-/*function agregarArtAlumno()
-{
-	$cveArt 	= GetSQLValueString($_POST['artCve'],"text");
-	$num 	 	= GetSQLValueString($_POST['numArt'],"int");
-	$nomArt 	= $_POST['artNom'];
-	$respuesta	= true;
-	$renglones	= "";
-	$renglones .= "<tr id=".$cveArt.">";
-	$renglones .= "<td class='col s6'>".$nomArt."</td>";
-	$renglones .= "<td class='col s3'>".$num."</td>";
-	$renglones .= "<td class='col s3'><a name =".$cveArt."class='btn-floating btn-large waves-effect waves-light red darken-1' id='btnEliminarArtAlu'><i class='material-icons'>delete</i></a></td>";
-	$renglones .= "</tr>";
-	$arrayJSON = array('respuesta' => $respuesta,
-		'renglones' => $renglones);
-	print json_encode($arrayJSON);
-}*/
 function materialesDisponibles()
 {
 	$claveSol 		= GetSQLValueString($_POST['claveSol'],"int");
@@ -363,34 +347,6 @@ function materialesDisponibles()
 	print json_encode($arrayJSON);
 
 }
-/*function comboEleArtAlu()
-{
-	$laboratorio 		= GetSQLValueString($_POST["laboratorio"],"text");
-	$respuesta 		= false;
-	$comboEleArt 	= array();
-	$comboCveArt 	= "";
-	$comboNomArt 	= "";
-	$con 			= 0;
-	$conexion		= conectaBDSICLAB();
-	$consulta		= sprintf("select DISTINCT (c.nombreArticulo), c.claveArticulo from lbarticuloscat c inner join lbarticulos a on a.claveArticulo = c.claveArticulo inner join lbasignaarticulos aa on aa.indentificadorArticulo = a.identificadorArticulo where aa.claveLaboratorio =%s and a.estatus = 'V'",$laboratorio);
-	$res 			= mysql_query($consulta);
-	while($row = mysql_fetch_array($res))
-	{
-			$comboEleArt[]  = $row;
-			$respuesta = true;
-			$con++;
-	}
-	for ($i=0; $i < $con ; $i++)
-	{ 
-		$comboCveArt[] 	=$comboEleArt[$i]["claveArticulo"];
-		$comboNomArt[] 	=$comboEleArt[$i]["nombreArticulo"];
-	}
-	$arrayJSON = array('respuesta' => $respuesta,
-						'comboCveArt' => $comboCveArt, 
-						'comboNomArt' => $comboNomArt, 
-						'con' => $con);
-	print json_encode($arrayJSON);
-}*/
 function consultaClavePrestamo($clave,$numCtrl)
 {
 	$responsable	= "6";
@@ -667,9 +623,6 @@ switch ($opc){
 	case 'consultaMaterialPractica1':
 	consultaMaterialPractica();
 	break;
-	// case 'agregarArtAlu1':
-	// agregarArtAlumno();
-	// break;
 	case 'materialesDisponibles1':
 	materialesDisponibles();
 	break;

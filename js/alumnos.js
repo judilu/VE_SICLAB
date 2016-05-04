@@ -749,7 +749,6 @@ var inicio = function()
 		$("#txtSemestre").val(" ");
 		$("#txtNControl").removeAttr("disabled");
 		del();
-
 		//$("#alumno").show("slow");
 		//$("#accesoAlumno").show("slow");
 	}
@@ -761,37 +760,11 @@ var inicio = function()
     	nombreArticulos.push(artNom);
 		numeroArticulos.push(numArt);
     	articulosSolicitadosAlumnos.push(articuloCve); 	
-    	/*var parametros = "opc=construirTablaArt1"+
-    						"&articulosSolicitados="+articulosSolicitadosAlumnos+
-    						"&nombreArticulos="+nombreArticulos+
-    						"&numeroArticulos="+numeroArticulos+
-    						"&id="+Math.random();
-    	$.ajax({
-    		cache:false,
-    		type: "POST",
-    		dataType: "json",
-    		url:"../data/alumnos.php",
-    		data: parametros,
-    		success: function(response){
-    			if(response.respuesta == true)
-    			{		    	
-    				$("#txtNumArtMat").val("1");
-    				$("#bodyArtAlumno").append(response.renglones);
-					checkOtroArticulo();
-					//$("#bodyArtAlumno #btnEliminarArtAlu").on("click",eliminarArtAlumno);
-				}
-				else
-				{
-					$("#bodyArtAlumno").html("");
-					//sweetAlert("No se agregó el articulo", "", "error");
-				}
-			},
-			error: function(xhr, ajaxOptions,x){
-				console.log("Error de conexión articulo agregado");	
-			}
-		});*/
+    	//construir la tabla de nuevo con los articulos que estan guardados
 		construirTablaAlu();
 	}
+
+	//función para llenar el combo de materiales, omitiendo los que estan en la tabla
 	var checkOtroArticulo = function()
 	{
 		var claveSol = 1;//$("#cmbHorariosPractica").val();
@@ -862,21 +835,7 @@ var inicio = function()
 			$(".select-dropdown").attr("disabled","disabled");
 			$("#cmbMaterialesLab").attr("disabled","disabled");
 		}
-	}
-	var 
-	v/*ar buscaIndice = function(arreglo,elemento)
-	{
-		var ar= arreglo;
-		var e=elemento;
-		var c=elemento.length;
-		for (var i = 0; i < c; i++) 
-		{
-			if (ar[i]==e) 
-			{
-				return i;
-			}
-		}
-	}*/
+	}	
 	var eliminarArtAlumno = function()
 	{
     	var artEliminar = ($(this).attr('name'));
@@ -885,41 +844,10 @@ var inicio = function()
     	nombreArticulos = eliminar2(nombreArticulos,i);
     	articulosSolicitadosAlumnos = eliminar2(articulosSolicitadosAlumnos,i);
     	numeroArticulos = eliminar2(numeroArticulos,i);
-    	/*var parametros = "opc=construirTablaArt1"+
-				    	"&articulosSolicitados="+articulosSolicitadosAlumnos+
-				    	"&nombreArticulos="+nombreArticulos+
-				    	"&numeroArticulos="+numeroArticulos+
-				    	"&id="+Math.random();
-    	$.ajax({
-    		cache:false,
-    		type: "POST",
-    		dataType: "json",
-    		url:"../data/alumnos.php",
-    		data: parametros,
-    		success: function(response){
-    			if(response.respuesta == true)
-    			{
-    				$("#bodyArtAlumno").html("");
-    				$("#bodyArtAlumno").append(response.renglones);
-    				//formar de nuevo el combo
-    				checkOtroArticulo();
-    				$("#bodyArtAlumno #btnEliminarArtAlu").on("click",eliminarArtAlumno);			
-				}//termina if
-				else
-				{
-					$("#bodyArtAlumno").html("");
-					checkOtroArticulo();
-					//sweetAlert("No se eliminó el articulo", "", "error");
-				}
-			},
-			error: function(xhr, ajaxOptions,x)
-			{
-				console.log("Error de conexión articulo eliminar");	
-				console.log(xhr);
-			}
-		});*/
+    	//construir la tabla de nuevo con los articulos que estan guardados
 		construirTablaAlu();
 	}
+	//función para construir la tabla con los materiales
 	var construirTablaAlu = function()
 	{
 		var parametros = "opc=construirTablaArt1"+
@@ -956,6 +884,7 @@ var inicio = function()
 			}
 		});
 	}
+	//funcion para eliminar un elemento según su posición de un arreglo
 	var eliminar2 = function(arreglo,posicion)
 	{
 		var ar = arreglo;
