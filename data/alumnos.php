@@ -356,8 +356,10 @@ function materialesDisponibles()
 			$nombreArt[] 	=$comboArticulos[$i]["nombreArticulo"];
 		}
 	}
-	$arrayJSON = array('respuesta' => $resp,'claveArticulo' => $claveArt,'nombreArticulo' => $nombreArt, 
-		'contador' => $contador);
+	$arrayJSON = array('respuesta' => $resp,
+						'claveArticulo' => $claveArt,
+						'nombreArticulo' => $nombreArt, 
+				'contador' => $contador);
 	print json_encode($arrayJSON);
 
 }

@@ -609,7 +609,7 @@ var inicio = function()
 			success: function(response)
 			{
 				$("#cmbHorariosPractica").html(" ");
-				$("#cmbHorariosPractica").html("<option value='' disabled selected>Selecciona la hora</option>");
+				$("#cmbHorariosPractica").html("<option value='' disabled selected>Selecciona la hora de la práctica</option>");
 				if(response.respuesta)
 				{
    						$("#cmbHorariosPractica").append($("<option></option>").attr("value",response.clavePractica).text(response.horaPractica));
@@ -792,8 +792,9 @@ var inicio = function()
 	}
 	var checkOtroArticulo = function()
 	{
-		var claveSol = 5;//$("#cmbHorariosPractica").val();
-		console.log(claveSol);
+		var claveSol = 1;//$("#cmbHorariosPractica").val();
+		comboclaArt = "";
+    	comboArt 	= "";
 		if ($("#chbElegirOtroMaterial").is(':checked'))
 		{
 			$(".select-dropdown").removeAttr("disabled");
@@ -803,36 +804,53 @@ var inicio = function()
 			var parametros = "opc=materialesDisponibles1"+
 							"&claveSol="+claveSol+
     						"&id="+Math.random();
+    		var c = articulosSolicitadosAlumnos.length;
 			$.ajax({
 	    		cache:false,
 	    		type: "POST",
 	    		dataType: "json",
 	    		url:"../data/alumnos.php",
 	    		data: parametros,
-	    		success: function(response){
+	    		success: function(response)
+	    		{
 	    			if(response.respuesta == true)
 	    			{
 	    				$("#cmbMaterialesLab").html(" ");
 						$("#cmbMaterialesLab").html("<option value='' disabled selected>Selecciona el material</option>");
-							for (var i = 0; i < response.contador; i++) 
-							{
-								$("#cmbMaterialesLab").append($("<option></option>").attr("value",response.claveArticulo[i]).text(response.nombreArticulo[i]));
-							}
-							$("#cmbMaterialesLab").trigger('contentChanged');
-							$('select').material_select();
+						comboclaArt = response.claveArticulo;
+    					comboArt 	= response.nombreArticulo;
+     					console.log(comboArt[0]);
+    					//eliminar elementos repetidos
+						for (var r =0; r< c; r++) 
+						{
+							o = (articulosSolicitadosAlumnos[r]);
+							i = parseInt((comboclaArt).indexOf(o));
+							comboclaArt = (eliminar2(comboclaArt,i));
+							comboArt 	= (eliminar2(comboArt,i));				
+						}
+						console.log(comboArt);
+						console.log(comboArt[0]);
+						var con = comboclaArt.length;
+						$("#cmbMaterialesLab").html(" ");
+						$("#cmbMaterialesLab").html("<option value='' disabled selected>Selecciona el material</option>");
+						for (var i = 0; i < con; i++) 
+						{
+							$("#cmbMaterialesLab").append($("<option></option>").attr("value",comboclaArt[i]).text(comboArt[i]));
+						}
+						$("#cmbMaterialesLab").trigger('contentChanged');
+						$('select').material_select();
 					}
 					else
 					{
 						$("#cmbMaterialesLab").html(" ");
-						$("#cmbMaterialesLab").html(" ");
-					$("#cmbMaterialesLab").html("<option value='' disabled selected>Selecciona el material</option>");
+						$("#cmbMaterialesLab").html("<option value='' disabled selected>Selecciona el material</option>");
 						sweetAlert("No hay hay mas articulos en el laboratorio s", "", "error");
 					}
 				},
 				error: function(xhr, ajaxOptions,x)
 				{
 					console.log("Error de conexión");
-					console.log(xhr)	;
+					console.log(xhr);
 				}
 			});
 		}
