@@ -581,7 +581,7 @@ function listaMantenimiento()
 			$renglones .= "<tr>";
 			$renglones .= "<td>".$rows[$c]["identificadorArticulo"]."</td>";
 			$renglones .= "<td>".$rows[$c]["nombreArticulo"]."</td>";
-			$renglones .= "<td><a name = '".$rows[$c]["claveMovimiento"]."' class='btn-floating btn-large waves-effect  green darken-2' id='btnRegresaDelMtto'><i class='material-icons'>done</i></a></td>";
+			$renglones .= "<td><a name = '".$rows[$c]["identificadorArticulo"]."' class='btn-floating btn-large waves-effect  green darken-2' id='btnRegresaDelMtto'><i class='material-icons'>done</i></a></td>";
 			$renglones .= "</tbody>";
 			$respuesta = true;
 		}
@@ -1406,6 +1406,30 @@ function comboArtPeticiones()
 						'contador' => $con);
 	print json_encode($arrayJSON);
 }
+function regresaMantenimiento()
+{
+	$respuesta 	 		= false;
+	session_start();
+		$responsable 			= $_SESSION['nombre'];
+		$identificador 			= GetSQLValueString($_POST["iduArt"],"int");
+		$periodo				= periodoActual();
+		$estatus				= '"E"';
+		$claveMovimiento		= 0;
+		$claveLab				= GetSQLValueString(obtieneCveLab($responsable),"text");
+		$observaciones			= "Regresa de mantenimiento";
+		$fechaMovimiento		= GetSQLValueString($_POST["fecha"],"text");
+		$horaMovimiento			= GetSQLValueString($_POST["hora"],"text");
+		$conexion 	= conectaBDSICLAB();
+
+		$consulta 	= sprintf("insert into lbmovimientosarticulos values(%s,%s,%s,%s,%s,%s,%s,%d,%s)",
+						$periodo,$fechaMovimiento,$horaMovimiento,$responsable,$identificador,$observaciones,
+						$estatus,$claveMovimiento,$claveLab);
+		$res = mysql_query($consulta);
+		if(mysql_affected_rows()>0)
+			$respuesta = true;
+	$salidaJSON = array('respuesta' => $respuesta);
+	print json_encode($salidaJSON);
+}
 //Menú principal
 $opc = $_POST["opc"];
 switch ($opc){
@@ -1507,6 +1531,9 @@ switch ($opc){
 	break;
 	case 'comboArtPeticiones1':
 	comboArtPeticiones();
+	break;
+	case 'regresaMtto1':
+	regresaMantenimiento();
 	break;
 } 
 ?>

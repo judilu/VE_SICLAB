@@ -996,6 +996,7 @@
 				{
 					$("#tbArticulosMtto").html("");
 					$("#tbArticulosMtto").append(response.renglones);
+					$("#tbArticulosMtto #btnRegresaDelMtto").on("click",regresaMtto);
 				}
 				else
 				{
@@ -1009,6 +1010,50 @@
 		$("#listaArtMtto").show("slow");
 		$("#listaMtto").show("slow");
 		$("#menuMtto").show("slow");
+	}
+	//Regresa un articulo de mantenimiento
+	var regresaMtto = function()
+	{
+		var iduArt = $(this).attr('name');
+		$(this).closest('tr').remove();
+		//fecha del sistema
+		var f  = new Date();
+		var dd = f.getDate();
+		var mm = (f.getMonth())+1;
+		(dd<10) ? (dd="0"+dd) : dd;
+		(mm<10) ? (mm="0"+mm) : mm;
+		var fe  = (dd+"/"+mm+"/"+f.getFullYear());
+		//hora del sistema
+		var horaActual 				= new Date();
+		var hora 					=horaActual.getHours();
+		var minutos 				=horaActual.getMinutes();
+		(minutos<10) ? (minutos="0"+minutos) : minutos;
+		var hora					= hora + ":" + minutos;
+		var parametros= "opc=regresaMtto1"
+							+"&iduArt="+iduArt
+							+"&fecha="+fe
+							+"&hora="+hora
+							+"&id="+Math.random();
+			$.ajax({
+				cache:false,
+				type: "POST",
+				dataType: "json",
+				url:'../data/genericos.php',
+				data: parametros,
+				success: function(response){
+					if(response.respuesta == true)
+					{
+						swal("El artículo se regresó de mantenimiento con éxito!", "Da clic en el botón OK!", "success");
+					}
+					else
+					{
+						sweetAlert("Error", "No se pudo registrar el regreso de mantenimiento!", "error");
+					}
+				},
+				error: function(xhr, ajaxOptions,x){
+					sweetAlert("Error", "Error de conexión regreso de mantenimiento", "error");
+				}
+			});
 	}
 	//Busca el articulo que queremos enviar a mantenimiento
 	var buscarArticuloMtto = function() 
@@ -1070,9 +1115,6 @@
 							+"&observaciones="+observaciones
 							+"&horaMovimiento="+hora
 							+"&fechaMovimiento="+fe
-							+"&estatus="+estatus
-							+"&claveMovimiento="+claveMovimiento
-							+"&claveLab="+claveLab
 							+"&id="+Math.random();
 			$.ajax({
 				cache:false,
