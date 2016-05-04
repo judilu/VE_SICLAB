@@ -295,6 +295,7 @@ function comboMat ()
 	$nombreMat		= "";
 	$conexion		= conectaBDSIE();
 	$consulta		= sprintf("select m.MATCVE, m.MATNCO from DMATER m inner join DGRUPO g on m.MATCVE = g.MATCVE where g.PERCVE =%d and g.PDOCVE =%s and g.GRUBAS = ' ' and g.INSNUM > 0",$maestro,$periodo);
+	var_dump($consulta);
 	$res 			= mysql_query($consulta);
 	if($res)
 	{
