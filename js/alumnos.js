@@ -294,7 +294,7 @@ var inicio = function()
 		if(($("#txtNControl").val())!=" " && ($("#txtNombre").val())!=" ") 
 		{
 			if ($("#rdoAlumno").is(':checked'))
-			{
+			{							
 				$("#accesoAlumno").hide();
 				$("#datosPracticas").show("slow");
 				var numeroControl = $("#txtNControl").val();
@@ -448,6 +448,7 @@ var inicio = function()
 	}
 	var materialPractica = function()
 	{
+		$("#bodyArtAlumno").html("");
 		articulosSolicitadosAlumnos = new Array();
 		nombreArticulos = new Array();
 		numeroArticulos = new Array();
@@ -760,7 +761,7 @@ var inicio = function()
     	nombreArticulos.push(artNom);
 		numeroArticulos.push(numArt);
     	articulosSolicitadosAlumnos.push(articuloCve); 	
-    	var parametros = "opc=construirTablaArt1"+
+    	/*var parametros = "opc=construirTablaArt1"+
     						"&articulosSolicitados="+articulosSolicitadosAlumnos+
     						"&nombreArticulos="+nombreArticulos+
     						"&numeroArticulos="+numeroArticulos+
@@ -777,7 +778,7 @@ var inicio = function()
     				$("#txtNumArtMat").val("1");
     				$("#bodyArtAlumno").append(response.renglones);
 					checkOtroArticulo();
-					$("#bodyArtAlumno #btnEliminarArtAlu").on("click",eliminarArtAlumno);
+					//$("#bodyArtAlumno #btnEliminarArtAlu").on("click",eliminarArtAlumno);
 				}
 				else
 				{
@@ -788,7 +789,8 @@ var inicio = function()
 			error: function(xhr, ajaxOptions,x){
 				console.log("Error de conexión articulo agregado");	
 			}
-		});
+		});*/
+		construirTablaAlu();
 	}
 	var checkOtroArticulo = function()
 	{
@@ -819,7 +821,6 @@ var inicio = function()
 						$("#cmbMaterialesLab").html("<option value='' disabled selected>Selecciona el material</option>");
 						comboclaArt = response.claveArticulo;
     					comboArt 	= response.nombreArticulo;
-     					console.log(comboArt[0]);
     					//eliminar elementos repetidos
 						for (var r =0; r< c; r++) 
 						{
@@ -862,7 +863,8 @@ var inicio = function()
 			$("#cmbMaterialesLab").attr("disabled","disabled");
 		}
 	}
-	var buscaIndice = function(arreglo,elemento)
+	var 
+	v/*ar buscaIndice = function(arreglo,elemento)
 	{
 		var ar= arreglo;
 		var e=elemento;
@@ -874,17 +876,16 @@ var inicio = function()
 				return i;
 			}
 		}
-	}
+	}*/
 	var eliminarArtAlumno = function()
 	{
-		console.log(articulosSolicitadosAlumnos);
-		console.log(nombreArticulos);
     	var artEliminar = ($(this).attr('name'));
-    	var i = buscaIndice(articulosSolicitadosAlumnos,artEliminar);
+    	console.log("eliminar "+artEliminar);
+    	var i = articulosSolicitadosAlumnos.indexOf(artEliminar);
     	nombreArticulos = eliminar2(nombreArticulos,i);
     	articulosSolicitadosAlumnos = eliminar2(articulosSolicitadosAlumnos,i);
     	numeroArticulos = eliminar2(numeroArticulos,i);
-    	var parametros = "opc=construirTablaArt1"+
+    	/*var parametros = "opc=construirTablaArt1"+
 				    	"&articulosSolicitados="+articulosSolicitadosAlumnos+
 				    	"&nombreArticulos="+nombreArticulos+
 				    	"&numeroArticulos="+numeroArticulos+
@@ -900,19 +901,57 @@ var inicio = function()
     			{
     				$("#bodyArtAlumno").html("");
     				$("#bodyArtAlumno").append(response.renglones);
-    				$("#bodyArtAlumno #btnEliminarArtAlu").on("click",eliminarArtAlumno);
-					//formar de nuevo el combo
-					checkOtroArticulo();
+    				//formar de nuevo el combo
+    				checkOtroArticulo();
+    				$("#bodyArtAlumno #btnEliminarArtAlu").on("click",eliminarArtAlumno);			
 				}//termina if
 				else
 				{
 					$("#bodyArtAlumno").html("");
+					checkOtroArticulo();
 					//sweetAlert("No se eliminó el articulo", "", "error");
 				}
 			},
 			error: function(xhr, ajaxOptions,x)
 			{
 				console.log("Error de conexión articulo eliminar");	
+				console.log(xhr);
+			}
+		});*/
+		construirTablaAlu();
+	}
+	var construirTablaAlu = function()
+	{
+		var parametros = "opc=construirTablaArt1"+
+				    	"&articulosSolicitados="+articulosSolicitadosAlumnos+
+				    	"&nombreArticulos="+nombreArticulos+
+				    	"&numeroArticulos="+numeroArticulos+
+				    	"&id="+Math.random();
+    	$.ajax({
+    		cache:false,
+    		type: "POST",
+    		dataType: "json",
+    		url:"../data/alumnos.php",
+    		data: parametros,
+    		success: function(response){
+    			if(response.respuesta == true)
+    			{
+    				$("#bodyArtAlumno").html("");
+    				$("#bodyArtAlumno").append(response.renglones);
+    				//formar de nuevo el combo
+    				checkOtroArticulo();
+    				$("#bodyArtAlumno #btnEliminarArtAlu").on("click",eliminarArtAlumno);			
+				}//termina if
+				else
+				{
+					$("#bodyArtAlumno").html("");
+					checkOtroArticulo();
+					//sweetAlert("No se eliminó el articulo", "", "error");
+				}
+			},
+			error: function(xhr, ajaxOptions,x)
+			{
+				console.log("Error de conexión articulo eliminar Alu");	
 				console.log(xhr);
 			}
 		});
@@ -1022,9 +1061,13 @@ var inicio = function()
  	var inicioRegistro = function ()
  	{
  		//limpiar variables
- 		articulosSolicitadosAlumnos = Array("");
+ 		$("#bodyArtAlumno").html("");
+		articulosSolicitadosAlumnos = Array();
+		nombreArticulos				= Array();
+		numeroArticulos 			= Array();
+ 		/*articulosSolicitadosAlumnos = Array("");
  		nombreArticulos = Array("");
- 		numeroArticulos = Array("");
+ 		numeroArticulos = Array("");*/
  		$("#materialExterno").hide();
  		$("#datosPracticas").hide();
  		$("#materialAlumno").hide();

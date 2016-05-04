@@ -447,7 +447,7 @@ function construirTablaArt()
 		if ($cveArt[$i]!= "") 
 		{
 			$respuesta	= true;
-			$renglones .= "";
+			$renglones .= "<tr>";
 			$renglones .= "<td class='col s6'>".$nomArt[$i]."</td>";
 			$renglones .= "<td class='col s3'>".$numArt[$i]."</td>";
 			$renglones .= "<td class='col s3'><a name ='".$cveArt[$i]."' class='btn-floating btn-large waves-effect waves-light red darken-1' id='btnEliminarArtAlu'><i class='material-icons'>delete</i></a></td>";
