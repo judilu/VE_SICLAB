@@ -427,15 +427,21 @@ var inicio = function()
 			{
 				if(response.respuesta)
 				{
+					articulosSolicitadosAlumnos = (response.materiales).split(",");
+					numeroArticulos = (response.cantidad).split(",");
+					nombreArticulos = (response.nombre).split(",");
 					$("#bodyArtExterno").append(response.renglones);
-					for (var i = 0; i < response.contador; i++) {
+					$("#bodyArtAlumno #btnEliminarArtExt").on("click",eliminarArtExterno);
+					/*for (var i = 0; i < response.contador; i++) 
+					{
 						articulosSolicitadosAlumnos.push(response.materiales[i]);
 						numeroArticulos.push(response.cantidad[i]);
 						nombreArticulos.push(response.nombre[i]);
-					}
+					}*/
 				}
 				else
 				{
+					$("#bodyArtExterno").html("");
 					sweetAlert("No hay material asignado para la práctica", "", "error");
 				}
 			},
@@ -452,9 +458,6 @@ var inicio = function()
 		articulosSolicitadosAlumnos = new Array();
 		nombreArticulos = new Array();
 		numeroArticulos = new Array();
-		articulosSolicitadosAlumnos1 = new Array();
-		nombreArticulos1 = new Array();
-		numeroArticulos1 = new Array();
 		$("#datosPractica2").hide();
 		$("#materialAlumno").show("slow");
 		$("#txtNumeroControlPrestamo").val($("#txtNControlAlu").val());
@@ -839,6 +842,17 @@ var inicio = function()
 	var eliminarArtAlumno = function()
 	{
     	var artEliminar = ($(this).attr('name'));
+    	console.log("eliminar "+artEliminar);
+    	var i = articulosSolicitadosAlumnos.indexOf(artEliminar);
+    	nombreArticulos = eliminar2(nombreArticulos,i);
+    	articulosSolicitadosAlumnos = eliminar2(articulosSolicitadosAlumnos,i);
+    	numeroArticulos = eliminar2(numeroArticulos,i);
+    	//construir la tabla de nuevo con los articulos que estan guardados
+		construirTablaAlu();
+	}
+	var eliminarArtExterno = function()
+	{
+		var artEliminar = ($(this).attr('name'));
     	console.log("eliminar "+artEliminar);
     	var i = articulosSolicitadosAlumnos.indexOf(artEliminar);
     	nombreArticulos = eliminar2(nombreArticulos,i);

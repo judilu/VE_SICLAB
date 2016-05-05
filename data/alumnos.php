@@ -493,7 +493,7 @@ function consultaMaterialExterno()
 				$renglones .= "<tr>";
 				$renglones .= "<td class='col s6'>".$rows[$c]["nombreArticulo"]."</td>";
 				$renglones .= "<td class='col s3'>".$rows[$c]["cantidad"]."</td>";
-				$renglones .= "<td class='col s3'><a name = '".$rows[$c]["claveArticulo"]."' class='btn-floating btn-large waves-effect red darken-1' id='btnEliminarArtAlu'><i class='material-icons'>delete</i></a></td>";
+				$renglones .= "<td class='col s3'><a name = '".$rows[$c]["claveArticulo"]."' class='btn-floating btn-large waves-effect red darken-1' id='btnEliminarArtExt'><i class='material-icons'>delete</i></a></td>";
 				$renglones .= "</tr>";
 				$respuesta = true;
 			}
