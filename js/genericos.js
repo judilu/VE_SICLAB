@@ -4,8 +4,29 @@
 	$('select').material_select(); //agregado
 	$('.collapsible').collapsible({
       accordion : false}); // A setting that changes the collapsible behavior to expandable instead of the default accordion style
-
+	var tipoUsu = -1;
 	var articulosPrestados = new Array();
+    var tipoUsuario = function()
+    {
+    	var parametros = "opc=tipoUsuario1"+"&id="+Math.random();
+			$.ajax({
+				cache:false,
+				type: "POST",
+				dataType: "json",
+				url:"../data/genericos.php",
+				data: parametros,
+				success: function(response){
+					if(response.respuesta == true)
+					{
+						tipoUsu = response.tipoUsuario; 
+					}
+				},
+			error: function(xhr, ajaxOptions,x){
+				alert("Error de conexión");
+			}
+		});
+    }
+
     //Salir del sistema
     var salir = function()
 	{
@@ -195,6 +216,8 @@
 	}
 	var eliminaPrestamoPendiente = function()
 	{
+		if (tipoUsu == 1 || tipoUsu == 2 )
+		{
 		var clavePrestamo 	= $("#btnEliminarPrestamo").attr('name');
 		$(this).closest("tr").remove();
 		var parametros 		= "opc=eliminaPrestamoPendiente1"
@@ -220,6 +243,12 @@
 					sweetAlert("Error", "Error de conexión elimina prestamo pendiente", "error");
 				}
 			});
+		}
+		else
+		{
+			$("#btnEliminarPrestamo").attr("disabled","disabled");
+			sweetAlert("Error", "No tienes permisos para eliminar el préstamo", "error");
+		}
 	}
 	var prestamosProceso = function()
 	{
@@ -287,31 +316,39 @@
 	}
 	var quitaSancion = function ()
 	{
-		$(this).closest("tr").remove();
-		var claveSancion = $(this).attr('name');
-		var parametros 	= "opc=quitaSanciones1"+
-							"&claveSancion="+claveSancion+
-							"&id="+Math.random();
-		$.ajax({
-			cache:false,
-			type: "POST",
-			dataType: "json",
-			url:"../data/genericos.php",
-			data: parametros,
-			success: function(response){
-				if(response.respuesta == true)
-				{
-					swal("Sanción eliminada con éxito!", "Da clic en el botón OK!", "success");
+		if (tipoUsu == 1 || tipoUsu == 2 )
+		{
+			$(this).closest("tr").remove();
+			var claveSancion = $(this).attr('name');
+			var parametros 	= "opc=quitaSanciones1"+
+								"&claveSancion="+claveSancion+
+								"&id="+Math.random();
+			$.ajax({
+				cache:false,
+				type: "POST",
+				dataType: "json",
+				url:"../data/genericos.php",
+				data: parametros,
+				success: function(response){
+					if(response.respuesta == true)
+					{
+						swal("Sanción eliminada con éxito!", "Da clic en el botón OK!", "success");
+					}
+					else
+					{
+						sweetAlert("La sanción no se pudo eliminar!", " ", "error");
+					}
+				},
+				error: function(xhr, ajaxOptions,x){
+					alert("Error de conexión quitar sanción");
 				}
-				else
-				{
-					sweetAlert("La sanción no se pudo eliminar!", " ", "error");
-				}
-			},
-			error: function(xhr, ajaxOptions,x){
-				alert("Error de conexión quitar sanción");
-			}
-		});
+			});
+		}
+		else
+		{
+			$("#btnQuitaSancion").attr("disabled","disabled");
+			sweetAlert("Error", "No tienes permisos para esta acción", "error");
+		}
 	}
 	var aplicaSancion = function()
 	{	
@@ -494,38 +531,44 @@
 	//funcion para aceptar una solicitud, introduciendo datos faltantes para agendarla
 	var aceptarSolicitudLab = function()
 	{
-		$("#verPrincipal").hide("slow");
-		$("#solicitudesPendientesLab2").hide("slow");
-		$("#aceptarSolLab").show("slow");
-		$("#guardarSolicitud").show("slow");
-		$("#verMasSolicitud").show("slow");
-		var claveSol= $(this).attr('name');
-		var parametros 	= "opc=obtenerDatosSolLab1"+
-							"&clave="+claveSol+
-							"&id="+Math.random();
-		$.ajax({
-			cache:false,
-			type: "POST",
-			dataType: "json",
-			url:"../data/genericos.php",
-			data: parametros,
-			success: function(response){
-				if(response.respuesta == true)
-				{
-					$("#txtFechaAsignada").val(response.fecha);
-					$("#txtHoraAsignada").val(response.hora);
-					$("#txtClaveSol").val(claveSol);
+		if (tipoUsu == 1 || tipoUsu == 2 )
+		{
+			$("#verPrincipal").hide("slow");
+			$("#solicitudesPendientesLab2").hide("slow");
+			$("#aceptarSolLab").show("slow");
+			$("#guardarSolicitud").show("slow");
+			$("#verMasSolicitud").show("slow");
+			var claveSol= $(this).attr('name');
+			var parametros 	= "opc=obtenerDatosSolLab1"+
+								"&clave="+claveSol+
+								"&id="+Math.random();
+			$.ajax({
+				cache:false,
+				type: "POST",
+				dataType: "json",
+				url:"../data/genericos.php",
+				data: parametros,
+				success: function(response){
+					if(response.respuesta == true)
+					{
+						$("#txtFechaAsignada").val(response.fecha);
+						$("#txtHoraAsignada").val(response.hora);
+						$("#txtClaveSol").val(claveSol);
+					}
+					else
+					{
+						sweetAlert("Lasolicitud no existe!", " ", "error");
+					}
+				},
+				error: function(xhr, ajaxOptions,x){
+					alert("Error de conexión aceptar solicitud de laboratorio");
 				}
-				else
-				{
-					sweetAlert("Lasolicitud no existe!", " ", "error");
-				}
-			},
-			error: function(xhr, ajaxOptions,x){
-				alert("Error de conexión aceptar solicitud de laboratorio");
-			}
-		});
-
+			});
+		}
+		else
+		{
+			sweetAlert("Error", "No tienes permisos para esta acción", "error");
+		}
 
 	}
 	//funcion para guardar una solicitud de laboratorio
@@ -593,35 +636,43 @@
 	}
 	var sLaboratorioPendientes = function()
 	{
-		$("#sAceptadasLab").hide("slow");
-		$("#verMasSolicitud").hide("slow");
-		$("#aceptarSolLab").hide("slow");
-		$("#guardarSolicitud").hide("slow");
-		$("#tbPendientesLab").html("");
-		var parametros 	= "opc=pendientesLab1"+"&id="+Math.random();
-		$.ajax({
-			cache:false,
-			type: "POST",
-			dataType: "json",
-			url:"../data/genericos.php",
-			data: parametros,
-			success: function(response){
-				if(response.respuesta == true)
-				{
-					$("#tbPendientesLab").append(response.renglones);
-					$("#tbPendientesLab #btnCalendarizado").on("click",aceptarSolicitudLab);
-					$("#tbPendientesLab #btnVerMas").on("click",verMas);
-					$("#tbPendientesLab #btnEliminarSolLab").on("click",eliminarSolLab);
+		if(tipoUsu ==1 || tipoUsu == 2)
+		{
+			$("#sAceptadasLab").hide("slow");
+			$("#verMasSolicitud").hide("slow");
+			$("#aceptarSolLab").hide("slow");
+			$("#guardarSolicitud").hide("slow");
+			$("#tbPendientesLab").html("");
+			var parametros 	= "opc=pendientesLab1"+"&id="+Math.random();
+			$.ajax({
+				cache:false,
+				type: "POST",
+				dataType: "json",
+				url:"../data/genericos.php",
+				data: parametros,
+				success: function(response){
+					if(response.respuesta == true)
+					{
+						$("#tbPendientesLab").append(response.renglones);
+						$("#tbPendientesLab #btnCalendarizado").on("click",aceptarSolicitudLab);
+						$("#tbPendientesLab #btnVerMas").on("click",verMas);
+						$("#tbPendientesLab #btnEliminarSolLab").on("click",eliminarSolLab);
+					}
+					else
+						sweetAlert("No hay solicitudes de laboratorio pendientes!", " ", "error");
+				},
+				error: function(xhr, ajaxOptions,x){
+					alert("Error de conexión solicitudes pendientes de laboratorio");
 				}
-				else
-					sweetAlert("No hay solicitudes de laboratorio pendientes!", " ", "error");
-			},
-			error: function(xhr, ajaxOptions,x){
-				alert("Error de conexión solicitudes pendientes de laboratorio");
-			}
-		});
-		$("#sPendientesLab").show("slow");
-		$("#solicitudesPendientesLab2").show("slow");
+			});
+			$("#sPendientesLab").show("slow");
+			$("#solicitudesPendientesLab2").show("slow");
+		}
+		else
+		{
+			$("#btnPendientesLab").attr("disabled","disabled");
+			sLaboratorioAceptadas();
+		}
 	}
 	var sLaboratorioAceptadas = function()
 	{

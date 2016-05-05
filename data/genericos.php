@@ -1,6 +1,25 @@
 <?php
 require_once('../data/conexion.php');
 require_once('../data/funciones.php');
+function tipoUsuarioSesion()
+{
+	$respuesta = false;
+	session_start();
+	$responsable= $_SESSION['nombre'];
+	$tipoUsuario = "";
+	$conexion 	= conectaBDSICLAB();
+	$consulta	= sprintf("select tipoUsuario from lbusuarios where claveUsuario=%d",$responsable);
+	$res 		= mysql_query($consulta);
+	while($row = mysql_fetch_array($res))
+	{
+		$respuesta = true;
+		$tipoUsuario	= $row["tipoUsuario"];
+	}
+	$arrayJSON = array('respuesta' => $respuesta, 
+						'tipoUsuario' => $tipoUsuario);
+		print json_encode($arrayJSON);
+
+}
 function usuario ()
 {
 	$usuario = GetSQLValueString($_POST['clave1'],"int");
@@ -1534,6 +1553,9 @@ switch ($opc){
 	break;
 	case 'regresaMtto1':
 	regresaMantenimiento();
+	break;
+	case 'tipoUsuario1':
+	tipoUsuarioSesion();
 	break;
 } 
 ?>
