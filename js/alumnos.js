@@ -365,8 +365,11 @@ var inicio = function()
 						{
 		       				$("#cmbMateriasAlumnos").html(" ");
 		       				$("#cmbMaestrosMat").html(" ");
+		       				$("#cmbMaestrosMat").html("<option value='' disabled selected>Selecciona el maestro</option>");
 		       				$("#cmbHorariosPractica").html(" ");
+		       				$("#cmbHorariosPractica").html("<option value='' disabled selected>Selecciona la hora de la práctica</option>");
 		       				$("#cmbNombrePracticas").html(" ");
+		       				$("#cmbNombrePracticas").html("<option value='' disabled selected>Selecciona la práctica</option>");
 		       				$("#cmbMateriasAlumnos").html("<option value='' disabled selected>Selecciona la materia</option>");
 							for (var i = 0; i < response.contador; i++) 
 							{
@@ -964,10 +967,10 @@ var inicio = function()
 		}
 		else
 		{
-			$("#btnAgregarArtAlu").hide();
-			$("#txtNumArtMat").attr("disabled","disabled");
+			$("#btnAgregarArtDep").hide();
+			$("#txtNumArtMatDep").attr("disabled","disabled");
 			$(".select-dropdown").attr("disabled","disabled");
-			$("#cmbMaterialesLab").attr("disabled","disabled");
+			$("#btnAgregarArtDep").attr("disabled","disabled");
 		}
 	}		
 	var eliminarArtAlumno = function()

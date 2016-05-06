@@ -20,7 +20,7 @@ function solicitudesAceptadas ()
 		$rows		= array();
 		$renglones	= "";
 		$conexion 	= conectaBDSICLAB();
-		$consulta	= sprintf("select c.claveCalendarizacion, s.MATCVE, p.tituloPractica, l.nombreLaboratorio, c.fechaAsignada, c.horaAsignada from lbcalendarizaciones c INNER JOIN lbsolicitudlaboratorios s ON s.claveSolicitud = c.claveSolicitud INNER JOIN lblaboratorios l ON l.claveLaboratorio = s.claveLaboratorio INNER JOIN lbpracticas p on p.clavePractica = s.clavePractica WHERE c.PDOCVE =%s AND s.claveUsuario =%d AND c.estatus = 'NR'",$periodo,$maestro);
+		$consulta	= sprintf("select c.claveCalendarizacion, s.MATCVE, p.tituloPractica, l.nombreLaboratorio, c.fechaAsignada, c.horaAsignada from lbcalendarizaciones c INNER JOIN lbsolicitudlaboratorios s ON s.claveSolicitud = c.claveSolicitud INNER JOIN lblaboratorios l ON l.claveLaboratorio = s.claveLaboratorio INNER JOIN lbpracticas p on p.clavePractica = s.clavePractica WHERE c.PDOCVE =%s AND s.claveUsuario =%d AND c.estatus = 'NR' order by c.fechaAsignada, c.horaAsignada",$periodo,$maestro);
 		$res 		= mysql_query($consulta);
 		$renglones	.= "<thead>";
 		$renglones	.= "<tr>";
@@ -95,7 +95,7 @@ function solicitudesPendientes ()
 		$rows 		= array();
 		$renglones	= "";
 		$conexion 	= conectaBDSICLAB();
-		$consulta	= sprintf("select s. claveSolicitud, MATCVE, p.tituloPractica, l.nombreLaboratorio, s.fechaSolicitud, s.horaSolicitud from lbsolicitudlaboratorios s inner join lbpracticas p on s.clavePractica = p.clavePractica inner join lblaboratorios l on s.claveLaboratorio = l.claveLaboratorio left join lbcalendarizaciones c ON c.claveSolicitud = s.claveSolicitud where s.PDOCVE =%s and s.claveUsuario =%s and s.estatus = 'V' and c.claveSolicitud is NULL",$periodo,$maestro);
+		$consulta	= sprintf("select s. claveSolicitud, MATCVE, p.tituloPractica, l.nombreLaboratorio, s.fechaSolicitud, s.horaSolicitud from lbsolicitudlaboratorios s inner join lbpracticas p on s.clavePractica = p.clavePractica inner join lblaboratorios l on s.claveLaboratorio = l.claveLaboratorio left join lbcalendarizaciones c ON c.claveSolicitud = s.claveSolicitud where s.PDOCVE =%s and s.claveUsuario =%s and s.estatus = 'V' and c.claveSolicitud is NULL ORDER BY s.fechaEnvio",$periodo,$maestro);
 		$res 		= mysql_query($consulta);
 		$renglones	.= "<thead>";
 		$renglones	.= "<tr>";
@@ -157,7 +157,7 @@ function solicitudesRealizadas ()
 		$rows		= array();
 		$renglones	= "";
 		$conexion 	= conectaBDSICLAB();
-		$consulta	= sprintf("select c.claveCalendarizacion, s.MATCVE, p.tituloPractica, l.nombreLaboratorio, c.fechaAsignada, c.horaAsignada from lbcalendarizaciones c INNER JOIN lbsolicitudlaboratorios s ON s.claveSolicitud = c.claveSolicitud INNER JOIN lblaboratorios l ON l.claveLaboratorio = s.claveLaboratorio INNER JOIN lbpracticas p on p.clavePractica = s.clavePractica WHERE c.PDOCVE = '2161' AND s.claveUsuario =%d AND c.estatus = 'R'",$maestro);
+		$consulta	= sprintf("select c.claveCalendarizacion, s.MATCVE, p.tituloPractica, l.nombreLaboratorio, c.fechaAsignada, c.horaAsignada from lbcalendarizaciones c INNER JOIN lbsolicitudlaboratorios s ON s.claveSolicitud = c.claveSolicitud INNER JOIN lblaboratorios l ON l.claveLaboratorio = s.claveLaboratorio INNER JOIN lbpracticas p on p.clavePractica = s.clavePractica WHERE c.PDOCVE = '2161' AND s.claveUsuario =%d AND c.estatus = 'R' ORDER BY c.fechaAsignada, c.horaAsignada",$maestro);
 		$res 		= mysql_query($consulta);
 		$renglones	.= "<thead>";
 		$renglones	.= "<tr>";
@@ -217,9 +217,6 @@ function mostrarSolicitud($clave,$solicitud)
 	{
 		return " ";
 	}
-	/*$arrayJSON = array('respuesta' => $respuesta,
-		'rows' => $rows);
-	print json_encode($arrayJSON);*/
 }
 function materiales($clave)
 {
@@ -230,7 +227,7 @@ function materiales($clave)
 	$cantidad 	= array();
 	$salida 	= array();
 	$conexion 	= conectaBDSICLAB();
-	$consulta	= sprintf("select a.claveArticulo, a.nombreArticulo, p.cantidad from lbasignaarticulospracticas p INNER JOIN lbarticuloscat a on p.claveArticulo = a.claveArticulo where claveSolicitud =%d and estatus = 'V'",$claveSol);
+	$consulta	= sprintf("select a.claveArticulo, a.nombreArticulo, p.cantidad from lbasignaarticulospracticas p INNER JOIN lbarticuloscat a on p.claveArticulo = a.claveArticulo where claveSolicitud =%d and estatus = 'V' ORDER BY a.nombreArticulo",$claveSol);
 	$res 		= mysql_query($consulta);
 	$con 		= 0;
 	while($row = mysql_fetch_array($res))

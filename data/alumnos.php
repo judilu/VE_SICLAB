@@ -123,7 +123,7 @@ function consultaMateriasAlumno()
 	$consulta 		= sprintf("select l.MATCVE,m.MATNCO 
 		FROM DLISTA l 
 		inner join DMATER m on l.MATCVE=m.MATCVE 
-		WHERE l.PDOCVE=%s AND l.ALUCTR=%s",$periodo,$numControl);
+		WHERE l.PDOCVE=%s AND l.ALUCTR=%s order by m.MATNCO",$periodo,$numControl);
 	$res 			= mysql_query($consulta);
 	if($res)
 	{
@@ -157,7 +157,7 @@ function consultaMaestroPractica()
 		from DGRUPO G 
 		INNER JOIN DMATER M ON G.MATCVE=M.MATCVE 
 		INNER JOIN DPERSO P ON G.PERCVE=P.PERCVE
-		WHERE G.PDOCVE=%s AND G.MATCVE=%s GROUP BY G.PERCVE",$periodo,$claveMateria);	
+		WHERE G.PDOCVE=%s AND G.MATCVE=%s GROUP BY G.PERCVE order by P.PERNOM",$periodo,$claveMateria);	
 	$res 			= mysql_query($consulta);
 	if($res)
 	{
@@ -190,7 +190,7 @@ function consultaPractica()
 		from lbpracticas p  
 		INNER JOIN lbsolicitudlaboratorios sl on p.clavePractica=sl.clavePractica 
 		INNER JOIN lbcalendarizaciones c on sl.claveSolicitud=c.claveSolicitud 
-		WHERE sl.PDOCVE =%s and c.claveCalendarizacion =%s",$periodo,$claveCal);
+		WHERE sl.PDOCVE =%s and c.claveCalendarizacion =%s ORDER BY p.tituloPractica",$periodo,$claveCal);
 	$res 			= mysql_query($consulta);
 	while($row = mysql_fetch_array($res))
 	{
@@ -290,7 +290,7 @@ function consultaMaterialPractica()
 		$consulta		= sprintf("select ap.claveArticulo,ac.nombreArticulo,ap.cantidad 
 			from lbasignaarticulospracticas ap 
 			INNER JOIN lbarticuloscat ac on ap.claveArticulo=ac.claveArticulo 
-			WHERE ap.estatus = 'V' and ap.claveSolicitud=%s",$claveSol);
+			WHERE ap.estatus = 'V' and ap.claveSolicitud=%s ORDER BY ac.nombreArticulo",$claveSol);
 		$res 			= mysql_query($consulta);
 		while($row = mysql_fetch_array($res))
 		{
@@ -332,7 +332,7 @@ function materialesDisponibles()
 	$claveArt 		= "";
 	$nombreArt		= "";
 	$conexion		= conectaBDSICLAB();
-	$consulta 		= sprintf("select DISTINCT (c.nombreArticulo), c.claveArticulo from lbarticuloscat c inner join lbarticulos a on a.claveArticulo = c.claveArticulo inner join lbasignaarticulos aa on aa.indentificadorArticulo = a.identificadorArticulo where aa.claveLaboratorio =%s and a.estatus = 'V'",$laboratorio);	
+	$consulta 		= sprintf("select DISTINCT (c.nombreArticulo), c.claveArticulo from lbarticuloscat c inner join lbarticulos a on a.claveArticulo = c.claveArticulo inner join lbasignaarticulos aa on aa.indentificadorArticulo = a.identificadorArticulo where aa.claveLaboratorio =%s and a.estatus = 'V' ORDER BY c.nombreArticulo",$laboratorio);	
 	$res 			= mysql_query($consulta);
 	if($res)
 	{
@@ -509,7 +509,7 @@ function consultaMaterialExterno()
 		$consulta		= sprintf("select ap.claveArticulo,ac.nombreArticulo,ap.cantidad 
 				from lbasignaarticulospracticas ap 
 				INNER JOIN lbarticuloscat ac on ap.claveArticulo=ac.claveArticulo 
-				WHERE ap.estatus = 'V' and ap.claveSolicitud=%s",$claveSol);
+				WHERE ap.estatus = 'V' and ap.claveSolicitud=%s ORDER BY ac.nombreArticulo",$claveSol);
 			$res 			= mysql_query($consulta);
 			while($row = mysql_fetch_array($res))
 			{

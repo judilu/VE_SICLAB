@@ -55,7 +55,7 @@ function nomMat ($claves)
 	$claveMat 	= $claves;
 	$materias	= array();
 	$conexion	= conectaBDSIE();
-	$consulta	= sprintf("select MATCVE, MATNCO from DMATER where MATCVE IN (%s)",$claveMat);
+	$consulta	= sprintf("select MATCVE, MATNCO from DMATER where MATCVE IN (%s) order by MATNCO",$claveMat);
 	$res 		= mysql_query($consulta);
 	if($res)
 	{
@@ -294,7 +294,7 @@ function comboMat ()
 	$claveMat 		= "";
 	$nombreMat		= "";
 	$conexion		= conectaBDSIE();
-	$consulta		= sprintf("select m.MATCVE, m.MATNCO from DMATER m inner join DGRUPO g on m.MATCVE = g.MATCVE where g.PERCVE =%d and g.PDOCVE =%s and g.GRUBAS = ' ' and g.INSNUM > 0",$maestro,$periodo);
+	$consulta		= sprintf("select m.MATCVE, m.MATNCO from DMATER m inner join DGRUPO g on m.MATCVE = g.MATCVE where g.PERCVE =%d and g.PDOCVE =%s and g.GRUBAS = ' ' and g.INSNUM > 0 order by m.MATNCO",$maestro,$periodo);
 	var_dump($consulta);
 	$res 			= mysql_query($consulta);
 	if($res)
@@ -354,7 +354,7 @@ function comboPract()
 	$comboTitPrac 	= "";
 	$con 			= 0;
 	$conexion		= conectaBDSICLAB();
-	$consulta		= sprintf("select p.clavePractica, p.tituloPractica from lbpracticas p inner join lbasignapracticas ap on p.clavePractica = ap.clavePractica where p.estatus = 'V' and ap.MATCVE =%s",$materia);
+	$consulta		= sprintf("select p.clavePractica, p.tituloPractica from lbpracticas p inner join lbasignapracticas ap on p.clavePractica = ap.clavePractica where p.estatus = 'V' and ap.MATCVE =%s order by p.tituloPractica",$materia);
 	$res 			= mysql_query($consulta);
 	while($row = mysql_fetch_array($res))
 	{
@@ -382,7 +382,7 @@ function comboLab()
 	$comboNomLab 	= "";
 	$con 			= 0;
 	$conexion		= conectaBDSICLAB();
-	$consulta		= sprintf("select ap.claveLaboratorio, l.nombreLaboratorio from lbasignapracticas ap inner join lbpracticas p on ap.clavePractica = p.clavePractica inner join lblaboratorios l on ap.claveLaboratorio = l.claveLaboratorio where (l.usoAsignado = '1' or '3') and p.estatus = 'V' and ap.clavePractica=%d",$practica);
+	$consulta		= sprintf("select ap.claveLaboratorio, l.nombreLaboratorio from lbasignapracticas ap inner join lbpracticas p on ap.clavePractica = p.clavePractica inner join lblaboratorios l on ap.claveLaboratorio = l.claveLaboratorio where (l.usoAsignado = '1' or '3') and p.estatus = 'V' and ap.clavePractica=%d order by l.nombreLaboratorio",$practica);
 	$res 			= mysql_query($consulta);
 	while($row = mysql_fetch_array($res))
 	{
@@ -433,7 +433,7 @@ function comboEleArt()
 	$comboNomArt 	= "";
 	$con 			= 0;
 	$conexion		= conectaBDSICLAB();
-	$consulta		= sprintf("select DISTINCT (c.nombreArticulo), c.claveArticulo from lbarticuloscat c inner join lbarticulos a on a.claveArticulo = c.claveArticulo inner join lbasignaarticulos aa on aa.indentificadorArticulo = a.identificadorArticulo where aa.claveLaboratorio =%s and a.estatus = 'V'",$laboratorio);
+	$consulta		= sprintf("select DISTINCT (c.nombreArticulo), c.claveArticulo from lbarticuloscat c inner join lbarticulos a on a.claveArticulo = c.claveArticulo inner join lbasignaarticulos aa on aa.indentificadorArticulo = a.identificadorArticulo where aa.claveLaboratorio =%s and a.estatus = 'V' order by c.nombreArticulo",$laboratorio);
 	$res 			= mysql_query($consulta);
 	while($row = mysql_fetch_array($res))
 	{
@@ -512,7 +512,7 @@ function comboMatRep ()
 	$claveMat 		= "";
 	$nombreMat		= "";
 	$conexion		= conectaBDSIE();
-	$consulta		= sprintf("select m.MATCVE, m.MATNCO from DMATER m inner join DGRUPO g on m.MATCVE = g.MATCVE where g.PERCVE =%d and g.PDOCVE =%s and g.GRUBAS = ' ' and g.INSNUM > 0",$maestro,$periodo);
+	$consulta		= sprintf("select m.MATCVE, m.MATNCO from DMATER m inner join DGRUPO g on m.MATCVE = g.MATCVE where g.PERCVE =%d and g.PDOCVE =%s and g.GRUBAS = ' ' and g.INSNUM > 0 order by m.MATNCO",$maestro,$periodo);
 	$res 			= mysql_query($consulta);
 	if($res)
 	{
