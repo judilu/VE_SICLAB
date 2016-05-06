@@ -6,6 +6,14 @@ function usuario ()
 	session_start();
 	$_SESSION['nombre'] = GetSQLValueString($_POST['clave1'],"int");
 }
+function salirG()
+{
+	session_start();
+	session_destroy();
+	$respuesta = true;
+	$arrayJSON = array('respuesta' => $respuesta);
+	print json_encode($arrayJSON);
+}
 function claveUsuario($clavePersona)
 {
 

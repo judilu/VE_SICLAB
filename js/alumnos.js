@@ -4,7 +4,55 @@ var inicio = function()
 	var articulosSolicitadosAlumnos = new Array();
 	var numeroArticulos = new Array();
 	var nombreArticulos = new Array();
-	
+	//Salir del sistema
+    var salir = function()
+	{
+		swal({   	
+			title: "¿Estas seguro que deseas salir?",   
+			text: "",   
+			type: "warning",   
+			showCancelButton: true,   
+			confirmButtonColor: "#DD6B55",   
+			confirmButtonText: "Si",   
+			cancelButtonText: "No",   
+			closeOnConfirm: false,   closeOnCancel: false 
+		}, 
+		function(isConfirm)
+		{   
+			if (isConfirm) 
+			{ 
+				var parametros = "opc=salir1"+
+				"&id="+Math.random();
+				$.ajax({
+					cache:false,
+					type: "POST",
+					dataType: "json",
+					url:"../data/funciones.php",
+					data: parametros,
+					success: function(response)
+					{
+						if(response.respuesta)
+						{
+							document.location.href= "acceso.php";
+						}
+						else
+						{
+							console.log(response.respuesta);
+						}
+					},
+					error: function(xhr, ajaxOptions,x)
+					{
+						console.log("Error de conexión salir");
+					}
+				});
+			} 
+			else 
+			{
+				solAceptadas();
+				swal("OK..!","Aún sigues en el sistema", "error");
+			} 
+		});
+	}
 	var uno= function()
 	{
 		$("#txtNControl").val($("#txtNControl").val()+1);
@@ -752,8 +800,6 @@ var inicio = function()
 		$("#txtSemestre").val(" ");
 		$("#txtNControl").removeAttr("disabled");
 		del();
-		//$("#alumno").show("slow");
-		//$("#accesoAlumno").show("slow");
 	}
 	var agregaArtAlumno = function()
 	{
@@ -1008,9 +1054,7 @@ var inicio = function()
 		articulosSolicitadosAlumnos = Array();
 		nombreArticulos				= Array();
 		numeroArticulos 			= Array();
- 		/*articulosSolicitadosAlumnos = Array("");
- 		nombreArticulos = Array("");
- 		numeroArticulos = Array("");*/
+
  		$("#materialExterno").hide();
  		$("#datosPracticas").hide();
  		$("#materialAlumno").hide();
@@ -1021,8 +1065,7 @@ var inicio = function()
 		$("#txtSemestre").val(" ");
 		$("#txtNControl").removeAttr("disabled");
 		del();
-		//mostrar 
-		materialPractica();
+
  	}
 	$("#btnPracticaAlumnos").on("click",practicaAlumnos);
 	$("#btnMaterialAlumno").on("click",materialPractica);
@@ -1052,5 +1095,7 @@ var inicio = function()
 	$("#btnAceptarEleccionMat").on("click",guardaSolMaterial);
 	$("#btnCancelarEleccionMat").on("click",inicioRegistro);
 	$("#btnAceptarEleccionMatDep").on("click",guardaSolMatExt);
+	$("#btnSalirLaboratorio").on("click",salir);
+	$("#btnCancelarDatosPractica").on("click",inicioRegistro);
 }
 $(document).on("ready",inicio);

@@ -246,7 +246,7 @@
 		}
 		else
 		{
-			$("#btnEliminarPrestamo").attr("disabled","disabled");
+			$("#btnEliminarPrestamo").attr("class","disabled");
 			sweetAlert("Error", "No tienes permisos para eliminar el préstamo", "error");
 		}
 	}

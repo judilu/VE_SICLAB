@@ -12,6 +12,9 @@
 					<div class="col s2">
 						<input placeholder="" id="txtFechaAcceso" type="text" class="validate" disabled>
 					</div>
+					<div class="col s1 offset-s8">
+						<a class="waves-effect waves-light btn red darken-1" id="btnSalirLaboratorio">Salir</a>
+					</div>
 					<div class="row">
 						<div class="col s3 offset-s9">
 							<h6>Entrada:</h6>
