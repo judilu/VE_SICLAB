@@ -422,6 +422,33 @@ function construirTablaArt()
 		'renglones' => $renglones);
 	print json_encode($arrayJSON);	
 }
+function construirTablaExt()
+{
+	$cve 		= $_POST['articulosSolicitados'];
+	$nom 		= $_POST['nombreArticulos'];
+	$num 		= $_POST['numeroArticulos'];
+	$cveArt 	= explode(",",$cve);
+	$nomArt 	= explode(",",$nom);
+	$numArt 	= explode(",",$num);
+	$n 			= count($cveArt);
+	$respuesta 	= false;
+	$renglones 	= "";
+	for ($i=0; $i < $n ; $i++) 
+	{ 
+		if ($cveArt[$i]!= "") 
+		{
+			$respuesta	= true;
+			$renglones .= "<tr>";
+			$renglones .= "<td class='col s6'>".$nomArt[$i]."</td>";
+			$renglones .= "<td class='col s3'>".$numArt[$i]."</td>";
+			$renglones .= "<td class='col s3'><a name ='".$cveArt[$i]."' class='btn-floating btn-large waves-effect waves-light red darken-1' id='btnEliminarArtExt'><i class='material-icons'>delete</i></a></td>";
+			$renglones .= "</tr>";
+		}
+	}
+	$arrayJSON = array('respuesta' => $respuesta,
+		'renglones' => $renglones);
+	print json_encode($arrayJSON);	
+}
 function consultaCalExt()
 {
 	$periodo 		= '"2161"';//periodoActual();
@@ -430,7 +457,7 @@ function consultaCalExt()
 	$claveCal 		= 0;
 	$conexion 		= conectaBDSICLAB();
 	$consulta		= sprintf("select claveSolicitud from lbsolicitudlaboratorios
-							where PDOCVE=%s and claveDependencia=%s",$periodo,$claveDep);
+							where PDOCVE=%s and claveDependencia=%s and fechaSolicitud =%s",$periodo,$claveDep,$fecha);
 	$res 			= mysql_query($consulta);
 	if($row = mysql_fetch_array($res))
 		{
@@ -487,7 +514,7 @@ function consultaMaterialExterno()
 			while($row = mysql_fetch_array($res))
 			{
 				$materiales .=($row["claveArticulo"]).",";
-				$cantidad 	.=($row["cantidad"])."',";
+				$cantidad 	.=($row["cantidad"]).",";
 				$nombre 	.=($row["nombreArticulo"]).",";
 				$rows[]=$row;
 				$respuesta = true;
@@ -639,6 +666,9 @@ switch ($opc){
 	break;
 	case 'construirTablaArt1':
 	construirTablaArt();
+	break;
+	case 'construirTablaExt1':
+	construirTablaExt();
 	break;
 	case 'consultaCalExt':
 	consultaCalExt();

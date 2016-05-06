@@ -483,7 +483,7 @@ var inicio = function()
 					numeroArticulos = (response.cantidad).split(",");
 					nombreArticulos = (response.nombre).split(",");
 					$("#bodyArtExterno").append(response.renglones);
-					$("#bodyArtAlumno #btnEliminarArtExt").on("click",eliminarArtExterno);
+					$("#bodyArtExterno #btnEliminarArtExt").on("click",eliminarArtExterno);
 					/*for (var i = 0; i < response.contador; i++) 
 					{
 						articulosSolicitadosAlumnos.push(response.materiales[i]);
@@ -816,7 +816,17 @@ var inicio = function()
     	//construir la tabla de nuevo con los articulos que estan guardados
 		construirTablaAlu();
 	}
-
+	var agregaArtExterno = function()
+	{
+		var articuloCve = $("#cmbMaterialesLabDep" ).val();
+		var artNom 		= $("#cmbMaterialesLabDep option:selected").text();
+    	var numArt    	= $("#txtNumArtMatDep").val();
+    	nombreArticulos.push(artNom);
+		numeroArticulos.push(numArt);
+    	articulosSolicitadosAlumnos.push(articuloCve); 	
+    	//construir la tabla de nuevo con los articulos que estan guardados
+		construirTablaExt();
+	}
 	//función para llenar el combo de materiales, omitiendo los que estan en la tabla
 	var checkOtroArticulo = function()
 	{
@@ -888,7 +898,78 @@ var inicio = function()
 			$(".select-dropdown").attr("disabled","disabled");
 			$("#cmbMaterialesLab").attr("disabled","disabled");
 		}
-	}	
+	}
+	var checkOtroArticuloDep = function()
+	{
+		var claveSol = 9;//$("#cmbHorariosPractica").val();
+		comboclaArt = "";
+    	comboArt 	= "";
+		if ($("#chbElegirOtroMaterialDep").is(':checked'))
+		{
+			$(".select-dropdown").removeAttr("disabled");
+			$("#cmbMaterialesLabDep").removeAttr("disabled");
+			$("#txtNumArtMatDep").removeAttr("disabled");
+			$("#btnAgregarArtDep").show();
+			var parametros = "opc=materialesDisponibles1"+
+							"&claveSol="+claveSol+
+    						"&id="+Math.random();
+    		var c = articulosSolicitadosAlumnos.length;
+			$.ajax({
+	    		cache:false,
+	    		type: "POST",
+	    		dataType: "json",
+	    		url:"../data/alumnos.php",
+	    		data: parametros,
+	    		success: function(response)
+	    		{
+	    			if(response.respuesta == true)
+	    			{
+	    				$("#cmbMaterialesLabDep").html(" ");
+						$("#cmbMaterialesLabDep").html("<option value='' disabled selected>Selecciona el material</option>");
+						comboclaArt = response.claveArticulo;
+    					comboArt 	= response.nombreArticulo;
+    					//eliminar elementos repetidos
+						for (var r =0; r< c; r++) 
+						{
+							o = (articulosSolicitadosAlumnos[r]);
+							i = parseInt((comboclaArt).indexOf(o));
+							comboclaArt = (eliminar2(comboclaArt,i));
+							comboArt 	= (eliminar2(comboArt,i));				
+						}
+						console.log(comboArt);
+						console.log(comboArt[0]);
+						var con = comboclaArt.length;
+						$("#cmbMaterialesLabDep").html(" ");
+						$("#cmbMaterialesLabDep").html("<option value='' disabled selected>Selecciona el material</option>");
+						for (var i = 0; i < con; i++) 
+						{
+							$("#cmbMaterialesLabDep").append($("<option></option>").attr("value",comboclaArt[i]).text(comboArt[i]));
+						}
+						$("#cmbMaterialesLabDep").trigger('contentChanged');
+						$('select').material_select();
+					}
+					else
+					{
+						$("#cmbMaterialesLabDep").html(" ");
+						$("#cmbMaterialesLabDep").html("<option value='' disabled selected>Selecciona el material</option>");
+						sweetAlert("No hay hay mas articulos en el laboratorio s", "", "error");
+					}
+				},
+				error: function(xhr, ajaxOptions,x)
+				{
+					console.log("Error de conexión");
+					console.log(xhr);
+				}
+			});
+		}
+		else
+		{
+			$("#btnAgregarArtAlu").hide();
+			$("#txtNumArtMat").attr("disabled","disabled");
+			$(".select-dropdown").attr("disabled","disabled");
+			$("#cmbMaterialesLab").attr("disabled","disabled");
+		}
+	}		
 	var eliminarArtAlumno = function()
 	{
     	var artEliminar = ($(this).attr('name'));
@@ -909,7 +990,7 @@ var inicio = function()
     	articulosSolicitadosAlumnos = eliminar2(articulosSolicitadosAlumnos,i);
     	numeroArticulos = eliminar2(numeroArticulos,i);
     	//construir la tabla de nuevo con los articulos que estan guardados
-		construirTablaAlu();
+		construirTablaExt();
 	}
 	//función para construir la tabla con los materiales
 	var construirTablaAlu = function()
@@ -937,6 +1018,42 @@ var inicio = function()
 				else
 				{
 					$("#bodyArtAlumno").html("");
+					checkOtroArticulo();
+					//sweetAlert("No se eliminó el articulo", "", "error");
+				}
+			},
+			error: function(xhr, ajaxOptions,x)
+			{
+				console.log("Error de conexión articulo eliminar Alu");	
+				console.log(xhr);
+			}
+		});
+	}
+	var construirTablaExt = function()
+	{
+		var parametros = "opc=construirTablaExt1"+
+				    	"&articulosSolicitados="+articulosSolicitadosAlumnos+
+				    	"&nombreArticulos="+nombreArticulos+
+				    	"&numeroArticulos="+numeroArticulos+
+				    	"&id="+Math.random();
+    	$.ajax({
+    		cache:false,
+    		type: "POST",
+    		dataType: "json",
+    		url:"../data/alumnos.php",
+    		data: parametros,
+    		success: function(response){
+    			if(response.respuesta == true)
+    			{
+    				$("#bodyArtExterno").html("");
+    				$("#bodyArtExterno").append(response.renglones);
+    				//formar de nuevo el combo
+    				checkOtroArticulo();
+    				$("#bodyArtExterno #btnEliminarArtExt").on("click",eliminarArtExterno);			
+				}//termina if
+				else
+				{
+					$("#bodyArtExterno").html("");
 					checkOtroArticulo();
 					//sweetAlert("No se eliminó el articulo", "", "error");
 				}
@@ -1089,6 +1206,7 @@ var inicio = function()
 	$("#btnDel").on("click",del);
 	//selects
 	$("#chbElegirOtroMaterial").on("change",checkOtroArticulo);
+	$("#chbElegirOtroMaterialDep").on("change",checkOtroArticuloDep)
 	$("#cmbMateriasAlumnos").on("change",maestroPractica);
 	$("#cmbMaestrosMat").on("change",horarioPractica);
 	$("#cmbHorariosPractica").on("change",nombrePracticaMaestro );
@@ -1096,8 +1214,10 @@ var inicio = function()
 	$("#btnAceptarSinMat").on("click",guardaEntradaExterno);
 	$("#btnCancelarEntrada").on("click",cancelaEntrada);
 	$("#btnAgregarArtAlu").on("click",agregaArtAlumno);
+	$("#btnAgregarArtDep").on("click",agregaArtExterno);
 	$("#btnAceptarEleccionMat").on("click",guardaSolMaterial);
 	$("#btnCancelarEleccionMat").on("click",inicioRegistro);
+	$("#btnCancelarEleccionMatExt").on("click",inicioRegistro);
 	$("#btnAceptarEleccionMatDep").on("click",guardaSolMatExt);
 	$("#btnSalirLaboratorio").on("click",salir);
 	$("#btnCancelarDatosPractica").on("click",inicioRegistro);
