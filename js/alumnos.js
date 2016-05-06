@@ -339,12 +339,13 @@ var inicio = function()
 	}
 	var practicaAlumnos = function()
 	{
+		$("#accesoAlumno").hide();
+		$("#datosPracticas2").show();
+		$("#datosPracticas").show();
 		if(($("#txtNControl").val())!=" " && ($("#txtNombre").val())!=" ") 
 		{
 			if ($("#rdoAlumno").is(':checked'))
 			{							
-				$("#accesoAlumno").hide();
-				$("#datosPracticas").show("slow");
 				var numeroControl = $("#txtNControl").val();
 				$("#txtNControlAlu").val(numeroControl.substr(0,8));
 				var numCtrl 	= $("#txtNControlAlu").val();
@@ -363,6 +364,9 @@ var inicio = function()
 						if(response.respuesta)
 						{
 		       				$("#cmbMateriasAlumnos").html(" ");
+		       				$("#cmbMaestrosMat").html(" ");
+		       				$("#cmbHorariosPractica").html(" ");
+		       				$("#cmbNombrePracticas").html(" ");
 		       				$("#cmbMateriasAlumnos").html("<option value='' disabled selected>Selecciona la materia</option>");
 							for (var i = 0; i < response.contador; i++) 
 							{
