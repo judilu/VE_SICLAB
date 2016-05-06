@@ -7,6 +7,7 @@ function validaUsuario()
 	$cve 			= GetSQLValueString(md5($_POST["cveUsuario"]),"text");
 	$tipo			= "0";
 	$usuario 		= "";
+	$claveUsuario 	= "";
 	$conexion 		= conectaBDSICLAB();
 	$consulta 		= sprintf("select * from lbusuarios where usuario=%s and cveUsuario=%s limit 1",$usu,$cve);
 	$res			= mysql_query($consulta);
