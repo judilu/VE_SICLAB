@@ -71,7 +71,6 @@
     		} 
     		else 
     		{
-    			solAceptadas();
     			swal("OK..!","Aún sigues en el sistema", "error");
     		} 
     	});
@@ -79,9 +78,12 @@
 	//Prestamos de matertial a alumnos y externos
 	var prestamosPendientes = function()
 	{
+		tipoUsuario();
 		$("#atenderSolicitud").hide("slow");
 		$("#alumnosSancionados").hide("slow");
 		$("#solicitudesEnProceso").hide("slow");
+		$("#solicitudesPendientes").show("slow");
+		$("#solicitudesPendientes2").show("slow");
 		$("#tabSolPendientesAlumnos").html(" ");
 		var parametros 	= "opc=prestamosPendientes1"+"&id="+Math.random();
 		$.ajax({
@@ -107,8 +109,6 @@
 				alert("Error de conexión prestamos pendientes");
 			}
 		});
-		$("#solicitudesPendientes").show("slow");
-		$("#solicitudesPendientes2").show("slow");
 	}
 	var atenderPrestamoMaterial = function()
 	{
@@ -654,7 +654,8 @@
 	}
 	var sLaboratorioPendientes = function()
 	{
-		if(tipoUsu ==1 || tipoUsu == 2)
+		tipoUsuario();
+		if(tipoUsu == 1 || tipoUsu == 2)
 		{
 			$("#sAceptadasLab").hide("slow");
 			$("#verMasSolicitud").hide("slow");
@@ -799,6 +800,7 @@
 	//Inventario
 	var listaArticulos = function()
 	{
+		tipoUsuario();
 		$("#altaArticulos").hide("slow");
 		$("#bajaArticulos").hide("slow");
 		$("#menuMtto").hide("slow");
@@ -1512,10 +1514,18 @@
 	//Reportes
 	var resumenReportes=function()
 	{
-		$("#existenciaInventario").hide("slow");
-		$("#pedidoMaterial").hide("slow");
-		$("#bajoInventario").hide("slow");
-		$("#resumenReportes").show("slow");
+		tipoUsuario();
+		if (tipoUsu == 1 || tipoUsu == 2 || tipoUsu == 5)
+		{
+			$("#existenciaInventario").hide("slow");
+			$("#pedidoMaterial").hide("slow");
+			$("#bajoInventario").hide("slow");
+			$("#resumenReportes").show("slow");
+		}
+		else
+		{
+			$("#tabReportesGenericos").attr("disabled","disabled");
+		}
 	}
 	var existenciaInventario=function()
 	{

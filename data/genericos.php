@@ -6,7 +6,7 @@ function tipoUsuarioSesion()
 	$respuesta = false;
 	session_start();
 	$responsable= $_SESSION['nombre'];
-	$tipoUsuario = "";
+	$tipoUsuario= "";
 	$conexion 	= conectaBDSICLAB();
 	$consulta	= sprintf("select tipoUsuario from lbusuarios where claveUsuario=%d",$responsable);
 	$res 		= mysql_query($consulta);
@@ -169,6 +169,7 @@ function verMas()
 			 INNER JOIN lbsolicitudlaboratorios as a ON d.claveSolicitud=a.claveSolicitud 
 			 INNER JOIN lbpracticas as c ON a.clavePractica=c.clavePractica
 				where a.claveSolicitud =%s AND NOT EXISTS(select claveCalendarizacion from lbcalendarizaciones where claveSolicitud=%s)",$clave,$clave);
+			//var_dump($consulta);
 			$renglones	.= "<thead>";
 			$renglones	.= "<tr>";
 			$renglones	.= "<th data-field='nombreArt'>Nombre del artículo</th>";
@@ -295,7 +296,7 @@ function aceptadasLaboratorio()
 								from lbusuarios as u 
 								INNER JOIN lbsolicitudlaboratorios as s ON u.claveUsuario =s.claveUsuario 
 								INNER JOIN lbpracticas as p ON p.clavePractica = s.clavePractica
-								where s.estatus='V' and EXISTS (select * from lbcalendarizaciones as c where c.claveSolicitud=s.claveSolicitud and c.estatus='')");
+								where s.estatus='V' and EXISTS (select * from lbcalendarizaciones as c where c.claveSolicitud=s.claveSolicitud and c.estatus='NR')");
 		$res 		= mysql_query($consulta);
 		$renglones	.= "<thead>";
 		$renglones	.= "<tr>";

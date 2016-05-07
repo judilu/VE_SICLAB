@@ -48,7 +48,7 @@ var inicio = function()
 			} 
 			else 
 			{
-				solAceptadas();
+				inicioRegistro();
 				swal("OK..!","Aún sigues en el sistema", "error");
 			} 
 		});
