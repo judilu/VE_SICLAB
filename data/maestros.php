@@ -560,6 +560,7 @@ function listaAlumnos()
 	$carrera	= nomCarr($clave,$gpo,$materia,$periodo);
 	$depLab 	= deptoLab($sol);
 	$depto 		= ((int)$depLab["depto"]);
+	$nomDep 	= nomDepto((int)$depLab["depto"]);
 	if ($cal != 0) 
 	{
 		$conexion 	= conectaBDSICLAB();
@@ -600,7 +601,7 @@ function listaAlumnos()
 						'renglones' => $renglones,
 						'carrera' => $carrera,
 						'nomLab' => $depLab["nomLab"],
-						'depto' => $depto);
+						'depto' => $nomDep);
 	print json_encode($arrayJSON);
 }
 //Menú principal

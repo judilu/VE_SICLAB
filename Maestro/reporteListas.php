@@ -39,12 +39,15 @@
 		</div>
 	</header>
 	<div class="listaAsistencia">
-		<div class="fuente centrado">
+		<div class="fuente centrado col s12">
 			INSTITUTO TECNOLOGICO DE CULIACAN <br>
-			<div class="input-field col s8">
-				<input disabled placeholder="" id="txtDepto" type="text" class="validate fuente">
-				<label class="active fuente"for="txtDepto">Departamento:</label>
-				<input disabled placeholder="" id="txtLaboratorioRp" type="text" class="validate fuente">
+			<div class="input-field col s3 offset-s2">
+				<input disabled placeholder="" id="txtDepto" type="text" class="centrado validate">
+				<label class="active fuente"for="txtDepto">Departamento:</label>			
+			</div>
+			<div class="input-field col s5 offset-s2">
+				<input disabled placeholder="" id="txtLaboratorioRp" type="text" class="centrado validate">
+				<label class="active"for="txtLaboratorioRp">Laboratorio:</label>
 			</div>
 		</div>
 		<div class="row">

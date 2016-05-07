@@ -1270,6 +1270,7 @@ var inicioMaestro = function ()
 			var h			= $("#cmbHoraMatRep option:selected").text();
 			var horaMat 	= parseInt(h.substring(0,2));
 			var practica 	= $("#cmbPracticaRep").val();
+			console.log(practica);
 			var ff  		= $("#txtFechaPracticaRep").val();
 	    	var a  			= ff.substring(0,4);
 	    	var m  			= ff.substring(5,7);
@@ -1313,6 +1314,7 @@ var inicioMaestro = function ()
 		    		else
 		    		{
 		    			//limpiar datos
+		    			$("#txtCarreraRep").val("");
 						$("#txtClaveMaestroRep2").val(" ");
 				    	$("#txtNombreMaestroRep2").val(" ");
 				    	$("#txtPeriodoRep").val(" ");

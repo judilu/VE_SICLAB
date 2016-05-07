@@ -5,8 +5,8 @@ var inicioreporte = function ()
 	{
 		var variables = obtenerDatos();
 		console.log(variables);
-		$("#txtDepto").html(variables['nomDepto']);
-		$("#txtLaboratorioRp").html(variables['nomLab']);
+		$("#txtDepto").val(variables['nomDepto']);
+		$("#txtLaboratorioRp").val(variables['nomLab']);
 		//llenar datos
 		$("#txtClaveMaestroRp").val(variables['cveMaestro']);
 		$("#txtNombreMaestroRp").val(variables['nomMaestro']);
@@ -57,7 +57,7 @@ var inicioreporte = function ()
 								"&periodo="+p+
 								"&materia="+m+
 								"&horaMat="+hrmat+
-								"&practica="+p+
+								"&practica="+pr+
 								"&fecha="+fcPr+
 								"&horaPract="+hrPr+
 								"&id="+Math.random();

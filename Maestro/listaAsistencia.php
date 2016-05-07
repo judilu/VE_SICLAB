@@ -3,11 +3,11 @@
 	<div class="row">
 		<div class="col s12">
 			<div class="row">
-				<div class="input-field col s2">
+				<div class="input-field">
 					<input disabled placeholder="" id="txtClaveMaestroRep2" type="text" class="validate">
 					<label class="active"for="txtClaveMaestroRep2">Clave</label>
 				</div>
-				<div class="input-field col s7">
+				<div class="input-field">
 					<input disabled placeholder="" id="txtNombreMaestroRep2" type="text" class="validate">
 					<label class="active" for="txtNombreMaestroRep2">Nombre</label>
 				</div>
