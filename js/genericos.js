@@ -298,12 +298,19 @@
 	}
 	var quitaSancion = function ()
 	{
+		var f  = new Date();
+		var dd = f.getDate();
+		var mm = (f.getMonth())+1;
+		(dd<10) ? (dd="0"+dd) : dd;
+		(mm<10) ? (mm="0"+mm) : mm;
+		var fe  = (dd+"/"+mm+"/"+f.getFullYear());	
 		if (tipoUsu == 1 || tipoUsu == 2 )
 		{
 			$(this).closest("tr").remove();
 			var claveSancion = $(this).attr('name');
 			var parametros 	= "opc=quitaSanciones1"+
 								"&claveSancion="+claveSancion+
+								"&fecha="+fe+
 								"&id="+Math.random();
 			$.ajax({
 				cache:false,
@@ -325,11 +332,6 @@
 					alert("Error de conexión quitar sanción");
 				}
 			});
-		}
-		else
-		{
-			$("#btnQuitaSancion").attr("disabled","disabled");
-			sweetAlert("Error", "No tienes permisos para esta acción", "error");
 		}
 	}
 	var aplicaSancion = function()
@@ -520,6 +522,7 @@
 			$("#aceptarSolLab").show("slow");
 			$("#guardarSolicitud").show("slow");
 			$("#verMasSolicitud").show("slow");
+			$("#txtComentariosSol").val("");
 			var claveSol= $(this).attr('name');
 			var parametros 	= "opc=obtenerDatosSolLab1"+
 								"&clave="+claveSol+
@@ -547,12 +550,6 @@
 				}
 			});
 		}
-		else
-		{
-			$("#btnCalendarizado").attr("disabled","disabled");
-			sweetAlert("Error", "No tienes permisos para esta acción", "error");
-		}
-
 	}
 	//funcion para guardar una solicitud de laboratorio
 	var sGuardaCanderalizada = function()
@@ -586,7 +583,7 @@
 							sLaboratorioPendientes();
 						}
 						else
-							sweetAlert("La solicitud no se calendarizó!", " ", "error");
+							sweetAlert("La solicitud no se calendarizó elige otra fecha u hora!", " ", "error");
 					},
 					error: function(xhr, ajaxOptions,x){
 						alert("Error de conexión guarda solicitud laboratorio");
@@ -649,8 +646,6 @@
 						$("#tbPendientesLab #btnVerMas").on("click",verMas);
 						$("#tbPendientesLab #btnEliminarSolLab").on("click",eliminarSolLab);
 					}
-					else
-						sweetAlert("No hay solicitudes de laboratorio pendientes!", " ", "error");
 				},
 				error: function(xhr, ajaxOptions,x){
 					alert("Error de conexión solicitudes pendientes de laboratorio");
@@ -695,6 +690,7 @@
 		$("#solicitudesPendientesLab2").hide("slow");
 		//contenido dinamico
 		var clave = $(this).attr("name");
+		$("#tbMaterialesPendientesLab").html("");
 		var parametros = "opc=verMasLab1"
 						+"&clave="+clave
 						+"&id="+Math.random();
@@ -764,6 +760,12 @@
 		$("#verPrincipal2").show("slow");
 	}
 	//Inventario
+	//Busca un articulo en la lista de artículos del laboratorio
+	var buscaArtInventario = function()
+	{
+		
+	}
+	//Muestra la lista de artículos pertenecientes al laboratorio del usuario
 	var listaArticulos = function()
 	{
 		$("#altaArticulos").hide("slow");
@@ -1476,7 +1478,7 @@
 	$("#btnCancelarPeticionArt").on("click",peticionesArticulos);
 	$("#chbOtroArticulo").on("change",checkOtroArticulo);
 	$("#btnEnviarPeticionArticulo").on("click",guardaPeticionArticulo);	
-	
+	$("#btnBucarInventario").on("click",buscaArtInventario);	
 	//Reportes
 	$("#tabReportesGenericos").on("click",resumenReportes);
 	$("#btnResumenReportes").on("click",resumenReportes);

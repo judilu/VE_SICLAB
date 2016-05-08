@@ -75,7 +75,7 @@ function pendientesLaboratorio()
 		$percve 	= "";
 		$nomMaestro = "";
 		$nomMat 	= "";
-		$tipoUsuario= tipoUsu($responsable);
+		$tipoUsuario= tipoUsuario($responsable);
 		$solPendientesLab ="";
 		$conexion 	= conectaBDSICLAB();
 		$consulta	= sprintf("select s.claveSolicitud,s.MATCVE,p.tituloPractica,s.fechaSolicitud,s.horaSolicitud,s.claveUsuario 
@@ -136,7 +136,7 @@ function verMas()
 {
 	$respuesta 		= false;
 	session_start();
-		$clave 			= GetSQLValueString($_POST["clave"],"text");
+		$clave 			= GetSQLValueString($_POST["clave"],"int");
 		$renglones		= "";
 		$fechaSolicitud	= "";
 		$horaSolicitud	= "";
@@ -150,11 +150,13 @@ function verMas()
 		$conexion 		= conectaBDSICLAB();
 		if(existeSolLabG($clave))
 		{
-			$consulta  		= sprintf("select a.fechaSolicitud,a.horaSolicitud,a.MATCVE,c.tituloPractica, b.nombreArticulo, d.cantidad, a.claveUsuario
-				from lbarticuloscat as b INNER JOIN lbasignaarticulospracticas as d ON b.claveArticulo=d.claveArticulo
-			 INNER JOIN lbsolicitudlaboratorios as a ON d.claveSolicitud=a.claveSolicitud 
-			 INNER JOIN lbpracticas as c ON a.clavePractica=c.clavePractica
-				where a.claveSolicitud =%s AND NOT EXISTS(select claveCalendarizacion from lbcalendarizaciones where claveSolicitud=%s)",$clave,$clave);
+			$consulta  		= sprintf("select sl.fechaSolicitud,sl.horaSolicitud,sl.MATCVE,p.tituloPractica, ac.nombreArticulo, aa.cantidad, sl.claveUsuario 
+									from lbarticuloscat as ac
+									INNER JOIN lbasignaarticulospracticas as aa ON ac.claveArticulo=aa.claveArticulo
+									INNER JOIN lbsolicitudlaboratorios as sl ON sl.claveSolicitud=aa.claveSolicitud 
+									INNER JOIN lbpracticas as p ON sl.clavePractica=p.clavePractica
+									where sl.claveSolicitud =%s 
+									AND sl.claveSolicitud NOT IN(select c.claveSolicitud from lbcalendarizaciones c where c.claveSolicitud=%s)",$clave,$clave);
 			$renglones	.= "<thead>";
 			$renglones	.= "<tr>";
 			$renglones	.= "<th data-field='nombreArt'>Nombre del artículo</th>";
@@ -162,7 +164,6 @@ function verMas()
 			$renglones	.= "</tr>";
 			$renglones	.= "</thead>";
 			$res 	 	=  mysql_query($consulta);
-
 			while($row = mysql_fetch_array($res))
 			{	
 				$respuesta		= true;
@@ -199,13 +200,13 @@ function obtenerDatosSolLab()
 {
 	$respuesta 		= false;
 	session_start();
-		$clave 			= GetSQLValueString($_POST["clave"],"text");
+		$clave 			= GetSQLValueString($_POST["clave"],"int");
 		$fecha 			= "";
 		$hora 			= "";
 		$conexion 		= conectaBDSICLAB();
 		if(existeSolLabG($clave))
 		{
-			$consulta  	= sprintf("select fechaSolicitud,horaSolicitud from lbsolicitudlaboratorios where claveSolicitud=%s",$clave);
+			$consulta  	= sprintf("select fechaSolicitud,horaSolicitud from lbsolicitudlaboratorios where claveSolicitud=%d",$clave);
 			$res 	 	=  mysql_query($consulta);
 			while($row = mysql_fetch_array($res))
 			{
@@ -216,6 +217,37 @@ function obtenerDatosSolLab()
 		}
 	$arrayJSON = array('respuesta' => $respuesta, 'fecha' => $fecha, 'hora' => $hora);
 		print json_encode($arrayJSON);
+}
+//consulta si la fecha de la solicitud de laboratorio esta disponible
+function consultaFechaSol($fecha,$hora,$periodo)
+{
+	$fechaSolicitada 	= $fecha;
+	$horaSolicitada 	= $hora;
+	$fechaSolicitada2 	= str_replace("/", "-", $fechaSolicitada);
+	$fechaSolicitada2 	= str_replace("'", "", $fechaSolicitada2);
+	$fechaSolicitada2 	= strtotime($fechaSolicitada2);
+	$periodoSol			= $periodo;
+	$fecha_hoy 			= strtotime(date("d-m-Y"));
+	if($fecha_hoy <= $fechaSolicitada2)
+	{
+		$conexion 			= conectaBDSICLAB();
+		$consulta 			= sprintf("select fechaAsignada,horaAsignada from lbcalendarizaciones
+										where fechaAsignada=%s and horaAsignada=%s and PDOCVE=%s"
+										,$fechaSolicitada,$horaSolicitada,$periodo);
+		$res 	 			=  mysql_query($consulta);
+		if($row = mysql_fetch_array($res))
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+	else
+	{
+		return false;
+	}
 }
 //Se inserta la solicitud en la tabla lbcalendarizaciones
 function guardaSolicitudLab()
@@ -229,9 +261,9 @@ function guardaSolicitudLab()
 		$firmaJefe 		= GetSQLValueString($_POST["firmaJefe"],"int");
 		$comentarios	= GetSQLValueString($_POST["comentarios"],"text");
 		$conexion 		= conectaBDSICLAB();
-		if(existeSolLabG($clave))
+		if(existeSolLabG($clave) && consultaFechaSol($fecha,$hora,$periodo))
 		{
-			$consulta  		= sprintf("insert into lbcalendarizaciones values(%s,%d,%s,%s,%d,%s,%d,%s)",$periodo,'""',$fecha,$hora,$firmaJefe,$comentarios,$clave,'""');
+			$consulta  		= sprintf("insert into lbcalendarizaciones values(%s,%d,%s,%s,%d,%s,%d,%s)",$periodo,'""',$fecha,$hora,$firmaJefe,$comentarios,$clave,'"NR"');
 			$res 	 	=  mysql_query($consulta);
 			if(mysql_affected_rows()>0)
 			$respuesta = true; 
@@ -586,7 +618,10 @@ function listaMantenimiento()
 			$renglones .= "<tr>";
 			$renglones .= "<td>".$rows[$c]["identificadorArticulo"]."</td>";
 			$renglones .= "<td>".$rows[$c]["nombreArticulo"]."</td>";
-			$renglones .= "<td><a name = '".$rows[$c]["identificadorArticulo"]."' class='btn-floating btn-large waves-effect  green darken-2' id='btnRegresaDelMtto'><i class='material-icons'>done</i></a></td>";
+			if($tipoUsuario != 3)
+			{
+				$renglones .= "<td><a name = '".$rows[$c]["identificadorArticulo"]."' class='btn-floating btn-large waves-effect  green darken-2' id='btnRegresaDelMtto'><i class='material-icons'>done</i></a></td>";
+			}
 			$renglones .= "</tbody>";
 			$respuesta = true;
 		}
@@ -653,7 +688,7 @@ function tipoUsuario($claveUsuario)
 {
 	$cve 			= $claveUsuario;
 	$conexion 		= conectaBDSICLAB();
-	$consulta		= sprintf("select tipoUsuario from lbusuarios where claveUsuario=%s",$cve);
+	$consulta		= sprintf("select tipoUsuario from lbusuarios where claveUsuario=%d",$cve);
 	$res 			= mysql_query($consulta);
 	if($row = mysql_fetch_array($res))
 	{
@@ -799,7 +834,7 @@ function prestamosPendientes()
 		$rows		= array();
 		$renglones	= "";
 		$nombreAlu 	= "";
-		$tipoUsuario= tipoUsu($responsable);
+		$tipoUsuario= tipoUsuario($responsable);
 		$conexion 	= conectaBDSICLAB();
 		$consulta	= sprintf("select ea.ALUCTR,ea.horaEntrada,ea.fechaEntrada,p.clavePrestamo 
 								from lbentradasalumnos ea 
@@ -846,24 +881,6 @@ function prestamosPendientes()
 	$salidaJSON = array('respuesta' => $respuesta, 
 						'renglones' => $renglones);
 	print json_encode($salidaJSON);
-}
-function tipoUsu($clave)
-{
-	$claveU = $clave;
-	$conexion 	= conectaBDSICLAB();
-	$consulta	= sprintf("select claveUsuario,tipoUsuario 
-								from lbusuarios 
-								where claveUsuario=%d",$claveU);
-	$res 		= mysql_query($consulta);
-	if($row = mysql_fetch_array($res))
-	{
-		return $row["tipoUsuario"];
-	}
-	else
-	{
-		return 0;
-	}
-
 }
 function atenderPrestamo()
 {
@@ -1240,7 +1257,7 @@ function listaAlumnosSancionados()
 		$responsable= $_SESSION['nombre'];
 		$prestamo	= "";
 		$con 		= 0;
-		$tipoUsuario= tipoUsu($responsable);
+		$tipoUsuario= tipoUsuario($responsable);
 		$rows		= array();
 		$renglones	= "";
 		$conexion 	= conectaBDSICLAB();
@@ -1291,9 +1308,15 @@ function listaAlumnosSancionados()
 }
 function quitaSanciones()
 {
-	$respuesta 	= false;
+	$respuesta 		= false;
 	session_start();
-
+	$responsable 	= $_SESSION['nombre'];
+	$claveSancion 	= GetSQLValueString($_POST["claveSancion"],"int");
+	$fecha 			= GetSQLValueString($_POST["fecha"],"text");
+	$periodo 		= periodoActual();
+	$consulta 		= sprintf("update lbasignasanciones set estatus='L', finSancion=%s where claveSancion=%d",$fecha,$claveSancion);
+	$res 	 		=  mysql_query($consulta);
+	if(mysql_affected_rows()>0)
 		$respuesta = true;
 	
 	$arrayJSON = array('respuesta' => $respuesta);
@@ -1565,9 +1588,6 @@ switch ($opc){
 	break;
 	case 'regresaMtto1':
 	regresaMantenimiento();
-	break;
-	case 'tipoUsuario1':
-	tipoUsuarioSesion();
 	break;
 } 
 ?>

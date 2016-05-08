@@ -4,6 +4,7 @@
 	<link rel="stylesheet" href="../css/genericos.css">
 	<script src="../js/usuarios.js"></script>
 	<script src="../js/genericos.js"></script>
+
 </head>
 <body>
 	<div id="pantallaLaboratorios" class="body2">
