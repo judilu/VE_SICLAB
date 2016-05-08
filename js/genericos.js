@@ -76,10 +76,11 @@
 				success: function(response){
 					if(response.respuesta == true)
 					{
+
+						$("#txtnombreAlumnoPrestamo").val(response.nombre);
 						$("#tabSolPendientesAlumnos").html(" ");
 						$("#tabSolPendientesAlumnos").append(response.renglones);
 						$("#tabSolPendientesAlumnos #btnAtenderPrestamo").on("click",atenderPrestamoMaterial);
-						$("#txtnombreAlumnoPrestamo").val(response.nombreAlumno);
 					}
 					else
 					{
@@ -100,7 +101,9 @@
 		$("#tbListaMaterialPrestamo").html("");
 		$("#bodyArtSolicitados").html("");
 		var clavePrestamo= $(this).attr('name');
-		var parametros 	= "opc=atenderPrestamo1"+"&clavePrestamo="+clavePrestamo+"&id="+Math.random();
+		var parametros 	= "opc=atenderPrestamo1"
+						+"&clavePrestamo="+clavePrestamo
+						+"&id="+Math.random();
 		$.ajax({
 			cache:false,
 			type: "POST",
@@ -112,10 +115,7 @@
 				{
 					$("#txtclavePrestamo").val(response.clavePrestamo);
 					$("#txtcodigoBarrasPrestamo").val("");
-					$("#tbListaMaterialPrestamo").html("");
-					$("#bodyArtSolicitados").html("");
 					$("#tbListaMaterialPrestamo").append(response.renglones);
-					$("#txtnombreAlumnoPrestamo").val(response.nombre);
 				}
 				else
 				{
@@ -376,10 +376,6 @@
 					$("#cmbSanciones").trigger('contentChanged');
 					$('select').material_select();
 				}
-				else
-				{
-					sweetAlert("No se pudo aplicar la sanción!", " ", "error");
-				}
 			},
 			error: function(xhr, ajaxOptions,x){
 				alert("Error de conexión aplica sanción");
@@ -420,6 +416,7 @@
 				if(response.respuesta == true)
 				{
 					swal("Sanción aplicada con éxito!", "Da clic en el botón OK!", "success");
+					listaSanciones();
 				}
 				else
 				{
@@ -646,6 +643,10 @@
 						$("#tbPendientesLab #btnVerMas").on("click",verMas);
 						$("#tbPendientesLab #btnEliminarSolLab").on("click",eliminarSolLab);
 					}
+					else
+					{
+						sweetAlert("No hay solicitudes de laboratorio pendientes!", " ", "error");
+					}
 				},
 				error: function(xhr, ajaxOptions,x){
 					alert("Error de conexión solicitudes pendientes de laboratorio");
@@ -851,9 +852,15 @@
 			if(($("#txtModeloArtAlta").val())!="" && ($("#txtNumSerieAlta").val())!="" && ($("#cmbNombreArtAlta").val())!=""
 				&& ($("#txtMarcaArtAlta").val())!="" && ($("#txtTipoContenedorAlta").val())!="" && ($("#txtUbicacionAlta").val())!="")
 			{
-				if($("#txtClaveKitAlta").val() == "")
+				if($("#txtClaveKitAlta").val() == "" || $("#txtFechaCaducidadAlta").val() == "")
 				{
-					var claveKit 	="0000";
+					var claveKit 		= "0000";
+					var fechaCaducidad	= "00/00/0000";
+				}
+				else
+				{
+					var claveKit 		= $("#txtClaveKitAlta").val();
+					var fechaCaducidad	= $("#txtFechaCaducidadAlta").val();
 				}
 	       		var imagen						= " ";
 	       		var modelo 						= $("#txtModeloArtAlta").val();
@@ -864,7 +871,6 @@
 				var descripcionArticulo			= $("#txtDescripcionArtAlta").val();
 				var descripcionUso				= $("#txtDescripcionUsoAlta").val();
 				var unidadMedida 				= $("#cmbUm").val();
-				var fechaCaducidad				= $("#txtFechaCaducidadAlta").val();
 				var ubicacionAsignada			= $("#txtUbicacionAlta").val();
 				var estatus						= "V";
 				var parametros 	= "opc=altaInventario1"+"&claveArticulo="+claveArticulo

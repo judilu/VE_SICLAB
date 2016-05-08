@@ -3,7 +3,7 @@
 		<div class="col s12">
 			<div class="row">
 				<div class="input-field col s4">
-					<input id="txtnombreAlumnoPrestamo" type="text" class="validate">
+					<input placeholder=" " id="txtnombreAlumnoPrestamo" type="text" class="validate" disabled>
 					<label for="txtnombreAlumnoPrestamo">Nombre</label>
 				</div>
 				<div class="input-field col s1 offset-s1">

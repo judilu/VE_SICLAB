@@ -257,7 +257,7 @@ function guardaEntrada()
 }
 function insertaPedido($fecha,$hora,$clave,$numCtrl)
 {
-	$responsable	= "6";
+	$responsable	= 0;
 	$cvePrestamo 	= "0";
 	$periodo 		= periodoActual();
 	$conexion 		= conectaBDSICLAB();
