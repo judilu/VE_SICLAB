@@ -1,25 +1,7 @@
 <?php
 require_once('../data/conexion.php');
 require_once('../data/funciones.php');
-function tipoUsuarioSesion()
-{
-	$respuesta = false;
-	session_start();
-	$responsable= $_SESSION['nombre'];
-	$tipoUsuario= "";
-	$conexion 	= conectaBDSICLAB();
-	$consulta	= sprintf("select tipoUsuario from lbusuarios where claveUsuario=%d",$responsable);
-	$res 		= mysql_query($consulta);
-	while($row = mysql_fetch_array($res))
-	{
-		$respuesta = true;
-		$tipoUsuario	= $row["tipoUsuario"];
-	}
-	$arrayJSON = array('respuesta' => $respuesta, 
-						'tipoUsuario' => $tipoUsuario);
-		print json_encode($arrayJSON);
 
-}
 function usuario ()
 {
 	$usuario = GetSQLValueString($_POST['clave1'],"int");
@@ -93,6 +75,7 @@ function pendientesLaboratorio()
 		$percve 	= "";
 		$nomMaestro = "";
 		$nomMat 	= "";
+		$tipoUsuario= tipoUsu($responsable);
 		$solPendientesLab ="";
 		$conexion 	= conectaBDSICLAB();
 		$consulta	= sprintf("select s.claveSolicitud,s.MATCVE,p.tituloPractica,s.fechaSolicitud,s.horaSolicitud,s.claveUsuario 
@@ -136,7 +119,10 @@ function pendientesLaboratorio()
 			$renglones .= "<td>".$rows[$c]["horaSolicitud"]."</td>";
 			$renglones .= "<td><a name = '".$rows[$c]["claveSolicitud"]."' class='btn-floating btn-large waves-effect  green darken-2' type='button' id='btnCalendarizado'><i class='material-icons'>done</i></a></td>";
 			$renglones .= "<td><a name = '".$rows[$c]["claveSolicitud"]."' class='btn-floating btn-large waves-effect amber darken-2' id='btnVerMas'><i class='material-icons'>add</i></a></td>";
-			$renglones .= "<td><a name = '".$rows[$c]["claveSolicitud"]."' class='btn-floating btn-large waves-effect red darken-1' id='btnEliminarSolLab'><i class='material-icons'>delete</i></a></td>";
+			if($tipoUsuario != 3)
+			{
+				$renglones .= "<td><a name = '".$rows[$c]["claveSolicitud"]."' class='btn-floating btn-large waves-effect red darken-1' id='btnEliminarSolLab'><i class='material-icons'>delete</i></a></td>";
+			}
 			$renglones .= "</tr>";
 			$renglones .= "</tbody>";
 			$respuesta = true;
@@ -169,7 +155,6 @@ function verMas()
 			 INNER JOIN lbsolicitudlaboratorios as a ON d.claveSolicitud=a.claveSolicitud 
 			 INNER JOIN lbpracticas as c ON a.clavePractica=c.clavePractica
 				where a.claveSolicitud =%s AND NOT EXISTS(select claveCalendarizacion from lbcalendarizaciones where claveSolicitud=%s)",$clave,$clave);
-			//var_dump($consulta);
 			$renglones	.= "<thead>";
 			$renglones	.= "<tr>";
 			$renglones	.= "<th data-field='nombreArt'>Nombre del artículo</th>";
@@ -814,6 +799,7 @@ function prestamosPendientes()
 		$rows		= array();
 		$renglones	= "";
 		$nombreAlu 	= "";
+		$tipoUsuario= tipoUsu($responsable);
 		$conexion 	= conectaBDSICLAB();
 		$consulta	= sprintf("select ea.ALUCTR,ea.horaEntrada,ea.fechaEntrada,p.clavePrestamo 
 								from lbentradasalumnos ea 
@@ -849,7 +835,10 @@ function prestamosPendientes()
 			$renglones .= "<td>".$rows[$c]["fechaEntrada"]."</td>";
 			$renglones .= "<td>".$rows[$c]["horaEntrada"]."</td>";
 			$renglones .= "<td><a name = '".$rows[$c]["clavePrestamo"]."' class='btn waves-effect waves-light  green darken-2' id='btnAtenderPrestamo'>Atender</a></td>";
-			$renglones .= "<td><a name = '".$rows[$c]["clavePrestamo"]."' class='btn waves-effect waves-light red darken-1 eliminarPrestamo' id='btnEliminarPrestamo' type='submit'>Eliminar</a></td>";
+			if($tipoUsuario != 3)
+			{
+				$renglones .= "<td><a name = '".$rows[$c]["clavePrestamo"]."' class='btn waves-effect waves-light red darken-1 eliminarPrestamo' id='btnEliminarPrestamo' type='submit'>Eliminar</a></td>";
+			}
 			$renglones .= "</tr>";
 			$renglones .= "</tbody>";
 			$respuesta = true;
@@ -857,6 +846,24 @@ function prestamosPendientes()
 	$salidaJSON = array('respuesta' => $respuesta, 
 						'renglones' => $renglones);
 	print json_encode($salidaJSON);
+}
+function tipoUsu($clave)
+{
+	$claveU = $clave;
+	$conexion 	= conectaBDSICLAB();
+	$consulta	= sprintf("select claveUsuario,tipoUsuario 
+								from lbusuarios 
+								where claveUsuario=%d",$claveU);
+	$res 		= mysql_query($consulta);
+	if($row = mysql_fetch_array($res))
+	{
+		return $row["tipoUsuario"];
+	}
+	else
+	{
+		return 0;
+	}
+
 }
 function atenderPrestamo()
 {
@@ -1233,6 +1240,7 @@ function listaAlumnosSancionados()
 		$responsable= $_SESSION['nombre'];
 		$prestamo	= "";
 		$con 		= 0;
+		$tipoUsuario= tipoUsu($responsable);
 		$rows		= array();
 		$renglones	= "";
 		$conexion 	= conectaBDSICLAB();
@@ -1270,7 +1278,10 @@ function listaAlumnosSancionados()
 			$renglones .= "<td>".$rows[$c]["inicioSancion"]."</td>";
 			$renglones .= "<td>".$rows[$c]["finSancion"]."</td>";
 			$renglones .= "<td>".$rows[$c]["comentarios"]."</td>";
-			$renglones .= "<td><a name = '".$rows[$c]["claveSancion"]."' class='btn waves-effect waves-light green darken-2' id='btnQuitaSancion'>Quitar</a></td>";
+			if($tipoUsuario != 3)
+			{
+				$renglones .= "<td><a name = '".$rows[$c]["claveSancion"]."' class='btn waves-effect waves-light green darken-2' id='btnQuitaSancion'>Quitar</a></td>";
+			}
 			$renglones .= "</tr>";
 			$renglones .= "</tbody>";
 			$respuesta = true;
