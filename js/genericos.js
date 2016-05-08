@@ -1457,7 +1457,7 @@
 	$("#btnDevolucionMaterial").on("click",devolucionPrestamo);
 	$("#btnFinalizarDevolucion").on("click",prestamosPendientes);
 	//Laboratorios
-	$("#tabLabs").on("click",sLaboratorioPendientes);
+	$("#tabLabs").on("click",sLaboratorioAceptadas);
 	$("#btnPendientesLab").on("click",sLaboratorioPendientes);
 	$("#btnAceptadasLab").on("click",sLaboratorioAceptadas);
 	$("#btnRegresarVerMas").on("click",sLaboratorioPendientes);

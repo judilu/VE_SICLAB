@@ -66,6 +66,7 @@ var inicio = function ()
 							$("#btnMantenimiento").hide();
 							$("#btnBaja").hide();
 							$("#btnPeticionArticulo").hide();
+							$("#btnPeticionesPendientes").hide();
 							$("#btnPendientesLab").hide();
 							$("#genericos").show("slow");
 							var parametros = "opc=usuario1"+"&clave1="+response.claveUsuario+"&id="+Math.random();

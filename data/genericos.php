@@ -434,6 +434,21 @@ function verMas2()
 						'renglones' => $renglones);
 		print json_encode($arrayJSON);
 }
+function jefeDepto($cvePersona)
+{
+	$clave 		= $cvePersona;
+	$conexion 	= conectaBDSIE();
+	$consulta 	= sprintf("select DEPCVE from DPUEST WHERE PERCVE =%s",$clave);
+	$res 		= mysql_query($consulta);
+	if($row = mysql_fetch_array($res))
+	{
+		return $row["DEPCVE"];
+	}
+	else
+	{
+		return 0;
+	}
+}
 function listaArticulos()
 {
 	$respuesta 	= false;
@@ -445,13 +460,27 @@ function listaArticulos()
 		$con 		= 0;
 		$rows		= array();
 		$renglones	= "";
+		$tipoUsu 	= tipoUsuario($responsable);
+		$clavesLab 	= arrayLabs(jefeDepto(claveMaestro($responsable)));
 		$conexion 	= conectaBDSICLAB();
-		$consulta	= sprintf("select B.claveArticulo,B.nombreArticulo,COUNT(A.claveArticulo) as cantidad 
-								FROM lbarticulos as A 
-								INNER JOIN lbarticuloscat as B ON A.claveArticulo=B.claveArticulo 
-								INNER JOIN lbasignaarticulos C ON A.identificadorArticulo=C.indentificadorArticulo 
-								WHERE C.claveLaboratorio =%s GROUP BY A.claveArticulo",$claveLab);
-		$res 		= mysql_query($consulta);
+		if ($tipoUsu == 5) 
+		{
+			$consulta	= sprintf("select B.claveArticulo,B.nombreArticulo,COUNT(A.claveArticulo) as cantidad 
+									FROM lbarticulos as A 
+									INNER JOIN lbarticuloscat as B ON A.claveArticulo=B.claveArticulo 
+									INNER JOIN lbasignaarticulos C ON A.identificadorArticulo=C.indentificadorArticulo 
+									WHERE C.claveLaboratorio IN(%s) GROUP BY A.claveArticulo",$clavesLab);
+			$res 		= mysql_query($consulta);
+		}
+		else
+		{
+			$consulta	= sprintf("select B.claveArticulo,B.nombreArticulo,COUNT(A.claveArticulo) as cantidad 
+									FROM lbarticulos as A 
+									INNER JOIN lbarticuloscat as B ON A.claveArticulo=B.claveArticulo 
+									INNER JOIN lbasignaarticulos C ON A.identificadorArticulo=C.indentificadorArticulo 
+									WHERE C.claveLaboratorio =%s GROUP BY A.claveArticulo",$claveLab);
+			$res 		= mysql_query($consulta);
+		}
 		$renglones	.= "<thead>";
 		$renglones	.= "<tr>";
 		$renglones	.= "<th data-field='nombreArticulo'>Nombre del artículo</th>";
@@ -721,7 +750,7 @@ function tipoUsuario($claveUsuario)
 	$res 			= mysql_query($consulta);
 	if($row = mysql_fetch_array($res))
 	{
-		return $row["tipoUsuario"];
+		return (int)$row["tipoUsuario"];
 	}
 	else
 	{
@@ -734,7 +763,8 @@ function peticionesPendientesArt()
 	session_start();
 		$responsable= $_SESSION['nombre'];
 		$labCve 	= GetSQLValueString(obtieneCveLab($responsable),"text");
-		$depto 		= obtieneDepto($labCve);
+		$depto 		= jefeDepto(claveMaestro($responsable));
+		$labs 		= arrayLabs($depto);
 		$tipoUsuario= tipoUsuario($responsable);
 		$claveResp 	= claveResp($responsable);
 		$art 		= "";
@@ -743,23 +773,20 @@ function peticionesPendientesArt()
 		$rows		= array();
 		$renglones	= "";
 		$nombreLaboratorio = "";
+		$conexion 	= conectaBDSICLAB();
 		if($tipoUsuario = 5)
 		{
-			$conexion 	= conectaBDSICLAB();
-			$consulta	= sprintf("select p.clavePedido,p.claveLaboratorio,p.nombreArticulo,p.cantidad 
-								from lbpedidos p 
-								where estatus='P' and DEPCVE=%s",$depto);
-			$res 		= mysql_query($consulta);
+			$consulta	= sprintf("select clavePedido,claveLaboratorio,nombreArticulo,cantidad 
+								from lbpedidos 
+								where estatus='P' and claveLaboratorio IN(%s)",$labs);
 		}
 		else
 		{
-			$conexion 	= conectaBDSICLAB();
-			$consulta2	= sprintf("select p.clavePedido,p.claveLaboratorio,p.nombreArticulo,p.cantidad 
+			$consulta	= sprintf("select p.clavePedido,p.claveLaboratorio,p.nombreArticulo,p.cantidad 
 								from lbpedidos p 
-								where estatus='P' and claveResponsable=%s",$claveResp);
-			$res 		= mysql_query($consulta2);
+								where estatus='P' and claveResponsable=%s",$claveResp);	
 		}
-		
+		$res 		= mysql_query($consulta);
 		$renglones	.= "<thead>";
 		$renglones	.= "<tr>";
 		$renglones	.= "<th data-field='laboratorio'>Laboratorio</th>";
