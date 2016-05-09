@@ -99,6 +99,23 @@ function existeCal ($clave)
 	}
 	return false;
 }
+function clavePractica($t,$d)
+{	
+	$titulo		= $t;
+	$duracion 	= $d;
+	$practica 	= 0;
+	$conexion 	= conectaBDSICLAB();
+	$consulta 	= sprintf("select clavePractica from lbpracticas WHERE tituloPractica =%s and duracionPractica =%s",$titulo,$duracion);
+	$res 		= mysql_query($consulta); 
+	if($res)
+	{
+		if($row = mysql_fetch_array($res))
+		{
+			$practica = (int)$row["clavePractica"];
+		}
+	}
+	return $practica;
+}
 function existCal($clave,$p,$mat,$gpo,$pract,$f,$hr)
 {	
 	$maestro	= $clave;
@@ -179,6 +196,23 @@ function claveMaestro($clave)
 	{
 		return 0;
 	}
+}
+function clavematerias($clave)
+{
+	$claveUsuario 	= $clave;
+	$maestro 		= claveMaestro($claveUsuario);
+	$periodo 		= periodoActual();
+	$materias 		= "";
+	$conexion 		= conectaBDSIE();
+	$consulta 		= sprintf("select m.MATCVE from DMATER m inner join DGRUPO g on m.MATCVE = g.MATCVE where g.PERCVE =%d and g.PDOCVE =%s and g.GRUBAS = ' ' and g.INSNUM > 0",$maestro,$periodo);
+	$res			= mysql_query($consulta);
+	while($row = mysql_fetch_array($res))
+	{
+		$materias .= "'".($row["MATCVE"])."',";
+	}
+	$materias = (rtrim($materias,","));
+	return $materias;
+
 }
 function nombreMaestro($clave)
 {
@@ -400,6 +434,28 @@ function comboLab()
 						'con' => $con);
 	print json_encode($arrayJSON);
 }
+function comboLaboratorios()
+{
+	$respuesta 		= false;
+	$comboCveLab 	= "";
+	$comboNomLab 	= "";
+	$con 			= 0;
+	$conexion		= conectaBDSICLAB();
+	$consulta		= sprintf("select claveLaboratorio, nombreLaboratorio from  lblaboratorios  where usoAsignado = ('1' or '3') order by nombreLaboratorio");
+	$res 			= mysql_query($consulta);
+	while($row = mysql_fetch_array($res))
+	{
+		$comboCveLab[] 	=$row["claveLaboratorio"];
+		$comboNomLab[] 	=$row["nombreLaboratorio"];
+		$respuesta = true;
+	}
+	$con = count($comboCveLab);
+	$arrayJSON = array('respuesta' => $respuesta,
+						'comboCveLab' => $comboCveLab, 
+						'comboNomLab' => $comboNomLab, 
+						'contador' => $con);
+	print json_encode($arrayJSON);
+}
 function comboHoraPrac()
 {
 	$laboratorio 	= GetSQLValueString($_POST["laboratorio"],"text");
@@ -598,6 +654,9 @@ switch ($opc)
 		break;
 	case 'comboLab1':
 		comboLab();
+		break;
+	case 'comboLaboratorios1':
+		comboLaboratorios();
 		break;
 	case 'comboHoraPrac1':
 		comboHoraPrac();

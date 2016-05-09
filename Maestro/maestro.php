@@ -10,8 +10,9 @@
 			<div class="col s12" id="tabsMaestro">
 				<ul class="tabs">
 					<li id= "solicitudestab" class="tab col s3 active"><a id="soliAceptadas" href="#solicitudes">Solicitudes</a></li>
+					<li id="practicasMatab" class="tab col s3"><a href="#practicasMa">Prácticas</a></li>
 					<li id="reportestab" class="tab col s3"><a href="#reportes">Reportes</a></li>
-					<li id= "salirTab" class="tab col s4"><a href="#salir">Salir</a></li>
+					<li id= "salirTab" class="tab col s3"><a href="#salir">Salir</a></li>
 				</ul>
 			</div>
 		</div>
@@ -37,11 +38,25 @@
 				<?php include 'sNuevaMaestro.php';?>
 			</div>
 		</div>
+		<div id="practicasMa">
+			<div id="menuPracticasMaestro">
+				<ul>
+					<button class="waves-effect waves-light btn grey" id="btnCatalagoPracticas">Prácticas</button>
+					<button class="waves-effect waves-light btn blue darken-2" id="btnNuevaPracticaMa">Nueva</button>
+				</ul>
+			</div>
+			<div id="catalagoPracticas">
+				<?php include 'catPracticas.php';?>	
+			</div>
+			<div id="NuevaPracticaM">
+				<?php include 'nuevaPractica.php';?>
+			</div>
+		</div>
 		<div id="reportes">
 			<?php include 'seleccionListaAsistencia.php';?>
 		</div>
 		<div id="salir">
-			<?php include '..\Genericos\salirSistema.php';?>
+			<?php include '../Genericos/salirSistema.php';?>
 		</div>
 	</div>
 </body>

@@ -20,7 +20,7 @@ function solicitudesAceptadas ()
 		$rows		= array();
 		$renglones	= "";
 		$conexion 	= conectaBDSICLAB();
-		$consulta	= sprintf("select c.claveCalendarizacion, s.MATCVE, p.tituloPractica, l.nombreLaboratorio, c.fechaAsignada, c.horaAsignada from lbcalendarizaciones c INNER JOIN lbsolicitudlaboratorios s ON s.claveSolicitud = c.claveSolicitud INNER JOIN lblaboratorios l ON l.claveLaboratorio = s.claveLaboratorio INNER JOIN lbpracticas p on p.clavePractica = s.clavePractica WHERE c.PDOCVE =%s AND s.claveUsuario =%d AND c.estatus = 'NR' order by c.fechaAsignada, c.horaAsignada",$periodo,$maestro);
+		$consulta	= sprintf("select c.claveCalendarizacion, s.MATCVE, p.tituloPractica, l.nombreLaboratorio, c.fechaAsignada, c.horaAsignada, c.comentarios from lbcalendarizaciones c INNER JOIN lbsolicitudlaboratorios s ON s.claveSolicitud = c.claveSolicitud INNER JOIN lblaboratorios l ON l.claveLaboratorio = s.claveLaboratorio INNER JOIN lbpracticas p on p.clavePractica = s.clavePractica WHERE c.PDOCVE =%s AND s.claveUsuario =%d AND c.estatus = 'NR' order by c.fechaAsignada, c.horaAsignada",$periodo,$maestro);
 		$res 		= mysql_query($consulta);
 		$renglones	.= "<thead>";
 		$renglones	.= "<tr>";
@@ -52,6 +52,7 @@ function solicitudesAceptadas ()
 			$renglones .= "<td>".$rows[$c]["horaAsignada"]."</td>";
 			$renglones .= "<td><a name = '".$rows[$c]["claveCalendarizacion"]."' class='btn-floating btn-large waves-effect waves-light green darken-2'><i class='material-icons'>thumb_up</i></a></td>";
 			$renglones .= "</tr>";
+			$renglones .= "<tr><td COLSPAN='6'>".$rows[$c]["comentarios"]."</td></tr>";
 			$renglones .= "</tbody>";
 			$respuesta = true;
 		}
@@ -61,7 +62,7 @@ function solicitudesAceptadas ()
 		salir();
 	}
 	$arrayJSON = array('respuesta' => $respuesta,
-		'renglones' => $renglones);
+						'renglones' => $renglones);
 	print json_encode($arrayJSON);
 }
 function liberarPractica ()
@@ -349,6 +350,48 @@ function nuevaSol()
 						'respuesta3' => $respuesta3);
 	print json_encode($arrayJSON);
 }
+function nuevaPract()
+{
+	//insertar en lbsolicitudes
+	$respuesta		= false;
+	$practica 		= 0;
+	$respuesta2 	= false;
+	$titulo 		= GetSQLValueString($_POST['titulo'],"text");
+	$materia 		= GetSQLValueString($_POST['materia'],"text");
+	$laboratorio 	= GetSQLValueString($_POST['laboratorio'],"text");
+	$duracion 		= "'0".($_POST['duracion']).":00'";
+	$descripcion 	= GetSQLValueString($_POST['descripcion'],"text");
+	$conexion 	= conectaBDSICLAB();
+	$consulta 	= sprintf("insert into lbpracticas values(' ',%s,%s,%s,'I','V')",$titulo,$descripcion,$duracion);
+	$res 		= mysql_query($consulta);
+	if(mysql_affected_rows()>0)
+	{
+		$practica 	= clavePractica($titulo,$duracion);
+		$respuesta2 = asignaPractica($practica,$materia,$laboratorio);
+		if($respuesta2==true)
+		{
+			$respuesta = true;
+		} 
+	}
+	$arrayJSON = array('respuesta' => $respuesta);
+	print json_encode($arrayJSON);
+}
+function asignaPractica($p,$m,$l)
+{
+	//insertar en lbasignapracticas
+	$practica 		= $p;
+	$materia 		= $m;
+	$laboratorio 	= $l;
+	$respuesta		= false;
+	$conexion  	= conectaBDSICLAB();
+	$consulta 	= sprintf("insert into lbasignapracticas values(%d,%s,%s)",$practica,$materia,$laboratorio);
+	$res 		= mysql_query($consulta);
+	if(mysql_affected_rows()>0)
+	{
+		$respuesta = true;
+	}
+	return $respuesta;
+}
 function construirTbArt()
 {
 	$cve 	 	= $_POST['articulosAgregados'];
@@ -604,6 +647,55 @@ function listaAlumnos()
 						'depto' => $nomDep);
 	print json_encode($arrayJSON);
 }
+function catPracticas()
+{
+	session_start();
+	$usuario 	= $_SESSION['nombre'];
+	$respuesta 	= false;
+	$nomMaterias ="";
+	$mat 		= ""; //aqui guardaremos las materias que tiene ese maestro
+	$con 		= 0;
+	$rows 		= array();
+	$materias 	= clavematerias($usuario);
+	$renglones	= "";
+	$conexion 	= conectaBDSICLAB();
+	$consulta	= sprintf("select p.tituloPractica, p.descripcion, p.duracionPractica, ap.MATCVE, l.nombreLaboratorio from lbpracticas p inner join lbasignapracticas ap on p.clavePractica = ap.clavePractica inner join lblaboratorios l on ap.claveLaboratorio = l.claveLaboratorio where ap.MATCVE in (%s) order by p.tituloPractica",$materias);
+	$res 		= mysql_query($consulta);
+	$renglones	.= "<thead>";
+	$renglones	.= "<tr>";
+	$renglones	.= "<th data-field='nomPractica'>Nombre de la práctica</th>";
+	$renglones	.= "<th data-field='descripcion'>Descripción</th>";
+	$renglones	.= "<th data-field='duracion'>Duración</th>";
+	$renglones  .= "<th data-field='materia'>Materia</th>";
+	$renglones	.= "<th data-field='laboratorio'>Laboratorio</th>";
+	$renglones	.= "</tr>";
+	$renglones	.= "</thead>";
+	while($row = mysql_fetch_array($res))
+	{
+		$mat 		.= "'".($row["MATCVE"])."',";
+		$rows[]		=$row;
+		$respuesta 	= true;
+		$con++;
+	}
+	$mat 			= (rtrim($mat,","));
+	$nomMaterias 	= nomMat($mat);		   
+	for($c= 0; $c< $con; $c++)
+	{
+		$renglones .= "<tbody>";
+		$renglones .= "<tr>";
+		$renglones .= "<td>".$rows[$c]['tituloPractica']."</td>";
+		$renglones .= "<td>".$rows[$c]['descripcion']."</td>";
+		$renglones .= "<td>".$rows[$c]['duracionPractica']."</td>";
+		$renglones .= "<td>".$nomMaterias[$rows[$c]["MATCVE"]]."</td>";
+		$renglones .= "<td>".$rows[$c]['nombreLaboratorio']."</td>";
+		$renglones .= "</tr>";
+		$renglones .= "</tbody>";
+		$respuesta = true;
+	}
+	$arrayJSON = array('respuesta' => $respuesta,
+		'renglones' => $renglones);
+	print json_encode($arrayJSON);	
+}
 //Menú principal
 $opc = $_POST["opc"];
 switch ($opc){
@@ -631,6 +723,9 @@ switch ($opc){
 	case 'nuevaSol1':
 		nuevaSol();
 		break;
+	case 'nuevaPract1':
+		nuevaPract();
+		break;
 	case 'construirTbArt1':
 		construirTbArt();
 		break;
@@ -648,6 +743,9 @@ switch ($opc){
 		break;
 	case 'listaAlumnos1':
 		listaAlumnos();
+		break;
+	case 'catPracticas1':
+		catPracticas();
 		break;
 } 
 ?>

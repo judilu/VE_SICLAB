@@ -1553,9 +1553,192 @@ var inicioMaestro = function ()
 			}
 		});
     }
+
+    //Inicia función para mostrar el catalago de las prácticas
+    var practicasMaestro = function()
+    {
+    	$("#tabCatPracticas").html(" ");
+		//ocultar los div
+		$("#NuevaPracticaM").hide();
+		//contenido dinamico
+		var parametros = "opc=catPracticas1"+
+		"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/maestros.php",
+			data: parametros,
+			success: function(response)
+			{
+				if(response.respuesta == true)
+				{
+					$("#tabCatPracticas").html(" ");
+					$("#tabCatPracticas").append(response.renglones);
+					//$("#tabCatPracticas a").on("click",editarPractica);
+				}
+				else
+				{
+					sweetAlert("No hay Prácticas..!", "Ninguna de las materias asignadas, cuenta con una práctica", "error");
+				}
+			},
+			error: function(xhr, ajaxOptions,x){
+				console.log("Error de conexión catalogo prácticas");
+				console.log(xhr);
+			}
+		});
+    	$("#catalagoPracticas").show("slow");
+    }//Termina función para mostrar el catalago de las prácticas
+
+    //inicia función de crear una nueva práctica
+    var nPracticaMaestro = function()
+    {
+    	//ocultar Elementos
+    	$("#catalagoPracticas").hide();
+    	$("#NuevaPracticaM").show("slow");
+    	//contenido dinamico
+    	//limpiar datos
+		$("#txtTituloPractica").val("");
+    	$("#txtDuracionPract").val("1");
+    	$("#textareaDesPrac").val("");
+    	//limpiando combos
+		$("#cmbMatPractica").html(" ");
+		$("#cmbMatPractica").html("<option value='' disabled selected>Seleccione la materia</option>");
+		$('select').material_select();
+		$("#cmbLabPractica").html(" ");
+		$("#cmbLabPractica").html("<option value='' disabled selected>Seleccione el laboratorio</option>");
+		$('select').material_select();
+		var parametros = "opc=comboMat1"+
+							"&id="+Math.random();
+			$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/funciones.php",
+			data: parametros,
+			success: function(response)
+			{
+				if(response.respuesta == true)
+				{
+					$("#cmbMatPractica").html(" ");
+					$("#cmbMatPractica").html("<option value='' disabled selected>Seleccione la materia</option>");
+					for (var i = 0; i < response.contador; i++) 
+					{
+						$("#cmbMatPractica").append($("<option></option>").attr("value",response.claveMat[i]).text(response.nombreMat[i]));
+					}
+					$("cmbMatPractica").trigger('contentChanged');
+					$('select').material_select();
+				}
+				else
+				{
+					$("#cmbMatPractica").html(" ");
+					$("#cmbMatPractica").html("<option value='' disabled selected>Seleccione la materia</option>");
+					$('select').material_select();
+					sweetAlert("No tiene materias", "Es posible que no tenga materias asignadas!", "error");
+				}
+			},
+			error: function(xhr, ajaxOptions,x){
+				console.log("Error de conexión combomat nueva practica");	
+			}
+		});
+    }//Termina función de crear una nueva práctica
+
+    //Inicia función para llenar todos los laboratorios
+    var comboLaboratorios = function()
+    {
+    	//contenido dinamico
+    	//limpiando combos
+		$("#cmbLabPractica").html(" ");
+		$("#cmbLabPractica").html("<option value='' disabled selected>Seleccione el laboratorio</option>");
+		$('select').material_select();
+		var parametros = "opc=comboLaboratorios1"+
+							"&id="+Math.random();
+			$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/funciones.php",
+			data: parametros,
+			success: function(response)
+			{
+				if(response.respuesta == true)
+				{
+					$("#cmbLabPractica").html(" ");
+					$("#cmbLabPractica").html("<option value='' disabled selected>Seleccione el laboratorio</option>");
+					for (var i = 0; i < response.contador; i++) 
+					{
+						$("#cmbLabPractica").append($("<option></option>").attr("value",response.comboCveLab[i]).text(response.comboNomLab[i]));
+					}
+					$("cmbLabPractica").trigger('contentChanged');
+					$('select').material_select();
+				}
+				else
+				{
+					$("#cmbLabPractica").html(" ");
+					$("#cmbLabPractica").html("<option value='' disabled selected>Seleccione el laboratorio</option>");
+					$('select').material_select();
+					console.log("no trajo laboratorios");
+				}
+			},
+			error: function(xhr, ajaxOptions,x){
+				console.log("Error de conexión combomat nueva practica");	
+			}
+		});
+    }//Termina función para llenar todos los laboratorios
+
+    //Inicia función para insertar una nueva práctica
+    var altaNuevaPractica = function()
+    {
+    	if($("#txtTituloPractica").val()!=""&& $("#cmbMatPractica option:selected").val()!="" && $("#cmbLabPractica option:selected").val() != "" && $("#textareaDesPrac").val() != "")
+    	{
+    		//contenido dinamico
+    		var titulo 		= $("#txtTituloPractica").val();
+    		var materia 	= $("#cmbMatPractica").val();
+    		var laboratorio = $("#cmbLabPractica").val();
+    		var duracion 	= $("#txtDuracionPract").val();
+    		var descripcion = $("#textareaDesPrac").val();
+    		var parametros = "opc=nuevaPract1"+
+				        			"&titulo="+titulo+
+									"&materia="+materia+
+									"&laboratorio="+laboratorio+
+									"&duracion="+duracion+
+									"&descripcion="+descripcion+
+				        			"&id="+Math.random();
+				$.ajax({
+				        cache:false,
+				        type: "POST",
+				        dataType: "json",
+				        url:'../data/maestros.php',
+				        data: parametros,
+				        success: function(response)
+				        {
+				        		if(response.respuesta == true)
+				        		{
+				                    //limpiar datos
+				                    nPracticaMaestro();
+									swal("La práctica fue creada con éxito!", "Da clic en el botón OK!", "success");				
+								}
+								else
+								{						
+										sweetAlert("Error", "No se pudo crear la práctica!", "error");
+								}
+							},
+							error: function(xhr, ajaxOptions,x)
+							{
+								console.log("Error de conexión Nueva Practica alta");
+							}
+				});
+    	}
+    	else
+    	{
+    		sweetAlert("Error", "Llene todos los campos!", "error");
+    	}
+    }//Termina función para insertar una nueva práctica
+
 	//Configuramos el evento del Tab
 	$("#salirTab").on("click",salir);
 	$("#solicitudestab").on("click",solAceptadas);
+	$("#practicasMatab").on("click",practicasMaestro);
 	
 	//Configuramos los eventos Menu Solicitudes
 	$("#btnSolicitudesAceptadas").on("click",solAceptadas);
@@ -1584,6 +1767,13 @@ var inicioMaestro = function ()
 	$("#btnRegresar").on("click",solNueva);
 	$("#btnAgregarArt").on("click",agregarArt);
 	
+	//Configuramos los eventos Menu Prácticas
+	$("#btnCatalagoPracticas").on("click",practicasMaestro);
+	$("#btnNuevaPracticaMa").on("click",nPracticaMaestro);
+	$("#cmbMatPractica").on("change",comboLaboratorios);
+	$("#btnFinalizarNPractica").on("click",altaNuevaPractica);
+	$("#btnCancelarPractica").on("click",nPracticaMaestro);
+
 	//Configuramos los eventos Menu Reportes
 	$("#reportestab").on("click",tbReportes);
 	$("#btnListaAsistencia").on("click",listaAsistencia);
