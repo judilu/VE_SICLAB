@@ -698,7 +698,8 @@ function catPracticas()
 }
 //Menú principal
 $opc = $_POST["opc"];
-switch ($opc){
+switch ($opc)
+{
 	case 'usuario1':
 	usuario();
 	break;
