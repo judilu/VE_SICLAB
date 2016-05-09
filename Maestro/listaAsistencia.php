@@ -1,5 +1,5 @@
 <div class="listaAsistencia">
-	<h5>Lista de asistencia</h5>
+	<h5 class="centrado">Lista de asistencia</h5>
 	<div class="row">
 		<div class="col s12">
 			<div class="row">

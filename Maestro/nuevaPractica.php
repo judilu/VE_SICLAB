@@ -1,6 +1,6 @@
 <div id="solNuevaMaestro">
 	<div class="row" id="nuevaMaestro">
-		<h5>Nueva práctica</h5>
+		<h5 class="centrado">Nueva práctica</h5>
 		<div class="col s12">
 			<div class="row">
 				<div class="input-field col s6">
