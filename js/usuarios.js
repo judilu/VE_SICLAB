@@ -91,7 +91,8 @@ var inicio = function ()
 				                    dataType: "json",
 				                    url:"../data/alumnos.php",
 				                    data: parametros, 
-				                    success: function(data) {  
+				                    success: function(data) 
+				                    {  
 				                              
 				                    }  
 				                }); 

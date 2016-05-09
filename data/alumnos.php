@@ -1,7 +1,7 @@
 <?php
 require_once('../data/conexion.php');
 require_once('../data/funciones.php');
-function usuario ()
+function usuarioA ()
 {
 	session_start();
 	$_SESSION['nombre'] = GetSQLValueString($_POST['clave1'],"int");
@@ -238,16 +238,17 @@ function consultaHoraPractica()
 }
 function guardaEntrada()
 {
-	$respuesta 		= false;
 	session_start();
-	
+	$usuario 		= $_SESSION['nombre'];
+	$respuesta 		= false;
+	$laboratorio 	= GetSQLValueString(claveLab($usuario),"text");
 	$periodo 		= periodoActual();
 	$claveCal		= GetSQLValueString($_POST["claveCal"],"text");
 	$fecha 			= GetSQLValueString($_POST["fecha"],"text");
 	$hora 			= GetSQLValueString($_POST["hora"],"text");
-	$numControl 	= GetSQLValueString($_POST["nControl"],"int");
+	$numControl 	= GetSQLValueString($_POST["nControl"],"text");
 	$conexion 		= conectaBDSICLAB();
-	$query  		= sprintf("insert into lbentradasalumnos values(%s,%s,%s,%s,%s)",$periodo,$numControl,$fecha,$hora,$claveCal);
+	$query  		= sprintf("insert into lbentradasalumnos values(%s,%s,%s,%s,%s,%s)",$periodo,$numControl,$fecha,$hora,$claveCal,$laboratorio);
 	$res 	 	=  mysql_query($query);
 	if(mysql_affected_rows()>0)
 		$respuesta = true; 
@@ -562,13 +563,16 @@ function consultaSolicitud($claveCal,$fecha)
 }
 function guardaEntradaExt()
 {
-	$periodo 		= '"2161"';//periodoActual();
+	session_start();
+	$usuario 		= $_SESSION['nombre'];
+	$periodo 		= periodoActual();
 	$claveCal		= GetSQLValueString($_POST["calendarizacion"],"int");
+	$laboratorio 	= GetSQLValueString(claveLab($usuario),"text");
 	$fecha 			= GetSQLValueString($_POST["fecha"],"text");
 	$hora 			= GetSQLValueString($_POST["hora"],"text");
 	$numControl 	= GetSQLValueString($_POST["nControl"],"int");
 	$conexion 		= conectaBDSICLAB();
-	$query  		= sprintf("insert into lbentradasexternos values(%s,%s,%s,%s,%s)",$periodo,$numControl,$fecha,$hora,$claveCal);
+	$query  		= sprintf("insert into lbentradasexternos values(%s,%s,%s,%s,%s,%s)",$periodo,$numControl,$fecha,$hora,$claveCal,$laboratorio);
 	$res 	 	=  mysql_query($query);
 	if(mysql_affected_rows()>0)
 		$respuesta = true; 
@@ -621,7 +625,11 @@ function guardaSolicitudExterno()
 }
 //Menú principal
 $opc = $_POST["opc"];
-switch ($opc){
+switch ($opc)
+{
+	case 'usuario1':
+	usuarioA();
+	break;
 	case 'consultaAlumno':
 	consultaAlumno();
 	break;

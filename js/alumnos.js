@@ -833,7 +833,7 @@ var inicio = function()
 	//función para llenar el combo de materiales, omitiendo los que estan en la tabla
 	var checkOtroArticulo = function()
 	{
-		var claveSol = 1;//$("#cmbHorariosPractica").val();
+		var claveSol = $("#cmbHorariosPractica").val();
 		comboclaArt = "";
     	comboArt 	= "";
 		if ($("#chbElegirOtroMaterial").is(':checked'))
@@ -1090,7 +1090,7 @@ var inicio = function()
 		var cantArt 		= numeroArticulos;
 		var nc 				=$("#txtNumeroControlPrestamo").val();
 		var claveCal 		= $("#cmbHorariosPractica").val();
-		var parametros = "opc=guardaSolicitudAlu"+
+		var parametros 		= "opc=guardaSolicitudAlu"+
 							"&listaArt="+listaArt+
 							"&cantArt="+cantArt+
 							"&claveCal="+claveCal+
@@ -1154,7 +1154,8 @@ var inicio = function()
     		dataType: "json",
     		url:"../data/alumnos.php",
     		data: parametros,
-    		success: function(response){
+    		success: function(response)
+    		{
     			if(response.respuesta && response.respuesta2)
     			{
     				swal("Solicitud enviada con éxito!", "Da clic en el botón OK!", "success");

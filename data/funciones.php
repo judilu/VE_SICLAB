@@ -18,6 +18,21 @@ function periodoActual ()
 		return $row["PARFOL1"];
 	}
 }
+function claveLab($clave)
+{
+	$cveResp 		= $clave;
+	$conexion		= conectaBDSICLAB();
+	$consulta 		= sprintf("select ALUCTR from lbusuarios where claveUsuario =%d",$cveResp);
+	$res 			= mysql_query($consulta);
+	if($row = mysql_fetch_array($res))
+	{
+		return $row["ALUCTR"];
+	}
+	else
+	{
+		return 0;
+	}
+}
 //treae el nombre del laboratorio y el departamento
 function deptoLab($s)
 {
