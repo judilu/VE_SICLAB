@@ -1,5 +1,5 @@
 <div id="devolucionMaterial2">
-	<h5>Devolución de material</h5>
+	<h5 class="centrado">Devolución de material</h5>
 	<div class="row">
 				<div class="input-field col s2">
 					<input id="txtNControlAluDev" placeholder="" type="text" class="validate" disabled>

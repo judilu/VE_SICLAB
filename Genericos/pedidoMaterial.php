@@ -1,5 +1,5 @@
 <div>
-	<h5>Pedidos de material</h5>
+	<h5 class="centrado">Pedidos de material</h5>
 	<table>
         <thead>
           <tr>

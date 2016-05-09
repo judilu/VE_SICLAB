@@ -1,5 +1,5 @@
 <div id="sancionesAlumnos2">
-	<h5>Aplicar sanción</h5>
+	<h5 class="centrado">Aplicar sanción</h5>
 	<div class="row">
 		<div class="col s12">
 			<div class="row">

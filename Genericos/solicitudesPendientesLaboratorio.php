@@ -1,5 +1,5 @@
 <div class="row" id="solicitudesPendientesLab2">
-	<h5>Solicitudes pendientes de laboratorio</h5>
+	<h5 class="centrado">Solicitudes pendientes de laboratorio</h5>
 	<div class="col s10 offset-s1">
 		<table id="tbPendientesLab">
 			

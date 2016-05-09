@@ -1,6 +1,6 @@
 <div class="row" id="guardarSolicitud">
 	<div class="col s12">
-			<h5>Aceptar solicitud de laboratorio</h5>
+			<h5 class="centrado">Aceptar solicitud de laboratorio</h5>
 		<div class="row">
 			<div class="input-field col s3">
 				<input placeholder=" " id="txtFechaAsignada" type="text" class="validate">

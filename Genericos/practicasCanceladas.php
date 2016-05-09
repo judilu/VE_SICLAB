@@ -1,5 +1,5 @@
 <div>
-  <h5>Prácticas canceladas</h5>
+  <h5 class="centrado">Prácticas canceladas</h5>
   <table id="tbpracticasCanceladas">
 
   </table>

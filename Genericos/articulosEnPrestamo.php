@@ -1,5 +1,5 @@
 <div>
-	<h5>Articulos que hasn sido prestados y negados</h5>
+	<h5 class="centrado">Articulos que hasn sido prestados y negados</h5>
 	<table id="tbArticulosEnPrestamo">
 
   </table>

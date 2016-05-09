@@ -1,5 +1,5 @@
 <div>
-	<h5>Articulos que se han enviado a mantenimiento</h5>
+	<h5 class="centrado">Articulos que se han enviado a mantenimiento</h5>
 	<table id="tbEnReparacion">
 
   </table>

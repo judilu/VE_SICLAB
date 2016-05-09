@@ -63,15 +63,15 @@
 				</ul>
 			</div>
 			<div id="pantallaInventario">
-				<h5>Inventario</h5>
+				<h5 class="centrado">Inventario</h5>
 				<?php include 'pantallaInventario.php';?>
 			</div>
 			<div id="altaArticulos">
-				<h5>Alta de artículos</h5>
+				<h5 class="centrado">Alta de artículos</h5>
 				<?php include 'altaArticulos.php';?>
 			</div>
 			<div id="bajaArticulos">
-				<h5>Baja de artículos</h5>
+				<h5 class="centrado">Baja de artículos</h5>
 				<?php include 'bajaArticulos.php';?>
 			</div>
 			<div id="mantenimientoArticulos">
@@ -81,7 +81,7 @@
 				<?php include 'peticionesPendientes.php';?>
 			</div>
 			<div id="peticionesArticulos">
-				<h5>Peticiones de articulos</h5>
+				<h5 class="centrado">Peticiones de articulos</h5>
 				<?php include 'peticionesArticulos.php';?>
 			</div>
 		</div>
@@ -111,7 +111,7 @@
 				</ul>
 			</div>
 			<div id="resumenReportes1">
-				<h5>Resumen</h5>
+				<h5 class="centrado">Resumen</h5>
 				<?php include 'resumenReportes.php';?>
 			</div>
 			<div id="bajoInventario1">

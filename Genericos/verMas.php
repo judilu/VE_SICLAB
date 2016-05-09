@@ -2,7 +2,7 @@
 	<div class="col s12">
 		<div class="row">
 			<div class="col">
-				<h5>Información general</h5>
+				<h5 class="centrado">Información general</h5>
 			</div>
 			
 			<div class="input-field col s3 offset-s3">
@@ -26,7 +26,7 @@
 		</div>
 		<div class="row">
 			<div class="col s10 offset-s1">
-				<h5>Materiales necesarios para la práctica</h5>
+				<h5 class="centrado">Materiales necesarios para la práctica</h5>
 				<table id="tbMaterialesPendientesLab">
 					<!--se llena dinamicamente con php-->
 				</table>

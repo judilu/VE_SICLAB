@@ -1,5 +1,5 @@
 <div>
-	<h5>Productos con bajo inventrio</h5>
+	<h5 class="centrado">Productos con bajo inventrio</h5>
 	<table>
         <thead>
           <tr>

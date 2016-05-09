@@ -1,5 +1,5 @@
 <div id="datosPractica2">
-	<h5>Datos de la práctica</h5>
+	<h5 class="centrado">Datos de la práctica</h5>
 	<div class="row">
 		<div class="col s12">
 			<div class="row">

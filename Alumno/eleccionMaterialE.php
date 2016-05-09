@@ -1,5 +1,5 @@
 <div id="seccionMaterialE">
-	<h5>Elección de material</h5>
+	<h5 class="centrado">Elección de material</h5>
 	<div class="row">
 		<div class="input-field col s2">
 			<input placeholder="" id="txtFechaActualEM" type="text" class="validate" disabled>
