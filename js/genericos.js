@@ -764,7 +764,29 @@
 	//Busca un articulo en la lista de artículos del laboratorio
 	var buscaArtInventario = function()
 	{
-		
+		var articulo = $("#txtArticuloLista").val();
+		var parametros 	= "opc=buscaArtLista1"
+						+"&articulo="+articulo
+						+"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/genericos.php",
+			data: parametros,
+			success: function(response){
+				if(response.respuesta == true)
+				{
+					$("#tbInventario").html("");
+					$("#tbInventario").append(response.renglones);
+				}
+				else
+					sweetAlert("No existe ese artículo..!", " ", "error");
+			},
+			error: function(xhr, ajaxOptions,x){
+				alert("Error de conexión lista de artículos");
+			}
+		});
 	}
 	//Muestra la lista de artículos pertenecientes al laboratorio del usuario
 	var listaArticulos = function()
@@ -1406,51 +1428,51 @@
 	
 	//Reportes
 	//NUEVO EDWIN
-	var resumenReportes=function()
+		var resumenReportes=function()
 	{
 
-		$("#existenciaInventario1").hide("slow");
-		$("#pedidoMaterial1").hide("slow");
-		$("#bajoInventario1").hide("slow");
+		$("#existenciaInventario").hide("slow");
+		$("#pedidoMaterial").hide("slow");
+		$("#bajoInventario").hide("slow");
 		$("#enReparacion").hide("slow");
 		$("#enPrestamo").hide("slow");
 		$("#practicasNoRealizadas").hide("slow");
 		$("#practicasRealizadas").hide("slow");
 		$("#practicasCanceladas").hide("slow");
-		$("#resumenReportes1").show("slow");
+		$("#resumenReportes").show("slow");
 		alumnosActuales();
 	}
 	var existenciaInventario=function()
 	{
-		$("#resumenReportes1").hide("slow");
-		$("#pedidoMaterial1").hide("slow");
-		$("#bajoInventario1").hide("slow");	
+		$("#resumenReportes").hide("slow");
+		$("#pedidoMaterial").hide("slow");
+		$("#bajoInventario").hide("slow");	
 		$("#enReparacion").hide("slow");
 		$("#enPrestamo").hide("slow");
 		$("#practicasNoRealizadas").hide("slow");
 		$("#practicasRealizadas").hide("slow");
 		$("#practicasCanceladas").hide("slow");
-		$("#existenciaInventario1").show("slow");
+		$("#existenciaInventario").show("slow");
 		resumenInventarioActual();
 	}
 	var bajoInventario = function()
 	{
-		$("#resumenReportes1").hide("slow");
-		$("#existenciaInventario1").hide("slow");
-		$("#pedidoMaterial1").hide("slow");
+		$("#resumenReportes").hide("slow");
+		$("#existenciaInventario").hide("slow");
+		$("#pedidoMaterial").hide("slow");
 		$("#enReparacion").hide("slow");
 		$("#enPrestamo").hide("slow");
 		$("#practicasNoRealizadas").hide("slow");
 		$("#practicasRealizadas").hide("slow");
 		$("#practicasCanceladas").hide("slow");
-		$("#bajoInventario1").show("slow");
+		$("#bajoInventario").show("slow");
 	}
 	var enReparacion = function()
 	{
-		$("#resumenReportes1").hide("slow");
-		$("#existenciaInventario1").hide("slow");
-		$("#pedidoMaterial1").hide("slow");
-		$("#bajoInventario1").hide("slow");
+		$("#resumenReportes").hide("slow");
+		$("#existenciaInventario").hide("slow");
+		$("#pedidoMaterial").hide("slow");
+		$("#bajoInventario").hide("slow");
 		$("#enPrestamo").hide("slow");
 		$("#practicasNoRealizadas").hide("slow");
 		$("#practicasRealizadas").hide("slow");
@@ -1461,10 +1483,10 @@
 	}
 	var enPrestamo = function()
 	{
-		$("#resumenReportes1").hide("slow");
-		$("#existenciaInventario1").hide("slow");
-		$("#pedidoMaterial1").hide("slow");
-		$("#bajoInventario1").hide("slow");
+		$("#resumenReportes").hide("slow");
+		$("#existenciaInventario").hide("slow");
+		$("#pedidoMaterial").hide("slow");
+		$("#bajoInventario").hide("slow");
 		$("#enReparacion").hide("slow");
 		$("#practicasNoRealizadas").hide("slow");
 		$("#practicasRealizadas").hide("slow");
@@ -1475,39 +1497,40 @@
 	}
 	var pedidoMaterial=function()
 	{
-		$("#resumenReportes1").hide("slow");
-		$("#existenciaInventario1").hide("slow");
-		$("#bajoInventario1").hide("slow");
+		$("#resumenReportes").hide("slow");
+		$("#existenciaInventario").hide("slow");
+		$("#bajoInventario").hide("slow");
 		$("#enReparacion").hide("slow");
 		$("#enPrestamo").hide("slow");
 		$("#practicasNoRealizadas").hide("slow");
 		$("#practicasRealizadas").hide("slow");
 		$("#practicasCanceladas").hide("slow");
-		$("#pedidoMaterial1").show("slow");
+		$("#pedidoMaterial").show("slow");
 		articulosPedidos();
 
 	}
 	var practicasNoRealizadas=function()
 	{
-		$("#resumenReportes1").hide("slow");
-		$("#existenciaInventario1").hide("slow");
-		$("#bajoInventario1").hide("slow");
+		$("#resumenReportes").hide("slow");
+		$("#existenciaInventario").hide("slow");
+		$("#bajoInventario").hide("slow");
 		$("#enReparacion").hide("slow");
 		$("#enPrestamo").hide("slow");
-		$("#pedidoMaterial1").hide("slow");
+		$("#pedidoMaterial").hide("slow");
 		$("#practicasRealizadas").hide("slow");
 		$("#practicasCanceladas").hide("slow");
 		$("#practicasNoRealizadas").show("slow");
+
 		noRealizadas();
 	}
 	var practicasRealizadas=function()
 	{
-		$("#resumenReportes1").hide("slow");
-		$("#existenciaInventario1").hide("slow");
-		$("#pedidoMaterial1").hide("slow");
-		$("#bajoInventario1").hide("slow");
+		$("#resumenReportes").hide("slow");
+		$("#existenciaInventario").hide("slow");
+		$("#bajoInventario").hide("slow");
 		$("#enReparacion").hide("slow");
 		$("#enPrestamo").hide("slow");
+		$("#pedidoMaterial").hide("slow");
 		$("#practicasNoRealizadas").hide("slow");
 		$("#practicasCanceladas").hide("slow");
 		$("#practicasRealizadas").show("slow");
@@ -1515,12 +1538,12 @@
 	}
 	var practicasCanceladas=function()
 	{
-		$("#resumenReportes1").hide("slow");
-		$("#existenciaInventario1").hide("slow");
-		$("#pedidoMaterial1").hide("slow");
-		$("#bajoInventario1").hide("slow");
+		$("#resumenReportes").hide("slow");
+		$("#existenciaInventario").hide("slow");
+		$("#bajoInventario").hide("slow");
 		$("#enReparacion").hide("slow");
 		$("#enPrestamo").hide("slow");
+		$("#pedidoMaterial").hide("slow");
 		$("#practicasNoRealizadas").hide("slow");
 		$("#practicasRealizadas").hide("slow");
 		$("#practicasCanceladas").show("slow");
@@ -1664,7 +1687,6 @@
 				if(response.respuesta == true)
 				{
 					$("#tbArticulosEnPrestamo").html(" ");
-					alert("si entro");
 					$("#tbArticulosEnPrestamo").append(response.renglones);
 				}
 				else
@@ -1863,7 +1885,7 @@
 	$("#btnCancelarPeticionArt").on("click",peticionesArticulos);
 	$("#chbOtroArticulo").on("change",checkOtroArticulo);
 	$("#btnEnviarPeticionArticulo").on("click",guardaPeticionArticulo);	
-	$("#btnBucarInventario").on("click",buscaArtInventario);	
+	$("#btnBucarInventario").on("click",buscaArtInventario);
 	//Reportes
 	$("#tabReportesGenericos").on("click",resumenReportes);
 	$("#btnPracticasNoRealizadas").on("click",practicasNoRealizadas);

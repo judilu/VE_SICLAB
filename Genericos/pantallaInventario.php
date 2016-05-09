@@ -2,7 +2,7 @@
 	<div class="col s12">
 		<div class="row">
 			<div class="input-field col s4">
-				<input id="txtArticulo" type="text" class="validate">
+				<input id="txtArticuloLista" type="text" class="validate">
 				<label class="active" for="txtArticulo">Artículo</label>
 			</div>
 			<div class="col s3">

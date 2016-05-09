@@ -100,6 +100,14 @@
 					    <li><a id="btnMaterialEnPrestamo">En prestamo</a></li>
 					    <li><a id="btnPedidoMaterial">Pedidos</a></li>
 					  </ul>
+					   <!-- Dropdown Trigger -->
+					  <a class='dropdown-button btn waves-effect waves-light blue darken-2' data-activates='dropdown2'>Prácticas</a>
+					  <!-- Dropdown Structure -->
+					  <ul id='dropdown2' class='dropdown-content'>
+					    <li><a id="btnPracticasNoRealizadas">No realizadas</a></li>
+					    <li><a id="btnPracticasRealizadas">Realizadas</a></li>
+					    <li><a id="btnPracticasCanceladas">Canceladas</a></li>
+					  </ul>
 				</ul>
 			</div>
 			<div id="resumenReportes1">

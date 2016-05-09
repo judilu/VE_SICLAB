@@ -3,7 +3,7 @@
 #existenciaInventario, #listaArtMtto, #listaMtto, #menuMtto, 
 #pedidoMaterial, #peticionesArticulos, #peticionesPendientes, 
 #sAceptadasLab, #salir, #sancionesAlumnos, #solicitudesEnProceso,  
-#verMasSolicitud, #verMasSolicitud2, #practicasNoRealizadas, #practicasRealizadas
+#verMasSolicitud, #verMasSolicitud2, #practicasNoRealizadas, #practicasRealizadas, #enPrestamo
 {
 	display: none;
 }

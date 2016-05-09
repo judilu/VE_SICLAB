@@ -1545,7 +1545,7 @@ function regresaMantenimiento()
 		$fechaMovimiento		= GetSQLValueString($_POST["fecha"],"text");
 		$horaMovimiento			= GetSQLValueString($_POST["hora"],"text");
 		$claveResponsable 		= claveResp($responsable);
-		$conexion 	= conectaBDSICLAB();
+		$conexion 				= conectaBDSICLAB();
 
 		$consulta 	= sprintf("insert into lbmovimientosarticulos values(%s,%s,%s,%s,%s,%s,%s,%d,%s)",
 						$periodo,$fechaMovimiento,$horaMovimiento,$claveResponsable,$identificador,$observaciones,
@@ -1555,6 +1555,67 @@ function regresaMantenimiento()
 			$respuesta = true;
 	$salidaJSON = array('respuesta' => $respuesta);
 	print json_encode($salidaJSON);
+}
+function buscaArtLista()
+{
+	$respuesta 	 	= false;
+	session_start();
+	$responsable 	= $_SESSION['nombre'];
+	$articulo 	 	= "%".$_POST["articulo"]."%";
+	$art 			= "";
+	$articulos 		= "";
+	$con 			= 0;
+	$rows			= array();
+	$renglones		= "";
+	$claveLab 		= GetSQLValueString(obtieneCveLab($responsable),"text");
+	$tipoUsu 		= tipoUsuario($responsable);
+	$clavesLab 		= arrayLabs(jefeDepto(claveMaestro($responsable)));
+	$conexion 		= conectaBDSICLAB();
+	if ($tipoUsu == 5) 
+		{
+			$consulta	= sprintf("select B.claveArticulo,B.nombreArticulo,COUNT(A.claveArticulo) as cantidad 
+									FROM lbarticulos as A 
+									INNER JOIN lbarticuloscat as B ON A.claveArticulo=B.claveArticulo 
+									INNER JOIN lbasignaarticulos C ON A.identificadorArticulo=C.indentificadorArticulo 
+									WHERE C.claveLaboratorio IN(%s) and B.nombreArticulo like '%s' GROUP BY A.claveArticulo",$clavesLab,$articulo);
+			$res 		= mysql_query($consulta);
+		}
+		else
+		{
+			$consulta	= sprintf("select B.claveArticulo,B.nombreArticulo,COUNT(A.claveArticulo) as cantidad 
+									FROM lbarticulos as A 
+									INNER JOIN lbarticuloscat as B ON A.claveArticulo=B.claveArticulo 
+									INNER JOIN lbasignaarticulos C ON A.identificadorArticulo=C.indentificadorArticulo 
+									WHERE C.claveLaboratorio =%s and B.nombreArticulo like '%s' GROUP BY A.claveArticulo",$claveLab,$articulo);
+			$res 		= mysql_query($consulta);
+		}
+		$renglones	.= "<thead>";
+		$renglones	.= "<tr>";
+		$renglones	.= "<th data-field='nombreArticulo'>Nombre del artículo</th>";
+		$renglones	.= "<th data-field='cantidad'>Cantidad</th>";
+		$renglones	.= "</tr>";
+		$renglones	.= "</thead>";
+		while($row = mysql_fetch_array($res))
+		{
+			$art 	.= "'".($row["claveArticulo"])."',";
+			$rows[]=$row;
+			$respuesta = true;
+			$con++;
+		}
+		$art = (rtrim($art,","));
+		for($c= 0; $c< $con; $c++)
+		{
+			$renglones .= "<tbody>";
+			$renglones .= "<tr>";
+			$renglones .= "<td>".$rows[$c]["nombreArticulo"]."</td>";
+			$renglones .= "<td>".$rows[$c]["cantidad"]."</td>";
+			$renglones .= "</tr>";
+			$renglones .= "</tbody>";
+			$respuesta = true;
+		}
+	$arrayJSON = array('respuesta' => $respuesta,
+						'renglones' => $renglones);
+	print json_encode($arrayJSON);
 }
 //FIN ANA
 //INICIO EDWIN
@@ -2203,6 +2264,9 @@ switch ($opc){
 	break;
 	case 'regresaMtto1':
 	regresaMantenimiento();
+	break;
+	case 'buscaArtLista1':
+	buscaArtLista();
 	break;
 
 	//EDWIN
