@@ -1405,37 +1405,416 @@
 	//fin de las peticiones de los articulos
 	
 	//Reportes
+	//NUEVO EDWIN
 	var resumenReportes=function()
 	{
-		if (tipoUsu == 1 || tipoUsu == 2 || tipoUsu == 5)
-		{
-			$("#existenciaInventario").hide("slow");
-			$("#pedidoMaterial").hide("slow");
-			$("#bajoInventario").hide("slow");
-			$("#resumenReportes").show("slow");
-		}
+
+		$("#existenciaInventario1").hide("slow");
+		$("#pedidoMaterial1").hide("slow");
+		$("#bajoInventario1").hide("slow");
+		$("#enReparacion").hide("slow");
+		$("#enPrestamo").hide("slow");
+		$("#practicasNoRealizadas").hide("slow");
+		$("#practicasRealizadas").hide("slow");
+		$("#practicasCanceladas").hide("slow");
+		$("#resumenReportes1").show("slow");
+		alumnosActuales();
 	}
 	var existenciaInventario=function()
 	{
-		$("#resumenReportes").hide("slow");
-		$("#pedidoMaterial").hide("slow");
-		$("#bajoInventario").hide("slow");	
-		$("#existenciaInventario").show("slow");
+		$("#resumenReportes1").hide("slow");
+		$("#pedidoMaterial1").hide("slow");
+		$("#bajoInventario1").hide("slow");	
+		$("#enReparacion").hide("slow");
+		$("#enPrestamo").hide("slow");
+		$("#practicasNoRealizadas").hide("slow");
+		$("#practicasRealizadas").hide("slow");
+		$("#practicasCanceladas").hide("slow");
+		$("#existenciaInventario1").show("slow");
+		resumenInventarioActual();
 	}
 	var bajoInventario = function()
 	{
-		$("#resumenReportes").hide("slow");
-		$("#existenciaInventario").hide("slow");
-		$("#pedidoMaterial").hide("slow");
-		$("#bajoInventario").show("slow");
+		$("#resumenReportes1").hide("slow");
+		$("#existenciaInventario1").hide("slow");
+		$("#pedidoMaterial1").hide("slow");
+		$("#enReparacion").hide("slow");
+		$("#enPrestamo").hide("slow");
+		$("#practicasNoRealizadas").hide("slow");
+		$("#practicasRealizadas").hide("slow");
+		$("#practicasCanceladas").hide("slow");
+		$("#bajoInventario1").show("slow");
+	}
+	var enReparacion = function()
+	{
+		$("#resumenReportes1").hide("slow");
+		$("#existenciaInventario1").hide("slow");
+		$("#pedidoMaterial1").hide("slow");
+		$("#bajoInventario1").hide("slow");
+		$("#enPrestamo").hide("slow");
+		$("#practicasNoRealizadas").hide("slow");
+		$("#practicasRealizadas").hide("slow");
+		$("#practicasCanceladas").hide("slow");
+		$("#enReparacion").show("slow");
+		articulosEnReparacion();
+
+	}
+	var enPrestamo = function()
+	{
+		$("#resumenReportes1").hide("slow");
+		$("#existenciaInventario1").hide("slow");
+		$("#pedidoMaterial1").hide("slow");
+		$("#bajoInventario1").hide("slow");
+		$("#enReparacion").hide("slow");
+		$("#practicasNoRealizadas").hide("slow");
+		$("#practicasRealizadas").hide("slow");
+		$("#practicasCanceladas").hide("slow");
+		$("#enPrestamo").show("slow");
+		articulosEnPrestamo();
+
 	}
 	var pedidoMaterial=function()
 	{
-		$("#resumenReportes").hide("slow");
-		$("#existenciaInventario").hide("slow");
-		$("#bajoInventario").hide("slow");
-		$("#pedidoMaterial").show("slow");
+		$("#resumenReportes1").hide("slow");
+		$("#existenciaInventario1").hide("slow");
+		$("#bajoInventario1").hide("slow");
+		$("#enReparacion").hide("slow");
+		$("#enPrestamo").hide("slow");
+		$("#practicasNoRealizadas").hide("slow");
+		$("#practicasRealizadas").hide("slow");
+		$("#practicasCanceladas").hide("slow");
+		$("#pedidoMaterial1").show("slow");
+		articulosPedidos();
+
 	}
+	var practicasNoRealizadas=function()
+	{
+		$("#resumenReportes1").hide("slow");
+		$("#existenciaInventario1").hide("slow");
+		$("#bajoInventario1").hide("slow");
+		$("#enReparacion").hide("slow");
+		$("#enPrestamo").hide("slow");
+		$("#pedidoMaterial1").hide("slow");
+		$("#practicasRealizadas").hide("slow");
+		$("#practicasCanceladas").hide("slow");
+		$("#practicasNoRealizadas").show("slow");
+		noRealizadas();
+	}
+	var practicasRealizadas=function()
+	{
+		$("#resumenReportes1").hide("slow");
+		$("#existenciaInventario1").hide("slow");
+		$("#pedidoMaterial1").hide("slow");
+		$("#bajoInventario1").hide("slow");
+		$("#enReparacion").hide("slow");
+		$("#enPrestamo").hide("slow");
+		$("#practicasNoRealizadas").hide("slow");
+		$("#practicasCanceladas").hide("slow");
+		$("#practicasRealizadas").show("slow");
+		Realizadas();
+	}
+	var practicasCanceladas=function()
+	{
+		$("#resumenReportes1").hide("slow");
+		$("#existenciaInventario1").hide("slow");
+		$("#pedidoMaterial1").hide("slow");
+		$("#bajoInventario1").hide("slow");
+		$("#enReparacion").hide("slow");
+		$("#enPrestamo").hide("slow");
+		$("#practicasNoRealizadas").hide("slow");
+		$("#practicasRealizadas").hide("slow");
+		$("#practicasCanceladas").show("slow");
+		Canceladas();
+	}
+	var alumnosActuales = function()	
+	{
+		var parametros = "opc=alumnosActuales1"+
+							"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/genericos.php",
+			data: parametros,
+			success: function(response){
+				if(response.respuesta == true)
+				{
+					$("#alumnosActuales").html("");
+					$("#alumnosActuales").append(response.renglones);
+				}
+			},
+			error: function(xhr, ajaxOptions,x){
+				
+				console.log(xhr);
+			}
+		});
+	}
+	var articuloMasPrestado = function()	
+	{
+		var parametros = "opc=articuloMasPrestado1"+
+		"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/genericos.php",
+			data: parametros,
+			success: function(response){
+				if(response.respuesta == true)
+				{
+					$("#masSolicitado").html(" ");
+					$("#masSolicitado").append(response.renglones);
+				}
+			},
+			error: function(xhr, ajaxOptions,x){
+				
+				console.log(xhr);
+			}
+		});
+	}
+	var proximosApartados = function()	
+	{
+		var parametros = "opc=proximosApartados1"+
+		"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/genericos.php",
+			data: parametros,
+			success: function(response){
+				if(response.respuesta == true)
+				{
+					$("#tbProximosApartados").html(" ");
+					$("#tbProximosApartados").append(response.renglones);
+				}
+			},
+			error: function(xhr, ajaxOptions,x){
+				
+				console.log(xhr);
+			}
+		});
+	}
+	var resumenInventarioActual = function()
+	{
+		var parametros = "opc=resumenInventarioActual1"+
+		"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/genericos.php",
+			data: parametros,
+			success: function(response){
+				if(response.respuesta == true)
+				{
+					$("#tbInventarioActual").html(" ");
+					$("#tbInventarioActual").append(response.renglones);
+				}
+				else
+					sweetAlert("Sin inventario", "", "error");
+			},
+			error: function(xhr, ajaxOptions,x){
+				console.log("Error de conexión sol aceptadas");
+				console.log(xhr);
+			}
+		});
+	}
+	var articulosEnReparacion = function()
+	{
+		//ocultar los div
+		
+		//contenido dinamico
+		var parametros = "opc=enReparacion1"+
+		"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/genericos.php",
+			data: parametros,
+			success: function(response){
+				if(response.respuesta == true)
+				{
+					$("#tbEnReparacion").html(" ");
+					$("#tbEnReparacion").append(response.renglones);
+				}
+				else
+					sweetAlert("Sin articulos en reparación", "No hay articulos en reparación actualmente.", "error");
+			},
+			error: function(xhr, ajaxOptions,x){
+				console.log("Error de conexión");
+				console.log(xhr);
+			}
+		});
+	}
+	var articulosEnPrestamo= function()
+	{
+		//ocultar los div
+		//contenido dinamico
+		var parametros = "opc=enPrestamo1"+
+		"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/genericos.php",
+			data: parametros,
+			success: function(response){
+				if(response.respuesta == true)
+				{
+					$("#tbArticulosEnPrestamo").html(" ");
+					alert("si entro");
+					$("#tbArticulosEnPrestamo").append(response.renglones);
+				}
+				else
+					sweetAlert("Sin articulos en préstamo", "No hay articulos en préstamo actualmente.", "error");
+			},
+			error: function(xhr, ajaxOptions,x){
+				console.log("Error de conexión");
+			}
+		});
+	}
+	var articulosPedidos= function()
+	{
+		//ocultar los div
+		
+		//contenido dinamico
+		var parametros = "opc=enPedido1"+
+		"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/genericos.php",
+			data: parametros,
+			success: function(response){
+				if(response.respuesta == true)
+				{
+					$("#tbPedidosMaterial").html(" ");
+					$("#tbPedidosMaterial").append(response.renglones);
+				}
+				else
+					sweetAlert("Sin articulos pedidos", "No hay articulos en con solicitud de peticion sin aceptar.", "error");
+			},
+			error: function(xhr, ajaxOptions,x){
+				console.log("Error de conexión");
+				console.log(xhr);
+			}
+		});
+	}
+	//FALTA
+	var articulosSinExistencia = function()
+	{
+		//ocultar los div
+		
+		//contenido dinamico
+		var parametros = "opc=articulosSinExistencia1"+
+		"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/genericos.php",
+			data: parametros,
+			success: function(response){
+				if(response.respuesta == true)
+				{
+					$("#tbMaterialesSinStock").html(" ");
+					$("#tbMaterialesSinStock").append(response.renglones);
+				}
+			},
+			error: function(xhr, ajaxOptions,x){
+				console.log(xhr);
+			}
+		});
+	}
+
+	var noRealizadas = function()
+	{
+		//ocultar los div
+		
+		//contenido dinamico
+		var parametros = "opc=practicasNoRealizadas1"+
+		"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/genericos.php",
+			data: parametros,
+			success: function(response){
+				if(response.respuesta == true)
+				{
+					$("#tbpracticasNoRealizadas").html(" ");
+					$("#tbpracticasNoRealizadas").append(response.renglones);
+				}
+				else
+					sweetAlert("Sin prácticas", "No hay prácticas pendientes actualmente.", "error");
+			},
+			error: function(xhr, ajaxOptions,x){
+				console.log("Error de conexión");
+				console.log(xhr);
+			}
+		});
+	}
+	var Realizadas = function()
+	{
+		//ocultar los div
+		
+		//contenido dinamico
+		var parametros = "opc=practicasRealizadas1"+
+		"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/genericos.php",
+			data: parametros,
+			success: function(response){
+				if(response.respuesta == true)
+				{
+					$("#tbpracticasRealizadas").html(" ");
+					$("#tbpracticasRealizadas").append(response.renglones);
+				}
+				else
+					sweetAlert("Sin prácticas", "No hay prácticas realizadas actualmente.", "error");
+			},
+			error: function(xhr, ajaxOptions,x){
+				console.log("Error de conexión");
+				console.log(xhr);
+			}
+		});
+	}
+	var Canceladas = function()
+	{
+		//ocultar los div
+		
+		//contenido dinamico
+		var parametros = "opc=practicasCanceladas1"+
+		"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/genericos.php",
+			data: parametros,
+			success: function(response){
+				if(response.respuesta == true)
+				{
+					$("#tbpracticasCanceladas").html(" ");
+					$("#tbpracticasCanceladas").append(response.renglones);
+				}
+				else
+					sweetAlert("Sin prácticas", "No hay prácticas canceladas actualmente.", "error");
+			},
+			error: function(xhr, ajaxOptions,x){
+				console.log("Error de conexión");
+				console.log(xhr);
+			}
+		});
+	}
+	//FIN EDWIN NUEVO
 	//Salir
 	$("#tabSalir").on("click",salir);
 	//Prestamos
@@ -1487,9 +1866,18 @@
 	$("#btnBucarInventario").on("click",buscaArtInventario);	
 	//Reportes
 	$("#tabReportesGenericos").on("click",resumenReportes);
+	$("#btnPracticasNoRealizadas").on("click",practicasNoRealizadas);
+	$("#btnPracticasRealizadas").on("click",practicasRealizadas);
+	$("#btnPracticasCanceladas").on("click",practicasCanceladas);
 	$("#btnResumenReportes").on("click",resumenReportes);
+	$("#tabReportesGenericos").on("click",alumnosActuales);
+	$("#tabReportesGenericos").on("click",articuloMasPrestado);
+	$("#tabReportesGenericos").on("click",articulosSinExistencia);
+	$("#tabReportesGenericos").on("click",proximosApartados);
 	$("#btnExistenciaInventario").on("click",existenciaInventario);
 	$("#btnBajoInventario").on("click",bajoInventario);
+	$("#btnMaterialDañado").on("click",enReparacion);
+	$("#btnMaterialEnPrestamo").on("click",enPrestamo);
 	$("#btnPedidoMaterial").on("click",pedidoMaterial);
 	$('.dropdown-button').dropdown({
 		inDuration: 300,

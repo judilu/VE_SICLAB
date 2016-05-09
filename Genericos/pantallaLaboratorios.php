@@ -102,17 +102,17 @@
 					  </ul>
 				</ul>
 			</div>
-			<div id="resumenReportes">
+			<div id="resumenReportes1">
 				<h5>Resumen</h5>
 				<?php include 'resumenReportes.php';?>
 			</div>
-			<div id="bajoInventario">
+			<div id="bajoInventario1">
 				<?php include 'bajoInventario.php';?>
 			</div>
-			<div id="existenciaInventario">
+			<div id="existenciaInventario1">
 				<?php include 'existenciaInventario.php';?>
 			</div>
-			<div id="pedidoMaterial">
+			<div id="pedidoMaterial1">
 				<?php include 'pedidoMaterial.php';?>
 			</div>
 		</div>
