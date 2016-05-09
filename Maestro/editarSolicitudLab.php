@@ -1,6 +1,6 @@
 <div id = "editarSolLab">
 		<div class="row" id="editarSol">
-			<h5>Editar Solicitud</h5>
+			<h5 class="centrado">Editar Solicitud</h5>
 			<div class="col s12">
 				<div class="row">
 					<div class="input-field col s6">

@@ -1575,7 +1575,6 @@ var inicioMaestro = function ()
 				{
 					$("#tabCatPracticas").html(" ");
 					$("#tabCatPracticas").append(response.renglones);
-					//$("#tabCatPracticas a").on("click",editarPractica);
 				}
 				else
 				{

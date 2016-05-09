@@ -1,6 +1,6 @@
 <div class="listaAsistencia">
 	<div class="row" id="selecionarLista">
-		<h5>Seleccionar lista de asistencia</h5>
+		<h5 class="centrado">Seleccionar lista de asistencia</h5>
 		<div class="col s12">
 			<div class="row">
 				<div class="input-field col s2">
