@@ -512,8 +512,8 @@ function listaArticulos()
 			$renglones .= "</tbody>";
 			$respuesta = true;
 		}
-	$arrayJSON = array('respuesta' => $respuesta,
-		'renglones' => $renglones);
+	$arrayJSON = array('respuesta' 	=> $respuesta,
+						'renglones' => $renglones);
 	print json_encode($arrayJSON);
 }
 function altaInventario1()

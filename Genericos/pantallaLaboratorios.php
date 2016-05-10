@@ -100,7 +100,7 @@
 					    <li><a id="btnMaterialEnPrestamo">En prestamo</a></li>
 					    <li><a id="btnPedidoMaterial">Pedidos</a></li>
 					  </ul>
-					   <!-- Dropdown Trigger -->
+					  <!-- Dropdown Trigger -->
 					  <a class='dropdown-button btn waves-effect waves-light blue darken-2' data-activates='dropdown2'>Prácticas</a>
 					  <!-- Dropdown Structure -->
 					  <ul id='dropdown2' class='dropdown-content'>
@@ -110,18 +110,33 @@
 					  </ul>
 				</ul>
 			</div>
-			<div id="resumenReportes1">
-				<h5 class="centrado">Resumen</h5>
+			<div id="resumenReportes">
+				<h5>Dashboard</h5>
 				<?php include 'resumenReportes.php';?>
 			</div>
-			<div id="bajoInventario1">
+			<div id="bajoInventario">
 				<?php include 'bajoInventario.php';?>
 			</div>
-			<div id="existenciaInventario1">
+			<div id="enReparacion">
+				<?php include 'enReparacion.php';?>
+			</div>
+			<div id="enPrestamo">
+				<?php include 'articulosEnPrestamo.php';?>
+			</div>
+			<div id="existenciaInventario">
 				<?php include 'existenciaInventario.php';?>
 			</div>
-			<div id="pedidoMaterial1">
+			<div id="pedidoMaterial">
 				<?php include 'pedidoMaterial.php';?>
+			</div>
+			<div id="practicasNoRealizadas">
+				<?php include 'practicasNoRealizadas.php';?>
+			</div>
+			<div id="practicasRealizadas">
+				<?php include 'practicasRealizadas.php';?>
+			</div>
+			<div id="practicasCanceladas">
+				<?php include 'practicasCanceladas.php';?>
 			</div>
 		</div>
 		<div id="salir">

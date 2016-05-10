@@ -811,8 +811,14 @@
 					$("#tbInventario").html("");
 					$("#tbInventario").append(response.renglones);
 				}
+				else if (tipoUsu == 5) 
+				{
+					sweetAlert("No hay artículos pertenecientes al departamento..!", " ", "error");
+				}
 				else
-					sweetAlert("No hay artículos..!", " ", "error");
+				{
+					sweetAlert("No hay artículos pertenecientes al laboratorio..!", " ", "error");
+				}
 			},
 			error: function(xhr, ajaxOptions,x){
 				alert("Error de conexión lista de artículos");
@@ -1886,6 +1892,7 @@
 	$("#chbOtroArticulo").on("change",checkOtroArticulo);
 	$("#btnEnviarPeticionArticulo").on("click",guardaPeticionArticulo);	
 	$("#btnBucarInventario").on("click",buscaArtInventario);
+	$("#txtArticuloLista").on("change",listaArticulos);
 	//Reportes
 	$("#tabReportesGenericos").on("click",resumenReportes);
 	$("#btnPracticasNoRealizadas").on("click",practicasNoRealizadas);
