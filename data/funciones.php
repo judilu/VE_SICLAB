@@ -627,8 +627,12 @@ function comboHrMatRep()
 	$consulta		= sprintf("select LUNHRA,MARHRA,MIEHRA,JUEHRA,VIEHRA from DGRUPO where MATCVE =%s and PERCVE=%d and PDOCVE =%s",$materia,$maestro,$periodo);
 	$res 			= mysql_query($consulta);
 	if($row = mysql_fetch_array($res))
-	{		
-		$comboHr 	= $row[0].",".$row[1].",".$row[2].",".$row[3].",".$row[4];
+	{
+		for ($i=0; $i < ; $i++) 
+		{ 
+			$comboHr .= $row[$i].","
+		}		
+		$comboHr = (rtrim($comboHr,","));
 		$comboHrMat = array_unique((explode(",",$comboHr)));
 		$respuesta 	= true;
 		$cont 		= count($comboHrMat);
