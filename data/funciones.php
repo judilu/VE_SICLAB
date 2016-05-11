@@ -382,7 +382,14 @@ function comboMatHr ()
 	$res 			= mysql_query($consulta);
 	if($row = mysql_fetch_array($res))
 	{		
-		$comboHr 	= $row[0].",".$row[1].",".$row[2].",".$row[3].",".$row[4];
+		for ($i=0; $i < 5; $i++) 
+		{
+		 	if($row[$i]!= "")
+		 	{
+				$comboHr .= $row[$i].",";
+			}
+		}
+		$comboHr = (rtrim($comboHr,","));
 		$comboHrMat = array_unique((explode(",",$comboHr)));
 		$respuesta 	= true;
 		$cont 		= count($comboHrMat);
