@@ -343,7 +343,7 @@ function nuevaSol()
 		$sol = existeSolLab($cveDep,$periodo,$fe,$fs,$hs,$lab,$prac,$mat,$gp,$clave);
 		$porArt = explode(",",$art);
 		$porNum = explode(",",$num);
-		$respuesta2 = detalleArt($n,$sol,$porArt,$porNum);
+		$respuesta2 = detalleArt($n,$sol,$porArt,$porNum);	
 	}
 	$arrayJSON = array('respuesta' => $respuesta,
 						'respuesta2' => $respuesta2,
