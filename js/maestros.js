@@ -948,8 +948,11 @@ var inicioMaestro = function ()
     				for (var i = 0; i < response.cont; i++) 
     				{
 						//arreglar la hora
-						hh = ((response.comboHr[i]).substring(0,2)+":00");
-						$("#cmbHoraMat").append($("<option></option>").attr("value",response.cont).text(hh));
+						if (response.comboHr[i]!="") 
+						{
+							hh = ((response.comboHr[i]).substring(0,2)+":00");
+							$("#cmbHoraMat").append($("<option></option>").attr("value",response.cont).text(hh));
+						}
 					}
 					$("cmbHoraMat").trigger('contentChanged');
 					$('select').material_select();

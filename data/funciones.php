@@ -254,7 +254,31 @@ function grupo($mat,$per,$pdo,$hor)
 	$n 	 	 = $hor;
 	$n2 	 = (string)($n+1);
 	$n 		 = (string)($n);
-	$hora 	 = $n."00".$n2."00";
+	$hora 	 = "";
+	if (count($n)==1) 
+	{
+		$hora 		.= "0".$n."00";
+		if (count($n2)==1)
+		{
+			$hora 		.= "0".$n2."00"; 
+		}
+		else
+		{
+			$hora 		.= "0".$n2."00";
+		} 
+	}
+	else
+	{
+		$hora 		.= $n."00";
+		if (count($n2)==1)
+		{
+			$hora 		.= "0".$n2."00"; 
+		}
+		else
+		{
+			$hora 		.= "0".$n2."00";
+		} 
+	}
 	$conexion 		= conectaBDSIE();
 	$consulta 		= sprintf("select GPOCVE from DGRUPO where MATCVE =%s AND PERCVE=%d AND PDOCVE =%s AND (LUNHRA =%s OR MARHRA =%s OR MIEHRA =%s OR JUEHRA =%s OR VIEHRA =%s)",$matcve,$maestro,$periodo,$hora,$hora,$hora,$hora,$hora);
 	$res			= mysql_query($consulta);
@@ -382,7 +406,14 @@ function comboMatHr ()
 	$res 			= mysql_query($consulta);
 	if($row = mysql_fetch_array($res))
 	{		
-		$comboHr 	= $row[0].",".$row[1].",".$row[2].",".$row[3].",".$row[4];
+		for ($i=0; $i < 5; $i++) 
+		{
+		 	if($row[$i]!= "")
+		 	{
+				$comboHr .= $row[$i].",";
+			}
+		}
+		$comboHr = (rtrim($comboHr,","));
 		$comboHrMat = array_unique((explode(",",$comboHr)));
 		$respuesta 	= true;
 		$cont 		= count($comboHrMat);
@@ -620,8 +651,12 @@ function comboHrMatRep()
 	$consulta		= sprintf("select LUNHRA,MARHRA,MIEHRA,JUEHRA,VIEHRA from DGRUPO where MATCVE =%s and PERCVE=%d and PDOCVE =%s",$materia,$maestro,$periodo);
 	$res 			= mysql_query($consulta);
 	if($row = mysql_fetch_array($res))
-	{		
-		$comboHr 	= $row[0].",".$row[1].",".$row[2].",".$row[3].",".$row[4];
+	{
+		for ($i=0; $i < 5; $i++) 
+		{ 
+			$comboHr .= $row[$i].",";
+		}		
+		$comboHr = (rtrim($comboHr,","));
 		$comboHrMat = array_unique((explode(",",$comboHr)));
 		$respuesta 	= true;
 		$cont 		= count($comboHrMat);

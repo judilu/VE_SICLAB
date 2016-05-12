@@ -776,6 +776,7 @@
 	var buscaArtInventario = function()
 	{
 		var articulo = $("#txtArticuloLista").val();
+		alert($("#txtArticuloLista").val());
 		var parametros 	= "opc=buscaArtLista1"
 						+"&articulo="+articulo
 						+"&id="+Math.random();
@@ -802,6 +803,7 @@
 	//Muestra la lista de artículos pertenecientes al laboratorio del usuario
 	var listaArticulos = function()
 	{
+		$("#txtArticuloLista").val("");
 		$("#altaArticulos").hide("slow");
 		$("#bajaArticulos").hide("slow");
 		$("#menuMtto").hide("slow");
@@ -1441,6 +1443,13 @@
 		$("#solicitudesPendientes2").hide("slow");
 		$("#atenderSolicitud").show("slow");
 	}
+	var buscarInventario = function()
+	{
+		if ($("#txtArticuloLista").val() == "") 
+		{
+			listaArticulos();
+		}
+	}
 	//fin de las peticiones de los articulos
 	
 	//Reportes
@@ -1483,6 +1492,7 @@
 		$("#practicasRealizadas").hide("slow");
 		$("#practicasCanceladas").hide("slow");
 		$("#bajoInventario").show("slow");
+		articulosDeBaja();
 	}
 	var enReparacion = function()
 	{
@@ -1585,7 +1595,7 @@
 			},
 			error: function(xhr, ajaxOptions,x){
 				
-				console.log(xhr);
+				console.log("Error de conexión");
 			}
 		});
 	}
@@ -1608,7 +1618,7 @@
 			},
 			error: function(xhr, ajaxOptions,x){
 				
-				console.log(xhr);
+				console.log("Error de conexión");
 			}
 		});
 	}
@@ -1631,7 +1641,7 @@
 			},
 			error: function(xhr, ajaxOptions,x){
 				
-				console.log(xhr);
+				console.log("Error de conexión");
 			}
 		});
 	}
@@ -1656,15 +1666,35 @@
 			},
 			error: function(xhr, ajaxOptions,x){
 				console.log("Error de conexión sol aceptadas");
-				console.log(xhr);
+			}
+		});
+	}
+	var articulosDeBaja = function()
+	{
+		var parametros = "opc=enBaja1"+
+						"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/genericos.php",
+			data: parametros,
+			success: function(response){
+				if(response.respuesta == true)
+				{
+					$("#tbBajoInventario").html(" ");
+					$("#tbBajoInventario").append(response.renglones);
+				}
+				else
+					sweetAlert("Sin articulos dados de baja", "No hay articulos en reparación actualmente.", "error");
+			},
+			error: function(xhr, ajaxOptions,x){
+				console.log("Error de conexión");
 			}
 		});
 	}
 	var articulosEnReparacion = function()
 	{
-		//ocultar los div
-		
-		//contenido dinamico
 		var parametros = "opc=enReparacion1"+
 		"&id="+Math.random();
 		$.ajax({
@@ -1684,14 +1714,11 @@
 			},
 			error: function(xhr, ajaxOptions,x){
 				console.log("Error de conexión");
-				console.log(xhr);
 			}
 		});
 	}
 	var articulosEnPrestamo= function()
 	{
-		//ocultar los div
-		//contenido dinamico
 		var parametros = "opc=enPrestamo1"+
 		"&id="+Math.random();
 		$.ajax({
@@ -1716,9 +1743,6 @@
 	}
 	var articulosPedidos= function()
 	{
-		//ocultar los div
-		
-		//contenido dinamico
 		var parametros = "opc=enPedido1"+
 		"&id="+Math.random();
 		$.ajax({
@@ -1738,16 +1762,11 @@
 			},
 			error: function(xhr, ajaxOptions,x){
 				console.log("Error de conexión");
-				console.log(xhr);
 			}
 		});
 	}
-	//FALTA
 	var articulosSinExistencia = function()
 	{
-		//ocultar los div
-		
-		//contenido dinamico
 		var parametros = "opc=articulosSinExistencia1"+
 		"&id="+Math.random();
 		$.ajax({
@@ -1764,16 +1783,13 @@
 				}
 			},
 			error: function(xhr, ajaxOptions,x){
-				console.log(xhr);
+				console.log("Error de conexión");
 			}
 		});
 	}
 
 	var noRealizadas = function()
 	{
-		//ocultar los div
-		
-		//contenido dinamico
 		var parametros = "opc=practicasNoRealizadas1"+
 		"&id="+Math.random();
 		$.ajax({
@@ -1793,15 +1809,11 @@
 			},
 			error: function(xhr, ajaxOptions,x){
 				console.log("Error de conexión");
-				console.log(xhr);
 			}
 		});
 	}
 	var Realizadas = function()
 	{
-		//ocultar los div
-		
-		//contenido dinamico
 		var parametros = "opc=practicasRealizadas1"+
 		"&id="+Math.random();
 		$.ajax({
@@ -1821,15 +1833,11 @@
 			},
 			error: function(xhr, ajaxOptions,x){
 				console.log("Error de conexión");
-				console.log(xhr);
 			}
 		});
 	}
 	var Canceladas = function()
 	{
-		//ocultar los div
-		
-		//contenido dinamico
 		var parametros = "opc=practicasCanceladas1"+
 		"&id="+Math.random();
 		$.ajax({
@@ -1849,7 +1857,6 @@
 			},
 			error: function(xhr, ajaxOptions,x){
 				console.log("Error de conexión");
-				console.log(xhr);
 			}
 		});
 	}
@@ -1904,7 +1911,7 @@
 	$("#chbOtroArticulo").on("change",checkOtroArticulo);
 	$("#btnEnviarPeticionArticulo").on("click",guardaPeticionArticulo);	
 	$("#btnBucarInventario").on("click",buscaArtInventario);
-	$("#txtArticuloLista").on("change",listaArticulos);
+	$("#txtArticuloLista").on("change",buscarInventario);
 	//Reportes
 	$("#tabReportesGenericos").on("click",resumenReportes);
 	$("#btnPracticasNoRealizadas").on("click",practicasNoRealizadas);
