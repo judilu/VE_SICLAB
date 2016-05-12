@@ -618,11 +618,21 @@
 			});
 		}
 	}
+	var sLaboratorioNuevas = function()
+	{
+		$("#sAceptadasLab").hide("slow");
+		$("#sPendientesLab").hide("slow");
+		$("#verMasSolicitud").hide("slow");
+		$("#aceptarSolLab").hide("slow");
+		$("#guardarSolicitud").hide("slow");
+		$("#sNuevaLabExternos").show();
+	}
 	var sLaboratorioPendientes = function()
 	{
 		if(tipoUsu == 1 || tipoUsu == 2)
 		{
 			$("#sAceptadasLab").hide("slow");
+			$("#sNuevaLabExternos").hide("slow");
 			$("#verMasSolicitud").hide("slow");
 			$("#aceptarSolLab").hide("slow");
 			$("#guardarSolicitud").hide("slow");
@@ -659,6 +669,7 @@
 	var sLaboratorioAceptadas = function()
 	{
 		$("#sPendientesLab").hide("slow");
+		$("#sNuevaLabExternos").hide("slow");
 		$("#verMasSolicitud2").hide("slow");
 		$("#tbAceptadasLab").html("");
 		var claveCal = $(this).attr('name');
@@ -1873,6 +1884,7 @@
 	$("#btnVerMas2").on("click",verMas2);
 	$("#btnAceptaSolLab").on("click",sGuardaCanderalizada);
 	$("#btnCancelarSolLab").on("click",sLaboratorioPendientes);
+	$("#btnNuevaLabExtenos").on("click",sLaboratorioNuevas);
 	//Inventario 
 	$("#tabInventario").on("click",listaArticulos);
 	$("#btnArticulos").on("click",listaArticulos);

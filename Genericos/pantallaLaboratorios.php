@@ -42,6 +42,7 @@
 				<ul>
 					<a class="waves-effect waves-light btn blue darken-1" id="btnPendientesLab">Pendientes</a>
 					<a class="waves-effect waves-light btn grey" id="btnAceptadasLab">Aceptadas</a>
+					<a class="waves-effect waves-light btn grey" id="btnNuevaLabExtenos">Nueva solicitud</a>
 				</ul>
 			</div>
 			<div id="sPendientesLab">
@@ -49,6 +50,9 @@
 			</div>
 			<div id="sAceptadasLab">
 				<?php include 'solicitudesAceptadasLaboratorio.php';?>
+			</div>
+			<div id="sNuevaLabExternos">
+				<?php include 'solicitudNuevaLabExternos.php';?>
 			</div>
 		</div>
 		<div id="inventarios">
