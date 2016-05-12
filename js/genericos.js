@@ -625,7 +625,77 @@
 		$("#verMasSolicitud").hide("slow");
 		$("#aceptarSolLab").hide("slow");
 		$("#guardarSolicitud").hide("slow");
-		$("#sNuevaLabExternos").show();
+		$("#sNuevaLabExternos").show("slow");
+		$("#nuevaExterno").show("slow");
+
+		$("input").val("");
+		$("textarea").val("");
+			var parametros  = "opc=listaDependencias1"
+							+"&id="+Math.random();
+			$.ajax({
+				cache:false,
+				type: "POST",
+				dataType: "json",
+				url:"../data/genericos.php",
+				data: parametros,
+				success: function(response)
+				{
+					if(response.respuesta)
+					{
+						$("#cmbNombreDependencias").html(" ");
+						$("#cmbNombreDependencias").html("<option value='' disabled selected>Selecciona la dependencia</option>");
+						
+						for (var i = 0; i < response.contador; i++) 
+						{
+							$("#cmbNombreDependencias").append($("<option></option>").attr("value",response.claveDependencia[i]).text(response.nombreDependencia[i]));
+						}
+						$("#cmbNombreDependencias").trigger('contentChanged');
+						$('select').material_select();
+					}
+					else
+					{
+						sweetAlert("No existen dependencias", "", "error");
+					}
+					if(response.respuesta2)
+					{
+						$("#cmbPracticaExterno").html(" ");
+						$("#cmbPracticaExterno").html("<option value='' disabled selected>Selecciona la práctica</option>");
+
+						for (var i = 0; i < response.contador2; i++) 
+						{
+							$("#cmbPracticaExterno").append($("<option></option>").attr("value",response.clavePractica[i]).text(response.nombrePractica[i]));
+						}
+						$("#cmbPracticaExterno").trigger('contentChanged');
+						$('select').material_select();
+					}
+					else
+					{
+						sweetAlert("No existen prácticas", "", "error");
+					}
+				},
+				error: function(xhr, ajaxOptions,x)
+				{
+					console.log("Error de conexión alta articulos");
+				}
+			});
+	}
+	var numeroControlLabExterno = function()
+	{
+		$("#txtNumeroControlDependencia").val($("#cmbNombreDependencias").val());
+	}
+	var checkOtraDependencia = function()
+	{
+		if ($("#chbOtraDependencia").is(':checked'))
+		{
+			$("#txtNombreDependencia").removeAttr("disabled");
+			$(".select-dropdown").attr("disabled","disabled");
+			$("#txtNumeroControlDependencia").val(" ");
+		}
+		else
+		{
+			$("#txtNombreDependencia").attr("disabled","disabled");
+			$(".select-dropdown").removeAttr("disabled");
+		}
 	}
 	var sLaboratorioPendientes = function()
 	{
@@ -1892,6 +1962,8 @@
 	$("#btnAceptaSolLab").on("click",sGuardaCanderalizada);
 	$("#btnCancelarSolLab").on("click",sLaboratorioPendientes);
 	$("#btnNuevaLabExtenos").on("click",sLaboratorioNuevas);
+	$("#cmbNombreDependencias").on("change",numeroControlLabExterno);
+	$("#chbOtraDependencia").on("change",checkOtraDependencia);
 	//Inventario 
 	$("#tabInventario").on("click",listaArticulos);
 	$("#btnArticulos").on("click",listaArticulos);

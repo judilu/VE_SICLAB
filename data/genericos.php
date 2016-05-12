@@ -1617,6 +1617,55 @@ function buscaArtLista()
 						'renglones' => $renglones);
 	print json_encode($arrayJSON);
 }
+function listaDependencias()
+{
+	$respuesta 	 		= false;
+	$respuesta2	 		= false;
+	session_start();
+	$responsable 		= $_SESSION['nombre'];
+	$claveDependencia 	= "";
+	$nombreDependencia 	= "";
+	$comboPracticas		= "";
+	$clavePractica 		= 0;
+	$nombrePractica 	= "";
+	$contador 			= 0;
+	$contador2 			= 0;
+	$claveLab 			= GetSQLValueString(obtieneCveLab($responsable),"text");
+	$conexion 			= conectaBDSICLAB();
+	$consulta 			= sprintf("select claveDependencia,nombreDependencia from lbdependencias");
+	$res 				= mysql_query($consulta);
+	while($row = mysql_fetch_array($res))
+			{
+				$claveDependencia[] = $row["claveDependencia"];
+				$nombreDependencia[]= $row["nombreDependencia"];
+				$respuesta 		 		= true;
+				$contador++;
+			}
+	$conexion2 	= conectaBDSICLAB();
+	$consulta2 	= sprintf("select clavePractica,tituloPractica from lbpracticas");
+	$res2 		= mysql_query($consulta2);
+	while($row = mysql_fetch_array($res2))
+			{
+				$comboPracticas .= "'".$row["clavePractica"]."',";
+				$respuesta2		 = true;
+				$contador2++;
+			}
+			$comboPracticas = (rtrim($comboPracticas,","));
+							var_dump($comboPracticas);
+			for ($i=0; $i < $contador2 ; $i++)
+			{ 
+				$clavePractica[] = $comboPracticas[$i]["clavePractica"];
+				$nombrePractica[]= $comboPracticas[$i]["tituloPractica"];
+			}
+	$arrayJSON = array('respuesta' 			=> $respuesta,
+						'claveDependencia' 	=> $claveDependencia,
+						'nombreDependencia' => $nombreDependencia,
+						'clavePractica' 	=> $clavePractica,
+						'nombrePractica' 	=> $nombrePractica,  
+						'contador' 			=> $contador,
+						'contador2' 		=> $contador2);
+	print json_encode($arrayJSON);
+}
 //FIN ANA
 //INICIO EDWIN
 
@@ -2316,7 +2365,9 @@ switch ($opc){
 	case 'buscaArtLista1':
 	buscaArtLista();
 	break;
-
+	case 'listaDependencias1':
+	listaDependencias();
+	break;
 	//EDWIN
 	//AGREGUE
 	case 'alumnosActuales1':

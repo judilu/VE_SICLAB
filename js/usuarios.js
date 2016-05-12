@@ -69,6 +69,7 @@ var inicio = function ()
 							$("#btnPeticionesPendientes").hide();
 							$("#btnPendientesLab").hide();
 							$("#genericos").show("slow");
+							$("#btnNuevaLabExtenos").hide();
 							var parametros = "opc=usuario1"+"&clave1="+response.claveUsuario+"&id="+Math.random();
 				               $.ajax({  
 				                    cache:false,
@@ -108,6 +109,7 @@ var inicio = function ()
 							$("#btnMantenimiento").hide();
 							$("#btnBaja").hide();
 							$("#btnPeticionArticulo").hide();
+							$("#btnNuevaLabExtenos").hide();
 							$("#genericos").show("slow");
 							var parametros = "opc=usuario1"+"&clave1="+response.claveUsuario+"&id="+Math.random();
 				               $.ajax({  
