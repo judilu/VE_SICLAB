@@ -6,7 +6,9 @@
 	$('.collapsible').collapsible({
       accordion : false}); // A setting that changes the collapsible behavior to expandable instead of the default accordion style
 	var articulosPrestados = new Array();
-	
+	var articulosExt = new Array();
+	var articulosAgregadosExt = new Array();
+	var numArticulosExt = new Array();
     //Salir del sistema
     var salir = function()
     {
@@ -620,6 +622,7 @@
 	}
 	var sLaboratorioNuevas = function()
 	{
+		$("#eleccionMaterialExt").hide();
 		$("#sAceptadasLab").hide("slow");
 		$("#sPendientesLab").hide("slow");
 		$("#verMasSolicitud").hide("slow");
@@ -629,6 +632,7 @@
 		$("#nuevaExterno").show("slow");
 
 		$("input").val("");
+		$("#txtCantAlumnosExterno").val(1);
 		$("textarea").val("");
 			var parametros  = "opc=listaDependencias1"
 							+"&id="+Math.random();
@@ -678,6 +682,149 @@
 					console.log("Error de conexión alta articulos");
 				}
 			});
+	}
+	var elegirMatExterno = function()
+	{
+		//ocultar elementos
+    	$("#nuevaExterno").hide();
+    	$("#eleccionMaterialExt").show("slow");
+    	//llenar combo y crear tabla
+    	//Crear tabla y crear combo
+    	construirTablaExt();
+    	llenarcomboEleArtExt();
+	}
+	var construirTablaExt = function()
+	{
+		var parametros = "opc=construirTbArtExt1"+
+    	"&articulosAgregadosExt="+articulosAgregadosExt+
+    	"&articulosExt="+articulosExt+
+    	"&numArticulosExt="+numArticulosExt+
+    	"&id="+Math.random();
+    	$.ajax({
+    		cache:false,
+    		type: "POST",
+    		dataType: "json",
+    		url:"../data/genericos.php",
+    		data: parametros,
+    		success: function(response){
+    			if(response.respuesta == true)
+    			{
+    				$("#bodyArtExt").html("");
+    				$("#bodyArtExt").append(response.renglones);
+    				llenarcomboEleArt();
+    				$("#txtNumArtExt").val("1");
+    				//$(".btnEliminarArtExt").on("click",eliminarArt);
+					//formar de nuevo el combo
+				}//termina if
+				else
+				{
+					console.log("no elimino");
+					$("#bodyArtExt").html("");
+					//llenarcomboEleArt();
+				}
+			},
+			error: function(xhr, ajaxOptions,x)
+			{
+				console.log("Error de conexión construir tabla");	
+			}
+		});
+	}
+	var llenarcomboEleArtExt = function()
+	{
+
+	}
+	var comboLaboratoriosExt = function()
+	{
+		practica  = $("#cmbPracticaExterno").val();
+		var parametros  = "opc=llenarcomboLabExt1"
+							+"&practica="+practica
+							+"&id="+Math.random();
+			$.ajax({
+				cache:false,
+				type: "POST",
+				dataType: "json",
+				url:"../data/genericos.php",
+				data: parametros,
+				success: function(response)
+				{
+					if(response.respuesta)
+					{
+						$("#cmbLaboratorioExterno").html(" ");
+						$("#cmbLaboratorioExterno").html("<option value='' disabled selected>Selecciona el laboratorio</option>");
+						
+						for (var i = 0; i < response.contador; i++) 
+						{
+							$("#cmbLaboratorioExterno").append($("<option></option>").attr("value",response.claveLab[i]).text(response.nombreLab[i]));
+						}
+						$("#cmbLaboratorioExterno").trigger('contentChanged');
+						$('select').material_select();
+					}
+					else
+					{
+						$("#cmbLaboratorioExterno").html(" ");
+						$("#cmbLaboratorioExterno").html("<option value='' disabled selected>Selecciona el laboratorio</option>");
+						sweetAlert("No existen laboratorios", "la practica seleccionada no tiene asignado ningun laboratorio", "error");
+					}
+				},
+				error: function(xhr, ajaxOptions,x)
+				{
+					console.log("Error de conexión alta articulos");
+				}
+			});
+	}
+	var comboHoraExt = function()
+	{
+		var laboratorio   = $("#cmbLaboratorioExterno").val();
+    	var parametros 	  = "opc=llenarcomboHrLabExt1"
+    						+"&laboratorio="+laboratorio
+    						+"&id="+Math.random();
+    	var hi = "";
+    	var hii = 0;
+    	var hf = "";
+    	var fff = 0;
+    	$.ajax({
+    		cache:false,
+    		type: "POST",
+    		dataType: "json",
+    		url:"../data/genericos.php",
+    		data: parametros,
+    		success: function(response){
+    			if(response.respuesta == true)
+    			{
+    				$("#cmbHoraPractExterno").html(" ");
+    				$("#cmbHoraPractExterno").html("<option value='' disabled selected>Seleccione la hora</option>");	
+    				(((response.horaApertura).length)<4) ? (hi=(response.horaApertura).substring(0,1)) : (hi=(response.horaApertura).substring(0,2));
+    				hii = parseInt(hi);
+    				(((response.horaCierre).length)<4) ? (hf=(response.horaCierre).substring(0,1)) : (hf=(response.horaCierre).substring(0,2));
+    				hff = parseInt(hf);
+					//modificando capacidad segun el laboratorio
+					$("#txtCantAlumnosExterno").attr("max",response.capacidad);
+					for (var i = hii; i <= hff; i++) 
+					{
+						if(i>9)
+						{
+							$("#cmbHoraPractExterno").append($("<option></option>").attr("value",i).text(i+":00"));
+						}
+						else
+						{
+							$("#cmbHoraPractExterno").append($("<option></option>").attr("value","0"+i).text("0"+i+":00"));
+						}
+					}
+					$("cmbHoraPractExterno").trigger('contentChanged');
+					$('select').material_select();
+				}
+				else
+				{
+					$("#cmbHoraPractExterno").html(" ");
+					$("#cmbHoraPractExterno").html("<option value='' disabled selected>Seleccione la hora</option>");
+					$('select').material_select();
+					sweetAlert("No existen horas", "Es posible que no existan horas asociados a dicha práctica!", "error");
+				}
+			},
+			error: function(xhr, ajaxOptions,x){
+				console.log("Error de conexión comboPrac");	
+			}
+		});
 	}
 	var numeroControlLabExterno = function()
 	{
@@ -1962,8 +2109,12 @@
 	$("#btnAceptaSolLab").on("click",sGuardaCanderalizada);
 	$("#btnCancelarSolLab").on("click",sLaboratorioPendientes);
 	$("#btnNuevaLabExtenos").on("click",sLaboratorioNuevas);
+	$("#btnElegirMaterialExt").on("click",elegirMatExterno);
+	$("#btnRegresarExt").on("click",sLaboratorioNuevas);
 	$("#cmbNombreDependencias").on("change",numeroControlLabExterno);
 	$("#chbOtraDependencia").on("change",checkOtraDependencia);
+	$("#cmbPracticaExterno").on("change",comboLaboratoriosExt);
+	$("#cmbLaboratorioExterno").on("change",comboHoraExt);
 	//Inventario 
 	$("#tabInventario").on("click",listaArticulos);
 	$("#btnArticulos").on("click",listaArticulos);

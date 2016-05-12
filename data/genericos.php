@@ -1620,50 +1620,152 @@ function buscaArtLista()
 function listaDependencias()
 {
 	$respuesta 	 		= false;
-	$respuesta2	 		= false;
 	session_start();
 	$responsable 		= $_SESSION['nombre'];
 	$claveDependencia 	= "";
 	$nombreDependencia 	= "";
-	$comboPracticas		= "";
-	$clavePractica 		= 0;
-	$nombrePractica 	= "";
 	$contador 			= 0;
+	$practicas 			= array();
 	$contador2 			= 0;
 	$claveLab 			= GetSQLValueString(obtieneCveLab($responsable),"text");
 	$conexion 			= conectaBDSICLAB();
 	$consulta 			= sprintf("select claveDependencia,nombreDependencia from lbdependencias");
 	$res 				= mysql_query($consulta);
 	while($row = mysql_fetch_array($res))
-			{
-				$claveDependencia[] = $row["claveDependencia"];
-				$nombreDependencia[]= $row["nombreDependencia"];
-				$respuesta 		 		= true;
-				$contador++;
-			}
-	$conexion2 	= conectaBDSICLAB();
-	$consulta2 	= sprintf("select clavePractica,tituloPractica from lbpracticas");
-	$res2 		= mysql_query($consulta2);
-	while($row = mysql_fetch_array($res2))
-			{
-				$comboPracticas .= "'".$row["clavePractica"]."',";
-				$respuesta2		 = true;
-				$contador2++;
-			}
-			$comboPracticas = (rtrim($comboPracticas,","));
-							var_dump($comboPracticas);
-			for ($i=0; $i < $contador2 ; $i++)
-			{ 
-				$clavePractica[] = $comboPracticas[$i]["clavePractica"];
-				$nombrePractica[]= $comboPracticas[$i]["tituloPractica"];
-			}
+	{
+		$claveDependencia[] 	= $row["claveDependencia"];
+		$nombreDependencia[]	= $row["nombreDependencia"];
+		$respuesta 		 		= true;
+		$contador++;
+	}
+	$practicas = llenarComboPracticasExt();
+	$contador2 = count($practicas['clavePract']);
 	$arrayJSON = array('respuesta' 			=> $respuesta,
+						'respuesta2'		=> $practicas['respuesta'],
 						'claveDependencia' 	=> $claveDependencia,
 						'nombreDependencia' => $nombreDependencia,
-						'clavePractica' 	=> $clavePractica,
-						'nombrePractica' 	=> $nombrePractica,  
+						'clavePractica' 	=> $practicas['clavePract'],
+						'nombrePractica'	=> $practicas['tituloPract'],
 						'contador' 			=> $contador,
 						'contador2' 		=> $contador2);
+	print json_encode($arrayJSON);
+}
+function llenarComboPracticasExt()
+{
+	$respuesta   = false;
+	$clavePract  = array();
+	$tituloPract = array();
+	$conexion 	 = conectaBDSICLAB();
+	$consulta 	 = sprintf("select clavePractica,tituloPractica from lbpracticas");
+	$res 		 = mysql_query($consulta);
+	while ($row  = mysql_fetch_array($res)) 
+	{
+		$clavePract[] 	= $row['clavePractica'];
+		$tituloPract[] 	= $row['tituloPractica'];
+		$respuesta 		= true;
+	}
+	$datosPracticas = array('clavePract' => $clavePract,
+							'tituloPract' => $tituloPract,
+							'respuesta' => $respuesta);
+	return $datosPracticas;
+}
+function llenarcomboLabExt()
+{
+	$practica    = GetSQLValueString($_POST['practica'],"int");
+	$respuesta   = false;
+	$claveLab  	 = array();
+	$nombreLab 	 = array();
+	$conexion 	 = conectaBDSICLAB();
+	$consulta 	 = sprintf("select l.claveLaboratorio, l.nombreLaboratorio from lbasignapracticas p inner join lblaboratorios l on p.claveLaboratorio = l.claveLaboratorio where clavePractica =%d",$practica);
+	$res 		 = mysql_query($consulta);
+	while ($row  = mysql_fetch_array($res)) 
+	{
+		$claveLab[] 	= $row['claveLaboratorio'];
+		$nombreLab[] 	= $row['nombreLaboratorio'];
+		$respuesta 		= true;
+	}
+	$arrayJSON 			= array('claveLab' => $claveLab,
+							'nombreLab' => $nombreLab,
+							'contador'  => count($claveLab),
+							'respuesta' => $respuesta);
+	print json_encode($arrayJSON);
+}
+function llenarcomboHrLabExt()
+{
+	$laboratorio 	= GetSQLValueString($_POST["laboratorio"],"text");
+	$respuesta 		= false;
+	$comboHrAp 		= "";
+	$comboHrC 		= "";
+	$capacidad 		= 0;
+	$conexion		= conectaBDSICLAB();
+	$consulta		= sprintf("select horaApertura, horaCierre, capacidad from lblaboratorios where claveLaboratorio =%s",$laboratorio);
+	$res 			= mysql_query($consulta);
+	if($row = mysql_fetch_array($res))
+	{
+			$comboHrAp  = $row["horaApertura"];
+			$comboHrC 	= $row["horaCierre"];
+			$capacidad  = (int)($row["capacidad"]);
+			$respuesta = true;
+	}
+	$arrayJSON = array('respuesta' => $respuesta,
+						'horaApertura' => $comboHrAp, 
+						'horaCierre' => $comboHrC,
+						'capacidad' => $capacidad);
+	print json_encode($arrayJSON);
+}
+function construirTbArtExt()
+{
+	$cve 	 	= $_POST['articulosAgregadosExt'];
+	$nom 	 	= $_POST['articulosExt'];
+	$numArt		= $_POST['numArticulosExt'];
+	$cveArt 	= explode(",",$cve);
+	$nomArt 	= explode(",",$nom);
+	$num 		= explode(",",$numArt);
+	$n 			= count($cveArt);
+	$respuesta 	= false;
+	$renglones 	= "";
+	for ($i=0; $i < $n ; $i++) 
+	{ 
+		if ($cveArt[$i]!= "") 
+		{
+			$respuesta	= true;
+			$renglones .= "<tr id=".$cveArt[$i].">";
+			$renglones .= "<td class='col s2'>".$num[$i]."</td>";
+			$renglones .= "<td class='col s8'>".$nomArt[$i]."</td>";
+			$renglones .= "<td class='col s2'><a name ='".$cveArt[$i]."' class='btnEliminarArtExt btn-floating btn-large waves-effect waves-light red darken-1'><i class='material-icons'>delete</i></a></td>";
+			$renglones .= "</tr>";
+		}
+	}
+	$arrayJSON = array('respuesta' => $respuesta,
+						'renglones' => $renglones);
+	print json_encode($arrayJSON);	
+}
+function comboEleArtExt()
+{
+	$laboratorio 		= GetSQLValueString($_POST["laboratorio"],"text");
+	$respuesta 		= false;
+	$comboEleArt 	= array();
+	$comboCveArt 	= "";
+	$comboNomArt 	= "";
+	$con 			= 0;
+	$conexion		= conectaBDSICLAB();
+	$consulta		= sprintf("select DISTINCT (c.nombreArticulo), c.claveArticulo from lbarticuloscat c inner join lbarticulos a on a.claveArticulo = c.claveArticulo inner join lbasignaarticulos aa on aa.indentificadorArticulo = a.identificadorArticulo where aa.claveLaboratorio =%s and a.estatus = 'V' order by c.nombreArticulo",$laboratorio);
+	$res 			= mysql_query($consulta);
+	while($row = mysql_fetch_array($res))
+	{
+			$comboEleArt[]  = $row;
+			$respuesta = true;
+			$con++;
+	}
+	for ($i=0; $i < $con ; $i++)
+	{ 
+		$comboCveArt[] 	=$comboEleArt[$i]["claveArticulo"];
+		$comboNomArt[] 	=$comboEleArt[$i]["nombreArticulo"];
+	}
+	$arrayJSON = array('respuesta' => $respuesta,
+						'comboCveArt' => $comboCveArt, 
+						'comboNomArt' => $comboNomArt, 
+						'con' => $con);
 	print json_encode($arrayJSON);
 }
 //FIN ANA
@@ -2368,6 +2470,15 @@ switch ($opc){
 	case 'listaDependencias1':
 	listaDependencias();
 	break;
+	case 'llenarcomboLabExt1':
+		llenarcomboLabExt();
+		break;
+	case 'llenarcomboHrLabExt1':
+		llenarcomboHrLabExt();
+		break;
+	case 'construirTbArtExt1':
+			construirTbArtExt();
+			break;	
 	//EDWIN
 	//AGREGUE
 	case 'alumnosActuales1':

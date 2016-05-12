@@ -49,7 +49,7 @@
 					<label>Hora de la práctica</label>
 				</div>
 				<div class="input-field col s2 offset-s1">
-					<input id="txtCantAlumnosExterno" type="number" min="1" value="1"class="validate">
+					<input id="txtCantAlumnosExterno" type="number" min="1" value="1" class="validate">
 					<label for="txtCantAlumnosExterno">Cant. de alumnos</label>
 				</div>
 				<div class="input-field col s6">
@@ -65,7 +65,7 @@
 		</div>
 	</div>
 	<!-- //elección material -->
-	<div id="eleccionMaterial">
+	<div id="eleccionMaterialExt">
 		<div class="row">
 			<div class="col s12">
 				<div class="row">
