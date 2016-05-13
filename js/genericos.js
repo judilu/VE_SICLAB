@@ -630,7 +630,7 @@
 		$("#guardarSolicitud").hide("slow");
 		$("#sNuevaLabExternos").show("slow");
 		$("#nuevaExterno").show("slow");
-
+		$("#datosDependencia").hide("slow");
 		$("input").val("");
 		$("#txtCantAlumnosExterno").val("1");
 		$("textarea").val("");
@@ -922,6 +922,71 @@
 			}
 		});
 	}
+	var guardaSolLabExterno = function()
+	{
+		if($("#chbOtraDependencia").is(':checked'))
+		{
+			var dependencia 	= $("#txtNombreDependencia").val();
+			var otra 			= 1;
+		}
+		else
+		{
+			var dependencia 	= $("#cmbNombreDependencias").val();
+			var otra 			= 0;
+		}
+		var f  = new Date();
+		var dd = f.getDate();
+		var mm = (f.getMonth())+1;
+			(dd<10) ? (dd="0"+dd) : dd;
+			(mm<10) ? (mm="0"+mm) : mm;
+		var fe  = (dd+"/"+mm+"/"+f.getFullYear());
+		var fecha 		= $("#txtFechaSolExterno").val();
+		var practica 	= $("#cmbPracticaExterno").val();
+		var laboratorio	= $("#cmbLaboratorioExterno").val();
+		var hora		= $("#cmbHoraPractExterno").val();
+		var cantAlu		= $("#txtCantAlumnosExterno").val();
+		var motivo		= $("#txtMotivoUsoExterno").val();
+		var nomEncargado= $("#txtNombreEncargado").val();
+		var direccion 	= $("#txtDireccionDependencia").val();
+		var telefono	= $("#txtTelefonoDependencia").val();
+		var articulos	= articulosAgregadosExt;
+		var cantArt		= numArticulosExt;
+		var parametros 	= "opc=guardaSolLabExterno1"
+							+"&dependencia="+dependencia
+							+"&fechaEnvio="+fe
+							+"&fechaSol="+fecha
+							+"&practica="+practica
+							+"&laboratorio="+laboratorio
+							+"&hora="+hora
+							+"&cantAlu="+cantAlu
+							+"&motivo="+motivo
+							+"&nomEncargado="+nomEncargado
+							+"&direccion="+direccion
+							+"&telefono="+telefono
+							+"&cantArt="+cantArt
+							+"&otra="+otra
+							+"&id="+Math.random();
+			$.ajax({
+				cache:false,
+				type: "POST",
+				dataType: "json",
+				url:"../data/genericos.php",
+				data: parametros,
+				success: function(response){
+					if(response.respuesta == true)
+					{
+						
+					}
+					else
+					{
+						sweetAlert("No se envió la solicitud!", " ", "error");
+					}
+				},
+				error: function(xhr, ajaxOptions,x){
+					alert("Error de conexión solicitudes pendientes de laboratorio");
+				}
+			});
+	}
 	var numeroControlLabExterno = function()
 	{
 		$("#txtNumeroControlDependencia").val($("#cmbNombreDependencias").val());
@@ -930,14 +995,19 @@
 	{
 		if ($("#chbOtraDependencia").is(':checked'))
 		{
+			$("#datosDependencia").show("slow");
 			$("#txtNombreDependencia").removeAttr("disabled");
-			$(".select-dropdown").attr("disabled","disabled");
+			$("#cmbNombreDependencias").html("");
+			$("#cmbNombreDependencias").html("<option value='' disabled selected>Selecciona la dependencia</option>");
+			$("#cmbNombreDependencias").trigger('contentChanged');
+			$('select').material_select();
 			$("#txtNumeroControlDependencia").val(" ");
 		}
 		else
 		{
+			$("#datosDependencia").hide("slow");
 			$("#txtNombreDependencia").attr("disabled","disabled");
-			$(".select-dropdown").removeAttr("disabled");
+			sLaboratorioNuevas();
 		}
 	}
 	var sLaboratorioPendientes = function()
@@ -2067,8 +2137,8 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
-					$("#tbPedidosMaterial").html(" ");
-					$("#tbPedidosMaterial").append(response.renglones);
+					$("#tbPedidoMaterialReporte").html(" ");
+					$("#tbPedidoMaterialReporte").append(response.renglones);
 				}
 				else
 					sweetAlert("Sin articulos pedidos", "No hay articulos en con solicitud de peticion sin aceptar.", "error");
@@ -2238,6 +2308,7 @@
 	$("#chbOtraDependencia").on("change",checkOtraDependencia);
 	$("#cmbPracticaExterno").on("change",comboLaboratoriosExt);
 	$("#cmbLaboratorioExterno").on("change",comboHoraExt);
+	$("#btnFinalizarNSExt").on("click", guardaSolLabExterno);
 	//Inventario 
 	$("#tabInventario").on("click",listaArticulos);
 	$("#btnArticulos").on("click",listaArticulos);

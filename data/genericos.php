@@ -275,12 +275,12 @@ function guardaSolicitudLab()
 		$clave 			= GetSQLValueString($_POST["clave"],"int");
 		$fecha 			= GetSQLValueString($_POST["fecha"],"text");
 		$hora 			= GetSQLValueString($_POST["hora"],"text");
-		$firmaJefe 		= GetSQLValueString($_POST["firmaJefe"],"int");
+		$firmaJefe 		= GetSQLValueString($_POST["firmaJefe"],"text");
 		$comentarios	= GetSQLValueString($_POST["comentarios"],"text");
 		$conexion 		= conectaBDSICLAB();
 		if(existeSolLabG($clave) && consultaFechaSol($fecha,$hora,$periodo))
 		{
-			$consulta  		= sprintf("insert into lbcalendarizaciones values(%s,%d,%s,%s,%d,%s,%d,%s)",$periodo,'""',$fecha,$hora,$firmaJefe,$comentarios,$clave,'"NR"');
+			$consulta  		= sprintf("insert into lbcalendarizaciones values(%s,%d,%s,%s,%s,%s,%d,%s)",$periodo,'""',$fecha,$hora,$firmaJefe,$comentarios,$clave,'"NR"');
 			$res 	 	=  mysql_query($consulta);
 			if(mysql_affected_rows()>0)
 			$respuesta = true; 
@@ -1742,7 +1742,7 @@ function construirTbArtExt()
 }
 function comboEleArtExt()
 {
-	$laboratorio 		= GetSQLValueString($_POST["laboratorio"],"text");
+	$laboratorio 	= GetSQLValueString($_POST["laboratorio"],"text");
 	$respuesta 		= false;
 	$comboEleArt 	= array();
 	$comboCveArt 	= "";
@@ -1767,6 +1767,78 @@ function comboEleArtExt()
 						'comboNomArt' => $comboNomArt, 
 						'con' => $con);
 	print json_encode($arrayJSON);
+}
+function insertaSolicitud($dep,$fecE,$fecS,$hr,$prac,$lab,$cant,$motivo)
+{
+	$cveDep 		= $dep;
+	$periodo 		= periodoActual();
+	$cveSol 		= "' '";
+	$fechaE 		= $fecE;
+	$fechaS 		= $fecS;
+	$hora 			= $hr;
+	$cveLab 		= $lab;
+	$motivoUso 		= $motivo;
+	$cvePractica 	= $prac;
+	$usuario 		= 0;
+	$firma 			= "'0000'";
+	$mat 			= "'NA'";
+	$gpo 			= "'NA'";
+	$cantAlumnos 	= $cant;
+	$estatus 		= "'V'";
+	//para validar
+	valirdarFeHr($fs,$hs,$lab);
+	$conexion 		= conectaBDSICLAB();
+	$consulta 		= sprintf("insert into lbsolicitudlaboratorios values(%s,%s,%s,%s,%s,%s,%s,%s,%d,%d,%s,%s,%s,%s,%s)",$cveDep,$periodo,$cveSol,$fechaE,$fechaS,$hora,$cveLab,$motivoUso,$cvePractica,$usuario,$firma,$mat,$gpo,$cantAlumnos,$estatus);
+		$res 		= mysql_query($consulta);
+	if(mysql_affected_rows()>0)
+		{
+			$respuesta = true; 
+		}
+}
+function guardaSolLabExterno()
+{
+
+	$respuesta 		= false;
+	session_start();
+	$responsable 	= $_SESSION['nombre'];
+	$dependencia   	= GetSQLValueString($_POST['dependencia'],"text");
+	$fechaE   		= GetSQLValueString($_POST['fechaEnvio'],"text");
+	$fechaS   		= GetSQLValueString($_POST['fechaSol'],"text");
+	$practica   	= GetSQLValueString($_POST['practica'],"int");
+	$laboratorio   	= GetSQLValueString($_POST['laboratorio'],"text");
+	$hora 		  	= GetSQLValueString($_POST['hora'],"text");
+	$cantidad  		= GetSQLValueString($_POST['cantAlu'],"int");
+	$motivo   		= GetSQLValueString($_POST['motivo'],"text");
+	$nomEncargado	= GetSQLValueString($_POST['nomEncargado'],"text");
+	$direccion   	= GetSQLValueString($_POST['direccion'],"text");
+	$telefono  		= GetSQLValueString($_POST['telefono'],"text");
+	$articulos   	= GetSQLValueString($_POST['articulos'],"int");
+	$cantArt   		= GetSQLValueString($_POST['cantArt'],"int");
+	$otra   		= GetSQLValueString($_POST['otra'],"int");
+	$conexion		= conectaBDSICLAB();
+	if($otra == 1)
+	{
+		$consulta 		= sprintf("insert into lbdependencias values(%d,%s,%s,%s,%s)",
+								"' '",$dependencia,$nomEncargado,$direccion,$telefono);
+		$resconsulta = mysql_query($consulta);
+			if(mysql_affected_rows()>0)
+			{
+				$claveDependencia = mysql_insert_id($conexion);
+				if(insertaSolicitud())
+				{
+					$respuesta = true;
+				}
+		}
+	}
+	else
+	{
+		if(insertaSolicitud())
+		{
+			$respuesta = true;
+		}
+	}
+	$salidaJSON = array('respuesta' => $respuesta,
+						'idu' => $identificadorArticulo);
 }
 //FIN ANA
 //INICIO EDWIN
@@ -2549,6 +2621,9 @@ switch ($opc){
 	case 'comboEleArtExt1':
 			comboEleArtExt();
 			break;	
+	case 'guardaSolLabExterno1':
+	guardaSolLabExterno();
+	break;
 	//EDWIN
 	//AGREGUE
 	case 'alumnosActuales1':

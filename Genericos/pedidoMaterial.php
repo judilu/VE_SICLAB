@@ -1,7 +1,7 @@
 <div>
 	<h5 class="centrado">Pedidos de material</h5>
   <div id="impPedidoMaterial">
-	<table id="tbPedidoMaterial">
+	<table id="tbPedidoMaterialReporte">
         
       </table>
       </div>

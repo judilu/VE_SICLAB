@@ -23,6 +23,20 @@
 					<label for="txtNumeroControlDependencia">Número de control</label>
 				</div>
 			</div>
+			<div class="row" id="datosDependencia">
+				<div class="input-field col s4">
+					<input id="txtNombreEncargado" type="text" class="validate">
+					<label for="txtNombreEncargado">Nombre del encargado</label>
+				</div>
+				<div class="input-field col s4">
+					<input id="txtDireccionDependencia" type="text" class="validate">
+					<label for="txtDireccionDependencia">Dirección dependencia</label>
+				</div>
+				<div class="input-field col s4">
+					<input id="txtTelefonoDependencia" type="text" class="validate" maxlength="20">
+					<label for="txtTelefonoDependencia">Telefono dependencia</label>
+				</div>
+			</div>
 			<div class="row">
 				<div class="input-field col s3">
 					<input id= "txtFechaSolExterno" placeholder= " " type="date" class="datepicker">
