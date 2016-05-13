@@ -10,3 +10,4 @@
 <script src="../js/jquery-2.2.0.js"></script>
 <script src="../js/materialize.min.js"></script>
 <script src="../sweetalert-master/dist/sweetalert.min.js"></script>
+<script type="text/javascript" src="..\jsPDF\dist\jspdf.debug.js"></script>

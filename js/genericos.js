@@ -2173,6 +2173,32 @@
 			}
 		});
 	}
+	//AGREGUE
+	var practicasNR = function()	
+	{
+		var parametros = "opc=practicasNR1"+
+		"&id="+Math.random();
+		$.ajax({
+			cache:false,
+			type: "POST",
+			dataType: "json",
+			url:"../data/genericos.php",
+			data: parametros,
+			success: function(response){
+				if(response.respuesta == true)
+				{
+					$("#practicasNR").html(" ");
+					$("#practicasNR").append(response.renglones);
+				}
+			},
+			error: function(xhr, ajaxOptions,x){
+				
+				console.log(xhr);
+			}
+		});
+		//FIN AGREGUE
+	}
+
 	//FIN EDWIN NUEVO
 	//Salir
 	$("#tabSalir").on("click",salir);
@@ -2240,6 +2266,7 @@
 	$("#btnResumenReportes").on("click",resumenReportes);
 	$("#tabReportesGenericos").on("click",alumnosActuales);
 	$("#tabReportesGenericos").on("click",articuloMasPrestado);
+	$("#tabReportesGenericos").on("click",practicasNR);
 	$("#tabReportesGenericos").on("click",articulosSinExistencia);
 	$("#tabReportesGenericos").on("click",proximosApartados);
 	$("#btnExistenciaInventario").on("click",existenciaInventario);
@@ -2247,6 +2274,7 @@
 	$("#btnMaterialDañado").on("click",enReparacion);
 	$("#btnMaterialEnPrestamo").on("click",enPrestamo);
 	$("#btnPedidoMaterial").on("click",pedidoMaterial);
+
 	$('.dropdown-button').dropdown({
 		inDuration: 300,
 		outDuration: 225,

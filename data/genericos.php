@@ -1829,7 +1829,7 @@ function articuloMasPrestado()
 		{ 
 			$rows = mysql_fetch_array($res); 
 			$renglones .= "<p>Materiales</p>";
-			$renglones .= "<p style= font-size:16px;> Mas solicitado: ".$rows["nombreArticulo"]." (".$rows["cantidad"].")</p>";
+			$renglones .= "<p style= font-size:16px;> Mas solicitado: <br> ".$rows["nombreArticulo"]." (".$rows["cantidad"].")</p>";
 			$respuesta=true; 
 		}
 		/*$consulta2 	= sprintf("select count(lbarticulos.claveArticulo) as Contador 
@@ -2358,7 +2358,74 @@ function practicasCanceladas()
 	$salidaJSON = array('respuesta' => $respuesta, 'renglones' => $renglones);
 	print json_encode($salidaJSON);
 }
-
+//AGREGUE
+function practicasNR()
+{
+	$respuesta 	= false;
+	session_start();
+		$usuario	= $_SESSION['nombre'];
+		$labUsuario	= "";
+		$claveLab 	= obtieneCveLab($usuario); //GUARDO LA CLAVE DEL LAB
+		$rows		= array();
+		$renglones	= "";
+		$conexion 	= conectaBDSICLAB();
+		$consulta 	= sprintf("select count(claveCalendarizacion) as cantidad from lbcalendarizaciones c inner join lbasignapracticas a on c.claveCalendarizacion=a.clavePractica
+where estatus= 'NR' and a.claveLaboratorio='%s'",$claveLab);
+		$res = mysql_query($consulta);
+		if (mysql_num_rows($res)) //Si se encontraron datos en la búsqueda 
+		{ 
+			$rows = mysql_fetch_array($res); 
+			$renglones .= "<p>Prácticas por realizar:</p>";
+			$renglones .= "<p style= font-size:16px;>".$rows["cantidad"]." Prácticas</p>";
+			$renglones .= "<p style= font-size:16px;><br></p>";
+			$respuesta  = true; 
+		} 
+	$arrayJSON = array('respuesta' => $respuesta,
+		'renglones' => $renglones);
+	print json_encode($arrayJSON);
+}
+function articulosBajoInventario()
+{
+	$respuesta 	= false;
+	session_start();
+		$responsable= $_SESSION['nombre'];
+		$claveLab 	= GetSQLValueString(obtieneCveLab($responsable),"text"); //GUARDO LA CLAVE DEL LAB
+		$rows		= array();
+		$con=0;
+		$renglones	= "";
+		$conexion 	= conectaBDSICLAB();
+		$consulta	= sprintf("select ac.nombreArticulo as Nombre, count(a.claveArticulo) AS Cantidad from lbarticulos a inner join lbarticuloscat ac on a.claveArticulo=ac.claveArticulo
+inner join lbasignaarticulos aa on aa.indentificadorArticulo=a.identificadorArticulo
+where aa.claveLaboratorio=%s group by a.claveArticulo having count(a.claveArticulo)<=5",$claveLab);
+		$res 		= mysql_query($consulta);
+		$renglones	.= "<thead>";
+		$renglones	.= "<tr>";
+		$renglones	.= "<th data-field='nombre'>Nombre del artículo</th>";
+		$renglones	.= "<th data-field='cantidad'>Cantidad</th>";
+		$renglones	.= "</tr>";
+		$renglones	.= "</thead>";
+		while($row = mysql_fetch_array($res))
+		{
+			$rows[]=$row;
+			$respuesta = true;
+			$con++;
+		}
+		
+		for($c= 0; $c< $con; $c++)
+		{
+			$renglones .= "<tbody>";
+			$renglones .= "<tr>";
+			$renglones .= "<td>".$rows[$c]["Nombre"]."</td>";
+			$renglones .= "<td>".$rows[$c]["Cantidad"]."</td>";
+			$renglones .= "</tr>";
+			$renglones .= "</tbody>";
+			$respuesta = true;
+		}
+	$salidaJSON = array('respuesta' => $respuesta, 
+						'renglones' => $renglones);
+	print json_encode($salidaJSON);
+}
+//FIN AGREGUE
 //Menú principal
 $opc = $_POST["opc"];
 switch ($opc){
@@ -2520,5 +2587,13 @@ switch ($opc){
 	case 'practicasCanceladas1':
 	practicasCanceladas();
 	break;
+	//AGREGUE
+	case 'practicasNR1':
+	practicasNR();
+	break;
+	case 'articulosBajoInventario1':
+	articulosBajoInventario();
+	break;
+	//FIN AGREGUE
 } 
 ?>
