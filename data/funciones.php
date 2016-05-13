@@ -251,32 +251,31 @@ function grupo($mat,$per,$pdo,$hor)
 	$clave   = $per;
 	$maestro = claveMaestro($clave);
 	$periodo = $pdo;
-	$n 	 	 = $hor;
+	$n 	 	 = (string)$hor;
 	$n2 	 = (string)($n+1);
-	$n 		 = (string)($n);
 	$hora 	 = "";
-	if (count($n)==1) 
+	if (strlen($n)==1) 
 	{
 		$hora 		.= "0".$n."00";
-		if (count($n2)==1)
+		if (strlen($n2)==1)
 		{
 			$hora 		.= "0".$n2."00"; 
 		}
 		else
 		{
-			$hora 		.= "0".$n2."00";
+			$hora 		.= $n2."00";
 		} 
 	}
 	else
 	{
 		$hora 		.= $n."00";
-		if (count($n2)==1)
+		if (strlen($n2)==1)
 		{
 			$hora 		.= "0".$n2."00"; 
 		}
 		else
 		{
-			$hora 		.= "0".$n2."00";
+			$hora 		.= $n2."00";
 		} 
 	}
 	$conexion 		= conectaBDSIE();
@@ -534,7 +533,7 @@ function comboEleArt()
 	$comboNomArt 	= "";
 	$con 			= 0;
 	$conexion		= conectaBDSICLAB();
-	$consulta		= sprintf("select DISTINCT (c.nombreArticulo), c.claveArticulo from lbarticuloscat c inner join lbarticulos a on a.claveArticulo = c.claveArticulo inner join lbasignaarticulos aa on aa.indentificadorArticulo = a.identificadorArticulo where aa.claveLaboratorio =%s and a.estatus = 'V' order by c.nombreArticulo",$laboratorio);
+	$consulta		= sprintf("select DISTINCT (c.nombreArticulo), c.claveArticulo from lbarticuloscat c inner join lbarticulos a on a.claveArticulo = c.claveArticulo inner join lbasignaarticulos aa on aa.identificadorArticulo = a.identificadorArticulo where aa.claveLaboratorio =%s and a.estatus = 'V' order by c.nombreArticulo",$laboratorio);
 	$res 			= mysql_query($consulta);
 	while($row = mysql_fetch_array($res))
 	{

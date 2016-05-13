@@ -310,7 +310,7 @@ function nuevaSol()
 	$respuesta	= false;
 	$respuesta2	= false;
 	$respuesta3 = false;
-	$cveDep 	= GetSQLValueString("0000","text"); //preparado para cuando se
+	$cveDep 	= GetSQLValueString("111111110","int"); //preparado para cuando se
 	$periodo 	= GetSQLValueString(periodoActual(),"text");
 	$fe 		= GetSQLValueString($_POST['fe'],"text");
 	$fs 		= GetSQLValueString($_POST['fs'],"text");
@@ -319,7 +319,7 @@ function nuevaSol()
 	$uso 		= GetSQLValueString($_POST['uso'],"text");
 	$prac 		= GetSQLValueString($_POST['prac'],"int"); 		
 	$clave  	= GetSQLValueString(($_SESSION['nombre']),"int");
-	$firma 		= GetSQLValueString("123456","text");
+	$firma 		= GetSQLValueString("000000","text");
 	$mat 		= GetSQLValueString($_POST['mat'],"text");
 	$gpo 		= GetSQLValueString($_POST['gpo'],"int");
 	$gp 		= GetSQLValueString(grupo($mat,$clave,$periodo,$gpo),"text");//insertar
