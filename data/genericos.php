@@ -2478,6 +2478,9 @@ switch ($opc){
 		break;
 	case 'construirTbArtExt1':
 			construirTbArtExt();
+			break;
+	case 'comboEleArtExt1':
+			comboEleArtExt();
 			break;	
 	//EDWIN
 	//AGREGUE

@@ -358,7 +358,8 @@ var inicioMaestro = function ()
 					sweetAlert("No existen articulos", "Es posible que no existan articulos en dicho laboratorio!", "error");
 				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
 				console.log("Error de conexión combomat");
 				console.log(xhr);	
 			}
@@ -501,12 +502,13 @@ var inicioMaestro = function ()
     	//llenar combo y crear tabla
     	//Crear tabla y crear combo
     	construirTablaE();
-    	llenarcomboEleArtE();
+    	//llenarcomboEleArtE();
     }//Termina función elegirMaterial de editar
     
     //Inicia función para construir tabla de los articulos a elegir para la practica
     var construirTablaE = function()
     {
+    	$("#bodyArtE").html("");
     	var parametros = "opc=construirTbArtE1"+
     	"&articulosAgregadosE="+articulosAgregadosE+
     	"&articulosE="+articulosE+
