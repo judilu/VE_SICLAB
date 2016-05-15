@@ -1768,7 +1768,7 @@ function comboEleArtExt()
 						'con' => $con);
 	print json_encode($arrayJSON);
 }
-function insertaSolicitud($dep,$fecE,$fecS,$hr,$prac,$lab,$cant,$motivo)
+function insertaSolicitud($dep,$fecE,$fecS,$hr,$prac,$lab,$cantAlu,$motivo,$nl,$art,$cant)
 {
 	$cveDep 		= $dep;
 	$periodo 		= periodoActual();
@@ -1783,17 +1783,26 @@ function insertaSolicitud($dep,$fecE,$fecS,$hr,$prac,$lab,$cant,$motivo)
 	$firma 			= "'0000'";
 	$mat 			= "'NA'";
 	$gpo 			= "'NA'";
-	$cantAlumnos 	= $cant;
+	$cantAlumnos 	= $cantAlu;
 	$estatus 		= "'V'";
+	$numL 			= $nl;
+	$articulos 		= $art;
+	$cantidad 		= $cant;
 	//para validar
-	valirdarFeHr($fs,$hs,$lab);
-	$conexion 		= conectaBDSICLAB();
-	$consulta 		= sprintf("insert into lbsolicitudlaboratorios values(%s,%s,%s,%s,%s,%s,%s,%s,%d,%d,%s,%s,%s,%s,%s)",$cveDep,$periodo,$cveSol,$fechaE,$fechaS,$hora,$cveLab,$motivoUso,$cvePractica,$usuario,$firma,$mat,$gpo,$cantAlumnos,$estatus);
-		$res 		= mysql_query($consulta);
-	if(mysql_affected_rows()>0)
+	if(valirdarFeHr($fechaS,$hora,$cveLab))
+	{
+		$conexion 		= conectaBDSICLAB();
+		$consulta 		= sprintf("insert into lbsolicitudlaboratorios values(%s,%s,%s,%s,%s,%s,%s,%s,%d,%d,%s,%s,%s,%s,%s)",$cveDep,$periodo,$cveSol,$fechaE,$fechaS,$hora,$cveLab,$motivoUso,$cvePractica,$usuario,$firma,$mat,$gpo,$cantAlumnos,$estatus);
+			$res 		= mysql_query($consulta);
+		if(mysql_affected_rows()>0)
 		{
-			$respuesta = true; 
+			$claveSolicitud = mysql_insert_id($conexion);
+			if(detalleArt($numL,$claveSolicitud,$articulos,$cantidad))
+			{
+				return true;
+			}
 		}
+	}
 }
 function guardaSolLabExterno()
 {
@@ -1812,33 +1821,39 @@ function guardaSolLabExterno()
 	$nomEncargado	= GetSQLValueString($_POST['nomEncargado'],"text");
 	$direccion   	= GetSQLValueString($_POST['direccion'],"text");
 	$telefono  		= GetSQLValueString($_POST['telefono'],"text");
-	$articulos   	= GetSQLValueString($_POST['articulos'],"int");
-	$cantArt   		= GetSQLValueString($_POST['cantArt'],"int");
+	$articulos   	= $_POST['articulos'];
+	$cantArt   		= $_POST['cantArt'];
 	$otra   		= GetSQLValueString($_POST['otra'],"int");
-	$conexion		= conectaBDSICLAB();
+	$numeroLineas	= GetSQLValueString($_POST['numeroLineas'],"int");
+	$claveDep 		= 0;
 	if($otra == 1)
 	{
+		$conexion		= conectaBDSICLAB();
 		$consulta 		= sprintf("insert into lbdependencias values(%d,%s,%s,%s,%s)",
 								"' '",$dependencia,$nomEncargado,$direccion,$telefono);
 		$resconsulta = mysql_query($consulta);
-			if(mysql_affected_rows()>0)
+		if(mysql_affected_rows()>0)
+		{
+			$claveDep = mysql_insert_id($conexion);
+			if(insertaSolicitud($claveDep,$fechaE,$fechaS,$hora,$practica,$laboratorio,$cantidad,$motivo,$numeroLineas,$articulos,$cantArt))
 			{
-				$claveDependencia = mysql_insert_id($conexion);
-				if(insertaSolicitud())
-				{
-					$respuesta = true;
-				}
+				$respuesta = true;
+			}
 		}
 	}
 	else
 	{
-		if(insertaSolicitud())
+		if(insertaSolicitud($dependencia,$fechaE,$fechaS,$hora,$practica,$laboratorio,$cantidad,$motivo,$numeroLineas,$articulos,$cantArt))
 		{
 			$respuesta = true;
 		}
 	}
-	$salidaJSON = array('respuesta' => $respuesta,
-						'idu' => $identificadorArticulo);
+	$arrayJSON 	= array('respuesta' 	=> $respuesta,
+						'dependenciaN' 	=> $claveDep,
+						'dependenciaE' 	=> $dependencia,
+						'otra' 			=> $otra);
+	print json_encode($arrayJSON);
+	
 }
 //FIN ANA
 //INICIO EDWIN

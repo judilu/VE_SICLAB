@@ -634,6 +634,7 @@
 		$("input").val("");
 		$("#txtCantAlumnosExterno").val("1");
 		$("textarea").val("");
+		$("#chbOtraDependencia").prop('checked', false); ;
 		//inicializar combo
 		//combo Lab
 		$("#cmbLaboratorioExterno").html(" ");
@@ -729,13 +730,24 @@
 	}
 	var elegirMatExterno = function()
 	{
-		//ocultar elementos
-    	$("#nuevaExterno").hide();
-    	$("#eleccionMaterialExt").show("slow");
-    	$("#txtNumArtExt").val("1");
-    	//llenar combo y crear tabla
-    	//Crear tabla y crear combo
-    	llenarcomboEleArtExt();
+		if($("#cmbNombreDependencias").val() != null || $("#txtNombreDependencia").val() != "")
+		{
+			if($("#txtFechaSolExterno").val() != "" && $("#cmbPracticaExterno").val() != null && $("#cmbLaboratorioExterno").val() != null
+				&& $("#cmbHoraPractExterno").val() != null && $("#txtCantAlumnosExterno").val() != "" && $("#txtMotivoUsoExterno").val() != "")
+			{
+				//ocultar elementos
+		    	$("#nuevaExterno").hide();
+		    	$("#eleccionMaterialExt").show("slow");
+		    	$("#txtNumArtExt").val("1");
+		    	//llenar combo y crear tabla
+		    	//Crear tabla y crear combo
+		    	llenarcomboEleArtExt();
+		    }
+		}
+	    else
+	    {
+			sweetAlert("Debe llenar todos los campos", "error");
+	    }
 	}
 	var construirTablaExt = function()
 	{
@@ -951,6 +963,7 @@
 		var telefono	= $("#txtTelefonoDependencia").val();
 		var articulos	= articulosAgregadosExt;
 		var cantArt		= numArticulosExt;
+		var numeroLineas= (($("#tbMaterialSolExt tr").length)-1);
 		var parametros 	= "opc=guardaSolLabExterno1"
 							+"&dependencia="+dependencia
 							+"&fechaEnvio="+fe
@@ -963,8 +976,10 @@
 							+"&nomEncargado="+nomEncargado
 							+"&direccion="+direccion
 							+"&telefono="+telefono
+							+"&articulos="+articulos
 							+"&cantArt="+cantArt
 							+"&otra="+otra
+							+"&numeroLineas="+numeroLineas
 							+"&id="+Math.random();
 			$.ajax({
 				cache:false,
@@ -975,7 +990,17 @@
 				success: function(response){
 					if(response.respuesta == true)
 					{
-						
+						if (response.otra == 1) 
+						{
+							swal("La solicitud fue enviada con éxito! El numero de control de la dependencia es: "+response.dependenciaN, "Da clic en el botón OK!", "success");
+							sLaboratorioNuevas();
+						}
+						else
+						{
+							swal("La solicitud fue enviada con éxito! El numero de control de la dependencia es: "+response.dependenciaE, "Da clic en el botón OK!", "success");
+							sLaboratorioNuevas();
+
+						}
 					}
 					else
 					{
@@ -1273,7 +1298,7 @@
 	{
 		if (tipoUsu == 1 || tipoUsu == 2) 
 		{
-			if(($("#txtModeloArtAlta").val())!="" && ($("#txtNumSerieAlta").val())!="" && ($("#cmbNombreArtAlta").val())!=""
+			if(($("#txtModeloArtAlta").val())!="" && ($("#txtNumSerieAlta").val())!="" && ($("#cmbNombreArtAlta").val())!= null
 				&& ($("#txtMarcaArtAlta").val())!="" && ($("#txtTipoContenedorAlta").val())!="" && ($("#txtUbicacionAlta").val())!="")
 			{
 				if($("#txtClaveKitAlta").val() == "" || $("#txtFechaCaducidadAlta").val() == "")
@@ -1358,7 +1383,7 @@
 	{
 		if(tipoUsu == 1 || tipoUsu ==2)
 		{
-			if($("#cmbTipoBaja").val()!="" && $("#txtMotivoDeBaja").val()!="" && $("#txtModeloArtBaja").val()!="")
+			if($("#cmbTipoBaja").val()!= null && $("#txtMotivoDeBaja").val()!="" && $("#txtModeloArtBaja").val()!="")
 			{
 				var identificadorArticulo	= $("#txtCodigoBarrasBaja").val();//obtener el articulo a dar de baja
 				var estatus 				= $("#cmbTipoBaja").val();
