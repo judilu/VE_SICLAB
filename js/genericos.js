@@ -541,7 +541,7 @@
 					}
 					else
 					{
-						sweetAlert("Lasolicitud no existe!", " ", "error");
+						sweetAlert("La solicitud no existe!", " ", "error");
 					}
 				},
 				error: function(xhr, ajaxOptions,x){
@@ -1184,7 +1184,6 @@
 	var buscaArtInventario = function()
 	{
 		var articulo = $("#txtArticuloLista").val();
-		alert($("#txtArticuloLista").val());
 		var parametros 	= "opc=buscaArtLista1"
 						+"&articulo="+articulo
 						+"&id="+Math.random();
