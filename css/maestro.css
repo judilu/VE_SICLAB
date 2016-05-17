@@ -1,3 +1,18 @@
+#loaderImage
+{
+	display: none;
+	text-align: center;
+	margin: 5% 0px;
+	width: 100%;
+	height: 100%;
+	/*z-index: 3;*/
+	/*position: absolute;*/
+	/*margin-left: 33%;*/
+}
+#loaderFondo:hover,#loaderImage:hover
+{
+	cursor: wait;
+}
 .bajo
 {
 	border-top: 2px solid black;
