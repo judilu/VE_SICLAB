@@ -116,7 +116,7 @@
 				<div class="row">
 					<div class="col s4 offset-s4">
 						<a class="waves-effect waves-light btn green darken-2 " id="btnFinalizarNSExt">Finalizar</a>
-						<a class="waves-effect waves-light btn amber darken-2" id="btnRegresarExt">Regresar</a>
+						<a class="waves-effect waves-light btn red darken-1" id="btnRegresarExt">Cancelar</a>
 					</div>
 				</div>
 			</div>

@@ -115,7 +115,7 @@
 				</ul>
 			</div>
 			<div id="resumenReportes">
-				<h5>Dashboard</h5>
+				<h5>Resumen de reportes</h5>
 				<?php include 'resumenReportes.php';?>
 			</div>
 			<div id="bajoInventario">

@@ -866,12 +866,13 @@ function prestamosPendientes()
 		$renglones	= "";
 		$nombreAlu 	= "";
 		$tipoUsuario= tipoUsuario($responsable);
+		$claveLab 	= obtieneCveLab($responsable);
 		$conexion 	= conectaBDSICLAB();
 		$consulta	= sprintf("select ea.ALUCTR,ea.horaEntrada,ea.fechaEntrada,p.clavePrestamo 
 								from lbentradasalumnos ea 
 								INNER JOIN lbprestamos p on ea.ALUCTR=p.ALUCTR
 								inner join lbsolicitudarticulos sa on p.clavePrestamo=sa.clavePrestamo
-								where sa.estatus='S' GROUP BY p.clavePrestamo");
+								where sa.estatus='S' and ea.claveLaboratorio=%s GROUP BY p.clavePrestamo",$claveLab);
 		$res 		= mysql_query($consulta);
 
 		$renglones	.= "<thead>";
@@ -1866,16 +1867,30 @@ function alumnosActuales()
 	session_start();
 		$usuario	= $_SESSION['nombre'];
 		$labUsuario	= "";
-		$claveLab 	= obtieneCveLab($usuario); //GUARDO LA CLAVE DEL LAB
+		$tipoUsu 	= tipoUsuario($usuario);
+		$claveLab 	= GetSQLValueString(obtieneCveLab($usuario),"text");
 		$rows		= array();
 		$renglones	= "";
 		$fechaActual= date("'d/m/Y'");
 		$conexion 	= conectaBDSICLAB();
-		$consulta 	= sprintf("select count(*) as Contador 
-							from lbentradasalumnos a 
-							inner join lbcalendarizaciones c on a.claveCalendarizacion=c.claveCalendarizacion 
-							inner join lbsolicitudlaboratorios l on l.claveSolicitud=c.claveSolicitud 
-							where l.claveLaboratorio='%s' and a.fechaEntrada = %s",$claveLab,$fechaActual);
+		if($tipoUsu == 5)
+		{
+			$claveDepto	= obtieneDepto($claveLab); 
+			$labs 		= arrayLabs($claveDepto);
+			$consulta 	= sprintf("select count(*) as Contador 
+								from lbentradasalumnos a 
+								inner join lbcalendarizaciones c on a.claveCalendarizacion=c.claveCalendarizacion 
+								inner join lbsolicitudlaboratorios l on l.claveSolicitud=c.claveSolicitud 
+								where l.claveLaboratorio IN(%s) and a.fechaEntrada = %s",$labs,$fechaActual);
+		}
+		else
+		{
+			$consulta 	= sprintf("select count(*) as Contador 
+								from lbentradasalumnos a 
+								inner join lbcalendarizaciones c on a.claveCalendarizacion=c.claveCalendarizacion 
+								inner join lbsolicitudlaboratorios l on l.claveSolicitud=c.claveSolicitud 
+								where l.claveLaboratorio=%s and a.fechaEntrada = %s",$claveLab,$fechaActual);
+		}
 		$res = mysql_query($consulta);
 		if (mysql_num_rows($res)) //Si se encontraron datos en la búsqueda 
 		{ 
@@ -1896,11 +1911,30 @@ function articuloMasPrestado()
 	session_start();
 		$usuario	= $_SESSION['nombre'];
 		$labUsuario ="";
-		$claveLab 	= GetSQLValueString(obtieneCveLab($usuario),"text"); //GUARDO LA CLAVE DEL LAB
+		$tipoUsu 	= tipoUsuario($usuario);
+		$claveLab 	= GetSQLValueString(obtieneCveLab($usuario),"text");
 		$rows		= array();
 		$renglones	= "";
 		$conexion 	= conectaBDSICLAB();
-		$consulta 	= sprintf("select ac.nombreArticulo,COUNT(a.claveArticulo) cantidad
+		if($tipoUsu == 5)
+		{
+			$claveDepto	= obtieneDepto($claveLab); 
+			$labs 		= arrayLabs($claveDepto);
+			$consulta 	= sprintf("select ac.nombreArticulo,COUNT(a.claveArticulo) cantidad
+							from lbarticulos a 
+							INNER JOIN lbprestamosarticulos pa 
+							ON a.identificadorArticulo=pa.identificadorArticulo
+							INNER JOIN lbarticuloscat ac 
+							ON a.claveArticulo=ac.claveArticulo
+							INNER JOIN lbasignaarticulos aa
+							ON a.identificadorArticulo= aa.indentificadorArticulo
+							WHERE aa.claveLaboratorio in(%s) 
+							GROUP BY a.claveArticulo
+							ORDER BY a.claveArticulo DESC LIMIT 1",$labs);
+		}
+		else
+		{
+			$consulta 	= sprintf("select ac.nombreArticulo,COUNT(a.claveArticulo) cantidad
 							from lbarticulos a 
 							INNER JOIN lbprestamosarticulos pa 
 							ON a.identificadorArticulo=pa.identificadorArticulo
@@ -1911,6 +1945,7 @@ function articuloMasPrestado()
 							WHERE aa.claveLaboratorio = %s
 							GROUP BY a.claveArticulo
 							ORDER BY a.claveArticulo DESC LIMIT 1",$claveLab);
+		}
 		$res = mysql_query($consulta);
 		if (mysql_num_rows($res)) //Si se encontraron datos en la búsqueda 
 		{ 
@@ -1919,22 +1954,6 @@ function articuloMasPrestado()
 			$renglones .= "<p style= font-size:16px;> Mas solicitado: <br> ".$rows["nombreArticulo"]." (".$rows["cantidad"].")</p>";
 			$respuesta=true; 
 		}
-		/*$consulta2 	= sprintf("select count(lbarticulos.claveArticulo) as Contador 
-								from lbarticulos 
-								inner join lbasignaarticulos 
-								on lbarticulos.identificadorArticulo=lbasignaarticulos.indentificadorArticulo 
-								inner join lbinventarios 
-								on lbarticulos.claveArticulo=lbinventarios.claveArticulo
-								where lbasignaarticulos.claveLaboratorio='%s' 
-								and lbinventarios.cantidad=0 
-								group by lbarticulos.claveArticulo limit 10",$claveLab);
-		$res2=mysql_query($consulta2);
-		if (mysql_num_rows($res2)) //Si se encontraron datos en la búsqueda 
-		{ 
-			$rows = mysql_fetch_array($res2); 
-			$renglones .= "<p style= font-size:16px;> Sin existencia: ".$rows["Contador"]."</p>";
-			$respuesta=true; 
-		}*/
 	$arrayJSON = array('respuesta' => $respuesta,
 		'renglones' => $renglones);
 	print json_encode($arrayJSON);
@@ -1943,13 +1962,30 @@ function articulosSinExistencia()
 {
 	$respuesta 	= false;
 	session_start();
-		$responsable= $_SESSION['nombre'];
+		$usuario 	= $_SESSION['nombre'];
 		$prestamo	= "";
 		$con 		= 0;
-		$claveLab 	= GetSQLValueString(obtieneCveLab($responsable),"text"); //GUARDO LA CLAVE DEL LAB
+		$tipoUsu 	= tipoUsuario($usuario);
+		$claveLab 	= GetSQLValueString(obtieneCveLab($usuario),"text");
 		$rows		= array();
 		$renglones	= "";
 		$conexion 	= conectaBDSICLAB();
+		if($tipoUsu == 5)
+		{
+			$claveDepto	= obtieneDepto($claveLab); 
+			$labs 		= arrayLabs($claveDepto);
+			$consulta	= sprintf("select COUNT(a.claveArticulo) as cant, ac.nombreArticulo
+								from lbarticulos a
+								INNER JOIN lbasignaarticulos aa 
+								on a.identificadorArticulo = aa.indentificadorArticulo
+								inner JOIN lbinventarios i 
+								on i.claveArticulo = a.claveArticulo
+								inner join lbarticuloscat ac
+								on a.claveArticulo=ac.claveArticulo
+								WHERE aa.claveLaboratorio in(%s) AND i.cantidad = 0",$labs);
+		}
+		else
+		{
 		$consulta	= sprintf("select COUNT(a.claveArticulo) as cant, ac.nombreArticulo
 								from lbarticulos a
 								INNER JOIN lbasignaarticulos aa 
@@ -1959,6 +1995,7 @@ function articulosSinExistencia()
 								inner join lbarticuloscat ac
 								on a.claveArticulo=ac.claveArticulo
 								WHERE aa.claveLaboratorio = %s AND i.cantidad = 0",$claveLab);
+		}
 		$res 		= mysql_query($consulta);
 
 		$renglones	.= "<thead>";
@@ -2000,16 +2037,31 @@ function proximosApartados()
 		$nomMaestro = "";
 		$nomMat 	= "";
 		$fechaActual= date("'d/m/Y'");
-		$tipoUsuario= tipoUsuario($responsable);
+		$tipoUsu 	= tipoUsuario($responsable);
 		$solAceptadas="";
 		$conexion 	= conectaBDSICLAB();
-		$consulta			= sprintf("select s.claveSolicitud,s.MATCVE,p.tituloPractica,c.fechaAsignada,c.horaAsignada,s.claveUsuario 
+		if($tipoUsu == 5)
+		{
+			$claveDepto	= obtieneDepto($claveLab); 
+			$labs 		= arrayLabs($claveDepto);
+			$consulta			= sprintf("select s.claveSolicitud,s.MATCVE,p.tituloPractica,c.fechaAsignada,c.horaAsignada,s.claveUsuario 
+										from lbusuarios as u 
+										INNER JOIN lbsolicitudlaboratorios as s ON u.claveUsuario =s.claveUsuario 
+										INNER JOIN lbpracticas as p ON p.clavePractica = s.clavePractica
+										INNER JOIN lbcalendarizaciones c ON c.claveSolicitud=s.claveSolicitud
+										where s.estatus='V' and s.claveLaboratorio in(%s) and c.fechaAsignada >= %s and
+										EXISTS (select * from lbcalendarizaciones as c where c.claveSolicitud=s.claveSolicitud and c.estatus='NR')",$labs,$fechaActual);
+		}
+		else
+		{
+			$consulta			= sprintf("select s.claveSolicitud,s.MATCVE,p.tituloPractica,c.fechaAsignada,c.horaAsignada,s.claveUsuario 
 										from lbusuarios as u 
 										INNER JOIN lbsolicitudlaboratorios as s ON u.claveUsuario =s.claveUsuario 
 										INNER JOIN lbpracticas as p ON p.clavePractica = s.clavePractica
 										INNER JOIN lbcalendarizaciones c ON c.claveSolicitud=s.claveSolicitud
 										where s.estatus='V' and s.claveLaboratorio=%s and c.fechaAsignada >= %s and
 										EXISTS (select * from lbcalendarizaciones as c where c.claveSolicitud=s.claveSolicitud and c.estatus='NR')",$claveLab,$fechaActual);
+		}
 		$res 		= mysql_query($consulta);
 		$renglones	.= "<thead>";
 		$renglones	.= "<tr>";
@@ -2058,11 +2110,27 @@ function resumenInventarioActual()
 		$responsable= $_SESSION['nombre'];
 		$prestamo	= "";
 		$con 		= 0;
-		$claveLab 	= GetSQLValueString(obtieneCveLab($responsable),"text"); //GUARDO LA CLAVE DEL LAB
+		$claveLab 	= GetSQLValueString(obtieneCveLab($responsable),"text"); 
+		$tipoUsu 	= tipoUsuario($responsable);
 		$rows		= array();
 		$renglones	= "";
 		$conexion 	= conectaBDSICLAB();
-		$consulta	= sprintf("select a.identificadorArticulo,ac.nombreArticulo,
+		if($tipoUsu == 5)
+		{
+			$claveDepto	= obtieneDepto($claveLab); 
+			$labs 		= arrayLabs($claveDepto);
+			$consulta	= sprintf("select a.identificadorArticulo,ac.nombreArticulo,
+								CASE WHEN a.fechaCaducidad='01/01/1900' THEN 'NA' ELSE A.fechaCaducidad END as caducidad
+								FROM lbarticulos a
+								INNER JOIN lbarticuloscat ac 
+								ON a.claveArticulo=ac.claveArticulo
+								INNER JOIN lbasignaarticulos aa
+								ON a.identificadorArticulo = aa.indentificadorArticulo
+								WHERE aa.claveLaboratorio in(%s)",$labs);
+		}
+		else
+		{
+			$consulta	= sprintf("select a.identificadorArticulo,ac.nombreArticulo,
 								CASE WHEN a.fechaCaducidad='01/01/1900' THEN 'NA' ELSE A.fechaCaducidad END as caducidad
 								FROM lbarticulos a
 								INNER JOIN lbarticuloscat ac 
@@ -2070,6 +2138,7 @@ function resumenInventarioActual()
 								INNER JOIN lbasignaarticulos aa
 								ON a.identificadorArticulo = aa.indentificadorArticulo
 								WHERE aa.claveLaboratorio=%s",$claveLab);
+		}
 		$res 		= mysql_query($consulta);
 
 		$renglones	.= "<thead>";
@@ -2108,16 +2177,32 @@ function enBaja()
 		$responsable= $_SESSION['nombre'];
 		$con 		= 0;
 		$periodo 	= periodoActual();
-		$cveLab 	= GetSQLValueString(obtieneCveLab($responsable),"text"); //GUARDO LA CLAVE DEL LAB
+		$claveLab 	= GetSQLValueString(obtieneCveLab($responsable),"text"); 
 		$rows		= array();
 		$renglones	= "";
+		$tipoUsu 	= tipoUsuario($responsable);
 		$conexion 	= conectaBDSICLAB();
-		$consulta	= sprintf("select a.identificadorArticulo,cat.nombreArticulo,ma.observaciones 
+		if($tipoUsu == 5)
+		{
+			$claveDepto	= obtieneDepto($claveLab); 
+			$labs 		= arrayLabs($claveDepto);
+			$consulta	= sprintf("select a.identificadorArticulo,cat.nombreArticulo,ma.observaciones 
 							from lbmovimientosarticulos ma
 							INNER JOIN lbarticulos a ON ma.identificadorArticulo=a.identificadorArticulo
 							INNER JOIN lbarticuloscat cat on a.claveArticulo=cat.claveArticulo
 							INNER JOIN lbasignaarticulos aa on aa.indentificadorArticulo=a.identificadorArticulo
-							WHERE a.estatus='B' AND aa.claveLaboratorio=%s and ma.PDOCVE=%s",$cveLab,$periodo);
+							WHERE a.estatus='B' AND aa.claveLaboratorio in(%s) and ma.PDOCVE=%s",$labs,$periodo);
+		}
+		else
+		{
+			$consulta	= sprintf("select a.identificadorArticulo,cat.nombreArticulo,ma.observaciones 
+							from lbmovimientosarticulos ma
+							INNER JOIN lbarticulos a ON ma.identificadorArticulo=a.identificadorArticulo
+							INNER JOIN lbarticuloscat cat on a.claveArticulo=cat.claveArticulo
+							INNER JOIN lbasignaarticulos aa on aa.indentificadorArticulo=a.identificadorArticulo
+							WHERE a.estatus='B' AND aa.claveLaboratorio=%s and ma.PDOCVE=%s",$claveLab,$periodo);
+		}
+		
 		$res 		= mysql_query($consulta);
 		$renglones	.= "<thead>";
 		$renglones	.= "<tr>";
@@ -2155,17 +2240,33 @@ function enReparacion()
 		$responsable= $_SESSION['nombre'];
 		$con 		= 0;
 		$periodo 	= periodoActual();
-		$cveLab 	= GetSQLValueString(obtieneCveLab($responsable),"text"); //GUARDO LA CLAVE DEL LAB
+		$claveLab 	= GetSQLValueString(obtieneCveLab($responsable),"text");
+		$tipoUsu 	= tipoUsuario($responsable);
 		$rows		= array();
 		$renglones	= "";
 		$conexion 	= conectaBDSICLAB();
-		$consulta	= sprintf("select m.identificadorArticulo,ac.nombreArticulo,m.observaciones,m.fechaMovimiento 
+		if($tipoUsu == 5)
+		{
+			$claveDepto	= obtieneDepto($claveLab); 
+			$labs 		= arrayLabs($claveDepto);
+			$consulta	= sprintf("select m.identificadorArticulo,ac.nombreArticulo,m.observaciones,m.fechaMovimiento 
 								from lbmovimientosarticulos m
 								INNER JOIN lbarticulos a
 								ON m.identificadorArticulo=a.identificadorArticulo
 								INNER JOIN lbarticuloscat ac
 								ON a.claveArticulo=ac.claveArticulo
-								WHERE m.estatus='M' AND m.claveLaboratorio=%s AND m.PDOCVE=%s",$cveLab,$periodo);
+								WHERE m.estatus='M' AND m.claveLaboratorio in(%s) AND m.PDOCVE=%s",$labs,$periodo);
+		}
+		else
+		{
+			$consulta	= sprintf("select m.identificadorArticulo,ac.nombreArticulo,m.observaciones,m.fechaMovimiento 
+								from lbmovimientosarticulos m
+								INNER JOIN lbarticulos a
+								ON m.identificadorArticulo=a.identificadorArticulo
+								INNER JOIN lbarticuloscat ac
+								ON a.claveArticulo=ac.claveArticulo
+								WHERE m.estatus='M' AND m.claveLaboratorio=%s AND m.PDOCVE=%s",$claveLab,$periodo);
+		}
 		$res 		= mysql_query($consulta);
 		$renglones	.= "<thead>";
 		$renglones	.= "<tr>";
@@ -2203,18 +2304,40 @@ function enPrestamo()
 	$respuesta 	= false;
 	session_start();
 		$responsable= $_SESSION['nombre'];
+		$claveLab 	= GetSQLValueString(obtieneCveLab($responsable),"text");
+		$tipoUsu 	= tipoUsuario($responsable);
 		$prestamo	= "";
 		$con 		= 0;
 		$rows		= array();
 		$renglones	= "";
 		$conexion 	= conectaBDSICLAB();
+		if($tipoUsu == 5)
+		{
+			$claveDepto	= obtieneDepto($claveLab); 
+			$labs 		= arrayLabs($claveDepto);
+			$consulta	= sprintf("select cat.nombreArticulo,COUNT(sa.cantidad) cantidad, 
+							CASE WHEN sa.estatus='A' THEN 'PRESTADO' ELSE 'NEGADO' END AS estatus
+							FROM lbarticuloscat cat
+							INNER JOIN lbsolicitudarticulos sa 
+							ON sa.claveArticulo=cat.claveArticulo
+							INNER JOIN lbprestamos p
+							ON p.clavePrestamo = sa.clavePrestamo
+							INNER JOIN lbentradasalumnos ea
+							on p.ALUCTR = ea.ALUCTR
+							WHERE sa.estatus <> 'S' and ea.claveLaboratorio in(%s)
+							GROUP BY sa.cantidad,cat.nombreArticulo",$labs);
+		}
 		$consulta	= sprintf("select cat.nombreArticulo,COUNT(sa.cantidad) cantidad, 
-								CASE WHEN sa.estatus='A' THEN 'PRESTADO' ELSE 'NEGADO' END AS estatus
-								FROM lbarticuloscat cat
-								INNER JOIN lbsolicitudarticulos sa 
-								ON sa.claveArticulo=cat.claveArticulo
-								WHERE sa.estatus <> 'S'
-								GROUP BY sa.cantidad,cat.nombreArticulo",$responsable);
+							CASE WHEN sa.estatus='A' THEN 'PRESTADO' ELSE 'NEGADO' END AS estatus
+							FROM lbarticuloscat cat
+							INNER JOIN lbsolicitudarticulos sa 
+							ON sa.claveArticulo=cat.claveArticulo
+							INNER JOIN lbprestamos p
+							ON p.clavePrestamo = sa.clavePrestamo
+							INNER JOIN lbentradasalumnos ea
+							on p.ALUCTR = ea.ALUCTR
+							WHERE sa.estatus <> 'S' and ea.claveLaboratorio=%s
+							GROUP BY sa.cantidad,cat.nombreArticulo",$claveLab);
 		$res 		= mysql_query($consulta);
 
 		$renglones	.= "<thead>";
@@ -2251,16 +2374,29 @@ function enPedido()
 	$respuesta 	= false;
 	session_start();
 		$responsable= $_SESSION['nombre'];
-		$claveLab 	= GetSQLValueString(obtieneCveLab($responsable),"text"); //GUARDO LA CLAVE DEL LAB
+		$claveLab 	= GetSQLValueString(obtieneCveLab($responsable),"text");
+		$tipoUsu 	= tipoUsuario($responsable) ;
 		$prestamo	= "";
 		$con 		= 0;
 		$rows		= array();
 		$renglones	= "";
 		$conexion 	= conectaBDSICLAB();
-		$consulta	= sprintf("select clavePedido,fechaPedido,nombreArticulo,cantidad,motivoPedido 
+		if($tipoUsu == 5)
+		{
+			$claveDepto	= obtieneDepto($claveLab); 
+			$labs 		= arrayLabs($claveDepto);
+			$consulta	= sprintf("select clavePedido,fechaPedido,nombreArticulo,cantidad,motivoPedido 
+							FROM lbpedidos l 
+							inner join lbresponsables r on l.claveResponsable=r.claveResponsable 
+							where r.claveLaboratorio in(%s) and l.estatus='P'",$labs);
+		}
+		else
+		{
+			$consulta	= sprintf("select clavePedido,fechaPedido,nombreArticulo,cantidad,motivoPedido 
 							FROM lbpedidos l 
 							inner join lbresponsables r on l.claveResponsable=r.claveResponsable 
 							where r.claveLaboratorio=%s and l.estatus='P'",$claveLab);
+		}
 		$res 		= mysql_query($consulta);
 
 		$renglones	.= "<thead>";
@@ -2301,17 +2437,31 @@ function practicasNoRealizadas()
 	$respuesta 	= false;
 	session_start();
 		$responsable= $_SESSION['nombre'];
-		$claveLab 	= GetSQLValueString(obtieneCveLab($responsable),"text"); //GUARDO LA CLAVE DEL LAB
+		$claveLab 	= GetSQLValueString(obtieneCveLab($responsable),"text");
+		$tipoUsu 	= tipoUsuario($responsable);
 		$prestamo	= "";
 		$con 		= 0;
 		$rows		= array();
 		$renglones	= "";
 		$conexion 	= conectaBDSICLAB();
-		$consulta	= sprintf("Select claveCalendarizacion, fechaAsignada, horaAsignada, tituloPractica, duracionPractica 					from lbcalendarizaciones inner join lbasignapracticas on
+		if($tipoUsu == 5)
+		{
+			$claveDepto	= obtieneDepto($claveLab); 
+			$labs 		= arrayLabs($claveDepto);
+			$consulta	= sprintf("Select claveCalendarizacion, fechaAsignada, horaAsignada, tituloPractica, duracionPractica 					from lbcalendarizaciones inner join lbasignapracticas on
+							lbcalendarizaciones.claveCalendarizacion= lbasignapracticas.clavePractica inner join lbpracticas
+							on lbpracticas.clavePractica=lbasignapracticas.clavePractica
+							where lbasignaPracticas.claveLaboratorio in(%s) and lbcalendarizaciones.estatus='NR'
+							and lbpracticas.estatus='V'",$labs);
+		}
+		else
+		{
+			$consulta	= sprintf("Select claveCalendarizacion, fechaAsignada, horaAsignada, tituloPractica, duracionPractica 					from lbcalendarizaciones inner join lbasignapracticas on
 							lbcalendarizaciones.claveCalendarizacion= lbasignapracticas.clavePractica inner join lbpracticas
 							on lbpracticas.clavePractica=lbasignapracticas.clavePractica
 							where lbasignaPracticas.claveLaboratorio=%s and lbcalendarizaciones.estatus='NR'
 							and lbpracticas.estatus='V'",$claveLab);
+		}
 		$res 		= mysql_query($consulta);
 		$renglones	.= "<thead>";
 		$renglones	.= "<tr>";
@@ -2350,17 +2500,31 @@ function practicasRealizadas()
 	$respuesta 	= false;
 	session_start();
 		$responsable= $_SESSION['nombre'];
-		$claveLab 	= GetSQLValueString(obtieneCveLab($responsable),"text"); //GUARDO LA CLAVE DEL LAB
+		$claveLab 	= GetSQLValueString(obtieneCveLab($responsable),"text");
+		$tipoUsu 	= tipoUsuario($responsable);
 		$prestamo	= "";
 		$con 		= 0;
 		$rows		= array();
 		$renglones	= "";
 		$conexion 	= conectaBDSICLAB();
-		$consulta	= sprintf("Select claveCalendarizacion, fechaAsignada, horaAsignada, tituloPractica, duracionPractica 					from lbcalendarizaciones inner join lbasignapracticas on
+		if ($tipoUsu == 5) 
+		{
+			$claveDepto	= obtieneDepto($claveLab); 
+			$labs 		= arrayLabs($claveDepto);
+			$consulta	= sprintf("Select claveCalendarizacion, fechaAsignada, horaAsignada, tituloPractica, duracionPractica 					from lbcalendarizaciones inner join lbasignapracticas on
+							lbcalendarizaciones.claveCalendarizacion= lbasignapracticas.clavePractica inner join lbpracticas
+							on lbpracticas.clavePractica=lbasignapracticas.clavePractica
+							where lbasignaPracticas.claveLaboratorio=%s and lbcalendarizaciones.estatus='R'
+							and lbpracticas.estatus='V'",$labs);
+		}
+		else
+		{
+			$consulta	= sprintf("Select claveCalendarizacion, fechaAsignada, horaAsignada, tituloPractica, duracionPractica 					from lbcalendarizaciones inner join lbasignapracticas on
 							lbcalendarizaciones.claveCalendarizacion= lbasignapracticas.clavePractica inner join lbpracticas
 							on lbpracticas.clavePractica=lbasignapracticas.clavePractica
 							where lbasignaPracticas.claveLaboratorio=%s and lbcalendarizaciones.estatus='R'
 							and lbpracticas.estatus='V'",$claveLab);
+		}
 		$res 		= mysql_query($consulta);
 
 		$renglones	.= "<thead>";
@@ -2400,17 +2564,31 @@ function practicasCanceladas()
 	$respuesta 	= false;
 	session_start();
 		$responsable= $_SESSION['nombre'];
-		$claveLab 	= GetSQLValueString(obtieneCveLab($responsable),"text"); //GUARDO LA CLAVE DEL LAB
+		$claveLab 	= GetSQLValueString(obtieneCveLab($responsable),"text"); 
+		$tipoUsu 	= tipoUsuario($responsable);
 		$prestamo	= "";
 		$con 		= 0;
 		$rows		= array();
 		$renglones	= "";
 		$conexion 	= conectaBDSICLAB();
-		$consulta	= sprintf("Select claveCalendarizacion, fechaAsignada, horaAsignada, tituloPractica, duracionPractica 					from lbcalendarizaciones inner join lbasignapracticas on
+		if($tipoUsu == 5)
+		{
+			$claveDepto	= obtieneDepto($claveLab); 
+			$labs 		= arrayLabs($claveDepto);
+			$consulta	= sprintf("Select claveCalendarizacion, fechaAsignada, horaAsignada, tituloPractica, duracionPractica 					from lbcalendarizaciones inner join lbasignapracticas on
+							lbcalendarizaciones.claveCalendarizacion= lbasignapracticas.clavePractica inner join lbpracticas
+							on lbpracticas.clavePractica=lbasignapracticas.clavePractica
+							where lbasignaPracticas.claveLaboratorio in(%s) and lbcalendarizaciones.estatus='NR'
+							and lbpracticas.estatus='B'",$labs);
+		}
+		else
+		{
+			$consulta	= sprintf("Select claveCalendarizacion, fechaAsignada, horaAsignada, tituloPractica, duracionPractica 					from lbcalendarizaciones inner join lbasignapracticas on
 							lbcalendarizaciones.claveCalendarizacion= lbasignapracticas.clavePractica inner join lbpracticas
 							on lbpracticas.clavePractica=lbasignapracticas.clavePractica
 							where lbasignaPracticas.claveLaboratorio=%s and lbcalendarizaciones.estatus='NR'
 							and lbpracticas.estatus='B'",$claveLab);
+		}
 		$res 		= mysql_query($consulta);
 
 		$renglones	.= "<thead>";
@@ -2450,14 +2628,25 @@ function practicasNR()
 {
 	$respuesta 	= false;
 	session_start();
-		$usuario	= $_SESSION['nombre'];
+		$responsable	= $_SESSION['nombre'];
 		$labUsuario	= "";
-		$claveLab 	= obtieneCveLab($usuario); //GUARDO LA CLAVE DEL LAB
+		$claveLab 	= GetSQLValueString(obtieneCveLab($responsable),"text"); 
+		$tipoUsu 	= tipoUsuario($responsable);
 		$rows		= array();
 		$renglones	= "";
 		$conexion 	= conectaBDSICLAB();
-		$consulta 	= sprintf("select count(claveCalendarizacion) as cantidad from lbcalendarizaciones c inner join lbasignapracticas a on c.claveCalendarizacion=a.clavePractica
-where estatus= 'NR' and a.claveLaboratorio='%s'",$claveLab);
+		if($tipoUsu == 5)
+		{
+			$claveDepto	= obtieneDepto($claveLab); 
+			$labs 		= arrayLabs($claveDepto);
+			$consulta 	= sprintf("select count(claveCalendarizacion) as cantidad from lbcalendarizaciones c inner join lbasignapracticas a on c.claveCalendarizacion=a.clavePractica
+				where estatus= 'NR' and a.claveLaboratorio in(%s)",$labs);
+		}
+		else
+		{
+			$consulta 	= sprintf("select count(claveCalendarizacion) as cantidad from lbcalendarizaciones c inner join lbasignapracticas a on c.claveCalendarizacion=a.clavePractica where estatus= 'NR' and a.claveLaboratorio=%s",$claveLab);
+		}
+
 		$res = mysql_query($consulta);
 		if (mysql_num_rows($res)) //Si se encontraron datos en la búsqueda 
 		{ 
@@ -2476,14 +2665,26 @@ function articulosBajoInventario()
 	$respuesta 	= false;
 	session_start();
 		$responsable= $_SESSION['nombre'];
-		$claveLab 	= GetSQLValueString(obtieneCveLab($responsable),"text"); //GUARDO LA CLAVE DEL LAB
+		$claveLab 	= GetSQLValueString(obtieneCveLab($responsable),"text"); 
+		$tipoUsu 	= tipoUsuario($responsable);
 		$rows		= array();
 		$con=0;
 		$renglones	= "";
 		$conexion 	= conectaBDSICLAB();
-		$consulta	= sprintf("select ac.nombreArticulo as Nombre, count(a.claveArticulo) AS Cantidad from lbarticulos a inner join lbarticuloscat ac on a.claveArticulo=ac.claveArticulo
-inner join lbasignaarticulos aa on aa.indentificadorArticulo=a.identificadorArticulo
-where aa.claveLaboratorio=%s group by a.claveArticulo having count(a.claveArticulo)<=5",$claveLab);
+		if($tipoUsu == 5)
+		{
+			$claveDepto	= obtieneDepto($claveLab); 
+			$labs 		= arrayLabs($claveDepto);
+			$consulta	= sprintf("select ac.nombreArticulo as Nombre, count(a.claveArticulo) AS Cantidad from lbarticulos a inner join lbarticuloscat ac on a.claveArticulo=ac.claveArticulo
+				inner join lbasignaarticulos aa on aa.indentificadorArticulo=a.identificadorArticulo
+				where aa.claveLaboratorio in(%s) group by a.claveArticulo having count(a.claveArticulo)<=5",$labs);
+		}
+		else
+		{
+			$consulta	= sprintf("select ac.nombreArticulo as Nombre, count(a.claveArticulo) AS Cantidad from lbarticulos a inner join lbarticuloscat ac on a.claveArticulo=ac.claveArticulo
+				inner join lbasignaarticulos aa on aa.indentificadorArticulo=a.identificadorArticulo
+				where aa.claveLaboratorio=%s group by a.claveArticulo having count(a.claveArticulo)<=5",$claveLab);
+		}
 		$res 		= mysql_query($consulta);
 		$renglones	.= "<thead>";
 		$renglones	.= "<tr>";

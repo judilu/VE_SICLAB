@@ -759,6 +759,7 @@ var inicio = function()
 		var horaActual 				= new Date();
 		var hora 					=horaActual.getHours();
 		var minutos 				=horaActual.getMinutes();
+		(hora<10) ? (hora="0"+hora) : hora;
 		(minutos<10) ? (minutos="0"+minutos) : minutos;
 		var horaEntrada			= hora + ":" + minutos;
 		var parametros 	= "opc=guardaEntrada1"+
@@ -1225,5 +1226,7 @@ var inicio = function()
 	$("#btnAceptarEleccionMatDep").on("click",guardaSolMatExt);
 	$("#btnSalirLaboratorio").on("click",salir);
 	$("#btnCancelarDatosPractica").on("click",inicioRegistro);
+	$("#rdoAlumno").on("change",inicioRegistro);
+	$("#rdoExterno").on("change",inicioRegistro);
 }
 $(document).on("ready",inicio);

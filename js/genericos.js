@@ -952,10 +952,14 @@
 			(dd<10) ? (dd="0"+dd) : dd;
 			(mm<10) ? (mm="0"+mm) : mm;
 		var fe  = (dd+"/"+mm+"/"+f.getFullYear());
-		var fecha 		= $("#txtFechaSolExterno").val();
+		var ff 		= $("#txtFechaSolExterno").val();
+		var a  = ff.substring(0,4);
+    	var m  = ff.substring(5,7);
+    	var d  = ff.substring(8,10);
+    	var fecha = d+"/"+m+"/"+a;
 		var practica 	= $("#cmbPracticaExterno").val();
 		var laboratorio	= $("#cmbLaboratorioExterno").val();
-		var hora		= $("#cmbHoraPractExterno").val();
+		var hora		= $("#cmbHoraPractExterno option:selected").val();
 		var cantAlu		= $("#txtCantAlumnosExterno").val();
 		var motivo		= $("#txtMotivoUsoExterno").val();
 		var nomEncargado= $("#txtNombreEncargado").val();
@@ -1544,6 +1548,7 @@
 			var horaActual 				= new Date();
 			var hora 					=horaActual.getHours();
 			var minutos 				=horaActual.getMinutes();
+			(hora<10) ? (hora="0"+hora) : hora;
 			(minutos<10) ? (minutos="0"+minutos) : minutos;
 			var hora					= hora + ":" + minutos;
 			var parametros  ="opc=regresaMtto1"
@@ -1860,7 +1865,6 @@
 	//fin de las peticiones de los articulos
 	
 	//Reportes
-	//NUEVO EDWIN
 		var resumenReportes=function()
 	{
 
@@ -1886,6 +1890,7 @@
 		$("#practicasRealizadas").hide("slow");
 		$("#practicasCanceladas").hide("slow");
 		$("#existenciaInventario").show("slow");
+		$("#btnImprimirInventario").hide();
 		resumenInventarioActual();
 	}
 	var bajoInventario = function()
@@ -1899,6 +1904,7 @@
 		$("#practicasRealizadas").hide("slow");
 		$("#practicasCanceladas").hide("slow");
 		$("#bajoInventario").show("slow");
+		$("#btnImprimirBajoInventario").hide();
 		articulosDeBaja();
 	}
 	var enReparacion = function()
@@ -1912,6 +1918,7 @@
 		$("#practicasRealizadas").hide("slow");
 		$("#practicasCanceladas").hide("slow");
 		$("#enReparacion").show("slow");
+		$("#btnImprimirEnReparacion").hide();
 		articulosEnReparacion();
 
 	}
@@ -1926,6 +1933,7 @@
 		$("#practicasRealizadas").hide("slow");
 		$("#practicasCanceladas").hide("slow");
 		$("#enPrestamo").show("slow");
+		$("#btnImprimirEnPrestamo").hide();
 		articulosEnPrestamo();
 
 	}
@@ -1940,6 +1948,7 @@
 		$("#practicasRealizadas").hide("slow");
 		$("#practicasCanceladas").hide("slow");
 		$("#pedidoMaterial").show("slow");
+		$("#btnImprimirPedidoMaterial").hide();
 		articulosPedidos();
 
 	}
@@ -1954,7 +1963,7 @@
 		$("#practicasRealizadas").hide("slow");
 		$("#practicasCanceladas").hide("slow");
 		$("#practicasNoRealizadas").show("slow");
-
+		$("#btnImpPracticasNoRealizadas").hide();
 		noRealizadas();
 	}
 	var practicasRealizadas=function()
@@ -1968,6 +1977,7 @@
 		$("#practicasNoRealizadas").hide("slow");
 		$("#practicasCanceladas").hide("slow");
 		$("#practicasRealizadas").show("slow");
+		$("#btnImpPracticasRealizadas").hide();
 		Realizadas();
 	}
 	var practicasCanceladas=function()
@@ -1981,6 +1991,7 @@
 		$("#practicasNoRealizadas").hide("slow");
 		$("#practicasRealizadas").hide("slow");
 		$("#practicasCanceladas").show("slow");
+		$("#btnImpPracticasCanceladas").hide();
 		Canceladas();
 	}
 	var alumnosActuales = function()	
@@ -2065,6 +2076,7 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#btnImprimirInventario").show();
 					$("#tbInventarioActual").html(" ");
 					$("#tbInventarioActual").append(response.renglones);
 				}
@@ -2089,6 +2101,7 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#btnImprimirBajoInventario").show();
 					$("#tbBajoInventario").html(" ");
 					$("#tbBajoInventario").append(response.renglones);
 				}
@@ -2113,6 +2126,7 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#btnImprimirEnReparacion").show();
 					$("#tbEnReparacion").html(" ");
 					$("#tbEnReparacion").append(response.renglones);
 				}
@@ -2137,6 +2151,7 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#btnImprimirEnPrestamo").show();
 					$("#tbArticulosEnPrestamo").html(" ");
 					$("#tbArticulosEnPrestamo").append(response.renglones);
 				}
@@ -2161,6 +2176,7 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#btnImprimirPedidoMaterial").show();
 					$("#tbPedidoMaterialReporte").html(" ");
 					$("#tbPedidoMaterialReporte").append(response.renglones);
 				}
@@ -2208,6 +2224,7 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#btnImpPracticasNoRealizadas").show();
 					$("#tbpracticasNoRealizadas").html(" ");
 					$("#tbpracticasNoRealizadas").append(response.renglones);
 				}
@@ -2232,6 +2249,7 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#btnImpPracticasRealizadas").show();
 					$("#tbpracticasRealizadas").html(" ");
 					$("#tbpracticasRealizadas").append(response.renglones);
 				}
@@ -2256,6 +2274,7 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#btnImpPracticasCanceladas").show();
 					$("#tbpracticasCanceladas").html(" ");
 					$("#tbpracticasCanceladas").append(response.renglones);
 				}
