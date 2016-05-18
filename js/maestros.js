@@ -63,6 +63,7 @@ var inicioMaestro = function ()
 	//Empieza función de solicitudes Aceptadas
 	var solAceptadas = function()
 	{
+		$("#loaderImage").show();
 		$("#tbSolAceptadas").html(" ");
 		//ocultar los div
 		$("#sNuevaMaestro").hide();
@@ -80,14 +81,20 @@ var inicioMaestro = function ()
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#loaderImage").hide();
 					$("#tbSolAceptadas").html(" ");
 					$("#tbSolAceptadas").append(response.renglones);
 					$("#tbSolAceptadas a").on("click",practicaRealizada);
 				}
 				else
+				{
+					$("#loaderImage").hide();
 					sweetAlert("No hay solicitudes..!", "Debe crear una solicitud antes", "error");
+				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImagen").hide();
 				console.log("Error de conexión sol aceptadas");
 				console.log(xhr);
 			}
@@ -98,6 +105,7 @@ var inicioMaestro = function ()
 	//Empieza función para liberar una solicitud realizada a aceptadas
 	var practicaRealizada = function()
 	{
+		$("#loaderImage").show();
 		//contenido dinamico
 		var realid = $(this).attr("name");
 		var parametros = "opc=liberarPractica1"+
@@ -112,16 +120,19 @@ var inicioMaestro = function ()
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#loaderImage").hide();
 					solAceptadas();
 					swal("Practica realizada..!", "Buen trabajo..!", "success");
 				}
 				else
 				{
+					$("#loaderImage").hide();
 					sweetAlert("No existe esa solicitud..!", "", "error");
 				}
 			},
 			error: function(xhr, ajaxOptions,x)
 			{
+				$("#loaderImage").hide();
 				console.log("Error de conexión realizadas");
 			}
 		});	
@@ -130,11 +141,13 @@ var inicioMaestro = function ()
 	//Empieza función de solicitudes pendientes
 	var solPendientes = function()
 	{
+		$("#tabSolPendientes").html("");
 		$("#sNuevaMaestro").hide();
 		$("#sAceptadasMaestro").hide();
 		$("#editarSolicitudLab").hide();
 		$("#editarSol").hide();
 		$("#sRealizadas").hide();
+		$("#loaderImage").show();
 		//Contenido Dinamico
 		var parametros = "opc=solicitudesPendientes1"+
 		"&id="+Math.random();
@@ -147,15 +160,21 @@ var inicioMaestro = function ()
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#loaderImage").hide();
 					$("#tabSolPendientes").html("");
 					$("#tabSolPendientes").append(response.renglones);
 					//$("#tabSolPendientes").on("click", ".btnEditarSolicitudLab" , editarSolicitudLab);
 					//$("#tabSolPendientes").on("click", ".btnEliminarSolicitudLab" , eliminarSolicitud);
 				}
 				else
+				{
+					$("#loaderImage").hide();
 					sweetAlert("No hay solicitudes pendientes", "Han aceptado todas tus solicitudes o no ha enviado ninguna solicitud", "error");
+				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImage").hide();
 				console.log("Error de conexión pendientes");	
 			}
 		});
@@ -169,6 +188,7 @@ var inicioMaestro = function ()
 	//Empieza función de solicitudes realizadas
 	var solRealizadas = function()
 	{
+		$("#loaderImage").show();
 		//ocultar los div
 		$("#sNuevaMaestro").hide();
 		$("#sAceptadasMaestro").hide();
@@ -186,13 +206,19 @@ var inicioMaestro = function ()
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#loaderImage").hide();
 					$("#tbSolRealizadas").html(" ");
 					$("#tbSolRealizadas").append(response.renglones);
 				}
 				else
+				{
+					$("#loaderImage").hide();
 					sweetAlert("No hay solicitudes realizadas", "Debes liberar la práctica realizada", "error");
+				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImage").hide();
 				console.log("Error de conexión srealizadas");	
 			}
 		});
@@ -206,6 +232,7 @@ var inicioMaestro = function ()
 		$("#sPendientesMaestro").hide();
 		$("#sRealizadas").hide();
 		$("#eleccionMaterial").hide();
+		$("#loaderImage").show();
 		$("#sNuevaMaestro").show("slow");
 		$("#nuevaMaestro").show("slow");
 		//modificación combo
@@ -220,6 +247,7 @@ var inicioMaestro = function ()
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#loaderImage").hide();
 					$("#cmbMateria").html(" ");
 					//$("#cmbMateria").append(response.combo);
 					$("#cmbMateria").html("<option value='' disabled selected>Seleccione la materia</option>");
@@ -258,13 +286,16 @@ var inicioMaestro = function ()
 				}
 				else
 				{
+					$("#loaderImage").hide();
 					$("#cmbMateria").html(" ");
 					$("#cmbMateria").html("<option value='' disabled selected>Seleccione la materia</option>");
 					$('select').material_select();
 					sweetAlert("No tiene materias", "Es posible que no tenga materias asignadas!", "error");
 				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImage").hide();
 				console.log("Error de conexión combomat");	
 			}
 		});
@@ -310,6 +341,7 @@ var inicioMaestro = function ()
     //inicia función de llenar combo de elegir articulos
     var llenarcomboEleArt = function()
     {
+    	$("#loaderImage").show();
     	var comboArt 	= Array();
     	var comboclaArt = Array();
     	var c 			= articulosAgregados.length;
@@ -329,6 +361,7 @@ var inicioMaestro = function ()
     		{
     			if(response.respuesta == true)
     			{
+    				$("#loaderImage").hide();
     				comboclaArt = response.comboCveArt;
     				comboArt 	= response.comboNomArt;
 					//eliminar elementos repetidos
@@ -352,6 +385,7 @@ var inicioMaestro = function ()
 				}
 				else
 				{
+					$("#loaderImage").hide();
 					$("#cmbMaterialCat").html(" ");
 					$("#cmbMaterialCat").html("<option value='' disabled selected>Seleccione el material</option>");
 					$('select').material_select();
@@ -360,6 +394,7 @@ var inicioMaestro = function ()
 			},
 			error: function(xhr, ajaxOptions,x)
 			{
+				$("#loaderImage").hide();
 				console.log("Error de conexión combomat");
 				console.log(xhr);	
 			}
@@ -369,6 +404,7 @@ var inicioMaestro = function ()
 	//Inicia función para llenar la tabla de elegirMaterial
 	var construirTabla = function()
     {
+    	$("#loaderImage").show();
     	var parametros = "opc=construirTbArt1"+
     	"&articulosAgregados="+articulosAgregados+
     	"&articulos="+articulos+
@@ -383,6 +419,7 @@ var inicioMaestro = function ()
     		success: function(response){
     			if(response.respuesta == true)
     			{
+    				$("#loaderImage").hide();
     				$("#bodyArt").html("");
     				$("#bodyArt").append(response.renglones);
     				llenarcomboEleArt();
@@ -392,6 +429,7 @@ var inicioMaestro = function ()
 				}//termina if
 				else
 				{
+					$("#loaderImage").hide();
 					console.log("no elimino");
 					$("#bodyArt").html("");
 					llenarcomboEleArt();
@@ -430,6 +468,7 @@ var inicioMaestro = function ()
 	    $("#solicitudesPendientesLab").hide();
 	    $("#eleccionMaterialE").hide();
 	    //Contenido Dinamico
+	    $("#loaderImage").show();
 	    $("#editarSolicitudLab").show("slow");
 	    $("#editarSol").show("slow");
     	var con   			= 0
@@ -451,6 +490,7 @@ var inicioMaestro = function ()
 	    	{
 	    		if(response.respuesta == true)
 	    		{
+	    			$("#loaderImage").hide();
 	    			//limpiando arreglos
 	    			articulosE 			= Array();
     				articulosAgregadosE	= Array();
@@ -484,10 +524,13 @@ var inicioMaestro = function ()
        			}
        			else
        			{
+       				$("#loaderImage").hide();
        				sweetAlert("Error", "No existe esa solicitud..!", "error");
        			}
        		},
-       		error: function(xhr, ajaxOptions,x){
+       		error: function(xhr, ajaxOptions,x)
+       		{
+       			$("#loaderImage").hide();
        			console.log("Error de conexion editar");
        		}
        	});
@@ -508,6 +551,7 @@ var inicioMaestro = function ()
     //Inicia función para construir tabla de los articulos a elegir para la practica
     var construirTablaE = function()
     {
+    	$("#loaderImage").show();
     	$("#bodyArtE").html("");
     	var parametros = "opc=construirTbArtE1"+
     	"&articulosAgregadosE="+articulosAgregadosE+
@@ -520,9 +564,11 @@ var inicioMaestro = function ()
     		dataType: "json",
     		url:"../data/maestros.php",
     		data: parametros,
-    		success: function(response){
+    		success: function(response)
+    		{
     			if(response.respuesta == true)
     			{
+    				$("#loaderImage").hide();
     				$("#bodyArtE").html("");
     				$("#bodyArtE").append(response.renglones);
     				llenarcomboEleArtE();
@@ -531,6 +577,7 @@ var inicioMaestro = function ()
 				}//termina if
 				else
 				{
+					$("#loaderImage").hide();
 					console.log("no elimino");
 					$("#bodyArt").html("");
 					llenarcomboEleArtE();
@@ -538,6 +585,7 @@ var inicioMaestro = function ()
 			},
 			error: function(xhr, ajaxOptions,x)
 			{
+				$("#loaderImage").hide();
 				console.log("Error de conexión construir tabla");	
 			}
 		});
@@ -546,6 +594,7 @@ var inicioMaestro = function ()
     //Inicia función para llenar el combo de elegir material de editar
     var llenarcomboEleArtE = function()
     {
+    	$("#loaderImage").show();
     	var comboArt 	= Array();
     	var comboclaArt = Array();
     	var c 			= articulosAgregadosE.length;
@@ -565,6 +614,7 @@ var inicioMaestro = function ()
     		{
     			if(response.respuesta == true)
     			{
+    				$("#loaderImage").hide();
     				comboclaArt = response.comboCveArt;
     				comboArt 	= response.comboNomArt;
 					//eliminar elementos repetidos
@@ -588,6 +638,7 @@ var inicioMaestro = function ()
 				}
 				else
 				{
+					$("#loaderImage").hide();
 					$("#cmbMaterialCat").html(" ");
 					$("#cmbMaterialCat").html("<option value='' disabled selected>Seleccione el material</option>");
 					$('select').material_select();
@@ -596,6 +647,7 @@ var inicioMaestro = function ()
 			},
 			error: function(xhr, ajaxOptions,x)
 			{
+				$("#loaderImage").hide();
 				console.log("Error de conexion combomat editar");
 				console.log(xhr);	
 			}
@@ -618,6 +670,7 @@ var inicioMaestro = function ()
     //Inicia función para eliminarArticulos en editar
     var eliminarArtE = function()
     {
+    	$("#loaderImage").show();
     	var art = ($(this).attr("name"));
     	var solId = $("#txtMateriaE").attr("name");
     	var i = articulosAgregadosE.indexOf(art);
@@ -639,15 +692,18 @@ var inicioMaestro = function ()
     		{
     			if(response.respuesta == true)
     			{
+    				$("#loaderImage").hide();
     				console.log("si se elimino de la bd el art");
 				}
 				else
 				{
+					$("#loaderImage").hide();
 					console.log("no se elimino de la bd el art");
 				}
 			},
 			error: function(xhr, ajaxOptions,x)
 			{
+				$("#loaderImage").hide();
 				console.log("Error de conexion combomat editar");
 				console.log(xhr);	
 			}
@@ -681,6 +737,7 @@ var inicioMaestro = function ()
     	{   
     		if (isConfirm) 
     		{ 
+    			$("#loaderImage").show();
     			var parametros = "opc=eliminarSolicitud1"+
     			"&solId="+solId+
     			"&id="+Math.random();
@@ -694,22 +751,26 @@ var inicioMaestro = function ()
     				{
     					if(response.respuesta)
     					{
+    						$("#loaderImage").hide();
     						swal("La solicitud fue eliminada con éxito!", "Da click en el botón", "success");
     						solPendientes();
     					}
     					else
     					{
+    						$("#loaderImage").hide();
     						sweetAlert("La solicitud no fue eliminada", "", "error");
     					}
     				},
     				error: function(xhr, ajaxOptions,x)
     				{
+    					$("#loaderImage").hide();
     					console.log("Error de conexión eliminar s");
     				}
     			});
     		} 
     		else 
     		{
+    			$("#loaderImage").hide();
     			swal("OK..!","La solicitud no fue eliminada..!", "error");
     		} 
     	});
@@ -718,6 +779,7 @@ var inicioMaestro = function ()
     //inicia funcion de capacidad de laboratorio
     var capacidadLab = function()
     {
+    	$("#loaderImage").show();
     	var laboratorio = $("#cmbLaboratorio").val();
     	var parametros 	  = "opc=capacidadLab1"+
     	"&laboratorio="+laboratorio+
@@ -728,9 +790,11 @@ var inicioMaestro = function ()
     		dataType: "json",
     		url:"../data/funciones.php",
     		data: parametros,
-    		success: function(response){
+    		success: function(response)
+    		{
     			if(response.respuesta == true)
     			{
+    				$("#loaderImage").hide();
     				if(parseInt($("#txtCantAlumnos").val()) <= response.capacidad)
     				{
 						return true;
@@ -742,6 +806,7 @@ var inicioMaestro = function ()
 				}
 				else
 				{
+					$("#loaderImage").hide();
 					return false;
 				}
 			},
@@ -761,6 +826,7 @@ var inicioMaestro = function ()
     		var cantalu = parseInt($("#txtCantAlumnos").val());
     		if(cantalu <= res)
     		{
+    			$("#loaderImage").show();
     			var f  = new Date();
     			var dd = f.getDate();
     			var mm = (f.getMonth())+1;
@@ -806,6 +872,7 @@ var inicioMaestro = function ()
 				        {
 				        		if(response.respuesta == true && response.respuesta2 == true && response.respuesta3 == true)
 				        		{
+				        			$("#loaderImage").hide();
 				                    //limpiar datos
 				                    $("#txtFechaS").val("dd/mm/aaaa");									
 				                    $("#txtCantAlumnos").val("1");
@@ -840,29 +907,35 @@ var inicioMaestro = function ()
 								}
 								else
 								{
+									$("#loaderImage").hide();
 									if(response.respuesta3==false)
 									{
+										$("#loaderImage").hide();
 										sweetAlert("Error", "Ya existe una calendarización del laboratorio en esa fecha y hora!", "error");
 									}
 									else
-									{	
+									{
+										$("#loaderImage").hide();	
 										sweetAlert("Error", "No se pudo crear la solicitud!", "error");
 									}
 								}
 							},
 							error: function(xhr, ajaxOptions,x)
 							{
+								$("#loaderImage").hide();
 								console.log("Error de conexión articulo");
 							}
 				});
 			}//Termina if de checar si la capacidad del lab es correcta
 			else
 			{
+				$("#loaderImage").hide();
 				sweetAlert("Error", "La capacidad seleccionada es superior a la que permite el laboratorio!", "error");
 			}
 	   	}//Termina if de checar campos vacios
 	   	else
 	   	{
+	   		$("#loaderImage").hide();
 	    	sweetAlert("Error", "Debe llenar todos los campos!", "error");
 	   	}
     }//fin de funcion para dar de alta una nueva solicitud de lab
@@ -872,6 +945,7 @@ var inicioMaestro = function ()
     {
     	if(articulosE != "" && articulosAgregadosE != "" && numArticulosE != "")
     	{
+    		$("#loaderImage").show();
     		var ff 	 		= $("#txtFechaSE").val();
     		var a  	 		= ff.substring(0,4);
     		var m  	 		= ff.substring(5,7);
@@ -900,30 +974,35 @@ var inicioMaestro = function ()
 	    		{
 	    			if (response.respuesta==true && response.respuesta2 == true) 
 	    			{
+	    				$("#loaderImage").hide();
 	    				swal("La solicitud fue actualizada exitosamente", "Da clic en el botón OK!", "success");
 	    				solPendientes();
 	    			}
 	    			else
 	    			{
+	    				$("#loaderImage").hide();
 	    				if(response.respuesta2 == false)
 	    				{
+	    					$("#loaderImage").hide();
 	    					sweetAlert("Error", "ya existe una calendarización en esa fecha y hora.!", "error");
 	    				}
 	    				else
 	    				{
+	    					$("#loaderImage").hide();
 	    					sweetAlert("Error", "La solicitud no pudo ser actualizada exitosamente.!", "error");
 	    				}
 	    			}
 				},
 				error: function(xhr, ajaxOptions,x)
 				{
+					$("#loaderImage").hide();
 					console.log("Error de conexión ModificarSol");
-					console.log(xhr);	
 				}
 			});
     	}//Termina if de checar campos vacios en editar
     	else
     	{
+    		$("#loaderImage").hide();
     		sweetAlert("Error", "Debe llenar todos los campos!", "error");
     	}
     }//Termina función para editar una solicitud
@@ -931,6 +1010,7 @@ var inicioMaestro = function ()
     //inicio de funcion para llenar el combo de hora de materia
     var comboHoraMat = function()
     {
+    	$("#loaderImage").show();
     	var hh = "";
     	var materia = $("#cmbMateria").val();
     	var parametros = "opc=comboMatHr1"+
@@ -942,9 +1022,11 @@ var inicioMaestro = function ()
     		dataType: "json",
     		url:"../data/funciones.php",
     		data: parametros,
-    		success: function(response){
+    		success: function(response)
+    		{
     			if(response.respuesta == true)
     			{
+    				$("#loaderImage").hide();
     				$("#cmbHoraMat").html(" ");
     				$("#cmbHoraMat").html("<option value='' disabled selected>Seleccione la hora</option>");	
     				for (var i = 0; i < response.cont; i++) 
@@ -961,13 +1043,16 @@ var inicioMaestro = function ()
 				}
 				else
 				{
+					$("#loaderImage").hide();
 					$("#cmbHoraMat").html(" ");
 					$("#cmbHoraMat").html("<option value='' disabled selected>Seleccione la hora</option>");
 					$('select').material_select();
 					sweetAlert("No existen horas", "Es posible que no existan horas para la materia seleccionada", "error");
 				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImage").hide();
 				console.log("Error de conexión combomat");	
 			}
 		});
@@ -989,6 +1074,7 @@ var inicioMaestro = function ()
     //inicio de funcion para llenar el combo de practica
     var comboPract = function()
     {
+    	$("#loaderImage").show();
     	var materia = $("#cmbMateria").val();
     	var parametros = "opc=comboPract1"+
     	"&materia="+materia+
@@ -999,9 +1085,11 @@ var inicioMaestro = function ()
     		dataType: "json",
     		url:"../data/funciones.php",
     		data: parametros,
-    		success: function(response){
+    		success: function(response)
+    		{
     			if(response.respuesta == true)
     			{
+    				$("#loaderImage").hide();
     				$("#cmbPractica").html(" ");
     				$("#cmbPractica").html("<option value='' disabled selected>Seleccione la práctica</option>");	
     				for (var i = 0; i < response.con; i++) 
@@ -1014,13 +1102,16 @@ var inicioMaestro = function ()
     			}
     			else
     			{
+    				$("#loaderImage").hide();
     				$("#cmbPractica").html(" ");
     				$("#cmbPractica").html("<option value='' disabled selected>Seleccione la práctica</option>");	
     				$('select').material_select();
     				sweetAlert("No existen prácticas", "Es posible que no existan prácticas asociadas a dicha materia!", "error");
     			}
     		},
-    		error: function(xhr, ajaxOptions,x){
+    		error: function(xhr, ajaxOptions,x)
+    		{
+    			$("#loaderImage").hide();
     			console.log("Error de conexión comboPrac");	
     		}
     	});
@@ -1029,6 +1120,7 @@ var inicioMaestro = function ()
     //inicio de funcion para llenar el combo de laboratorio
     var comboLab = function()
     {
+    	$("#loaderImage").show();
     	var practica   = $("#cmbPractica").val();
     	var parametros = "opc=comboLab1"+
     	"&practica="+practica+
@@ -1039,9 +1131,11 @@ var inicioMaestro = function ()
     		dataType: "json",
     		url:"../data/funciones.php",
     		data: parametros,
-    		success: function(response){
+    		success: function(response)
+    		{
     			if(response.respuesta == true)
     			{
+    				$("#loaderImage").hide();
     				$("#cmbLaboratorio").html(" ");
     				$("#cmbLaboratorio").html("<option value='' disabled selected>Seleccione el laboratorio</option>");	
     				for (var i = 0; i < response.con; i++) 
@@ -1053,6 +1147,7 @@ var inicioMaestro = function ()
     			}
     			else
     			{
+    				$("#loaderImage").hide();
     				$("#cmbLaboratorio").html(" ");
     				$("#cmbLaboratorio").html("<option value='' disabled selected>Seleccione el laboratorio</option>");
     				$('select').material_select();
@@ -1061,6 +1156,7 @@ var inicioMaestro = function ()
     		},
     		error: function(xhr, ajaxOptions,x)
     		{
+    			$("#loaderImage").hide();
     			console.log("Error de conexión comboPrac");	
     		}
     	});
@@ -1069,6 +1165,7 @@ var inicioMaestro = function ()
     //inicio de funcion para llenar el combo de la hora de la practica
     var comboHoraPrac = function()
     {
+    	$("#loaderImage").show();
     	var laboratorio   = $("#cmbLaboratorio").val();
     	var parametros 	  = "opc=comboHoraPrac1"+
     	"&laboratorio="+laboratorio+
@@ -1086,6 +1183,7 @@ var inicioMaestro = function ()
     		success: function(response){
     			if(response.respuesta == true)
     			{
+    				$("#loaderImage").hide();
     				$("#cmbHoraPract").html(" ");
     				$("#cmbHoraPract").html("<option value='' disabled selected>Seleccione la hora</option>");	
     				(((response.horaApertura).length)<4) ? (hi=(response.horaApertura).substring(0,1)) : (hi=(response.horaApertura).substring(0,2));
@@ -1110,13 +1208,16 @@ var inicioMaestro = function ()
 				}
 				else
 				{
+					$("#loaderImage").hide();
 					$("#cmbHoraPract").html(" ");
 					$("#cmbHoraPract").html("<option value='' disabled selected>Seleccione la hora</option>");
 					$('select').material_select();
 					sweetAlert("No existen horas", "Es posible que no existan horas asociados a dicha práctica!", "error");
 				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImage").hide();
 				console.log("Error de conexión comboPrac");	
 			}
 		});
@@ -1125,6 +1226,7 @@ var inicioMaestro = function ()
     //Inicio de funcion para llenar el combo de la hora de la practica en Editar
 	var comboHoraPracE = function(lab,hor)
     {
+    	$("#loaderImage").show();
     	var hora 			= hor;
     	var laboratorio   	= lab;
     	var parametros 	  	= "opc=comboHoraPrac1"+
@@ -1144,6 +1246,7 @@ var inicioMaestro = function ()
     		{
     			if(response.respuesta == true)
     			{
+    				$("#loaderImage").hide();
     				$("#cmbHoraPractE").html(" ");
     				$("#cmbHoraPractE").html("<option value='"+hora+"' disabled selected>"+hora+"</option>");	
     				(((response.horaApertura).length)<4) ? (hi=(response.horaApertura).substring(0,1)) : (hi=(response.horaApertura).substring(0,2));
@@ -1168,13 +1271,16 @@ var inicioMaestro = function ()
 				}
 				else
 				{
+					$("#loaderImage").hide();
 					$("#cmbHoraPractE").html(" ");
 					$("#cmbHoraPractE").html("<option value='' disabled selected>Seleccione la hora</option>");
 					$('select').material_select();
 					sweetAlert("No existen horas", "Es posible que no existan horas asociados a dicha práctica!", "error");
 				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImage").hide();
 				console.log("Error de conexión comboPracE");	
 			}
 		});
@@ -1212,6 +1318,7 @@ var inicioMaestro = function ()
 		$('select').material_select();
 		//Contenido Dinamico
 		$("#cmbMateriaRep")
+		$("#loaderImage").show();
 		var parametros = "opc=datosMaestro1"+
 							"&id="+Math.random();
 		$.ajax({
@@ -1224,6 +1331,7 @@ var inicioMaestro = function ()
     		{
     			if (response.respuesta==true) 
     			{
+    				$("#loaderImage").hide();
 	    			$("#txtClaveMaestroRep").val(response.datosMa["PERCVE"]);
 	    			$("#txtNombreMaestroRep").val((response.datosMa["PERNOM"])+" "+(response.datosMa["PERAPE"]));
 	    			//llenar combo
@@ -1239,6 +1347,7 @@ var inicioMaestro = function ()
 	    		}
 	    		else
 	    		{
+	    			$("#loaderImage").hide();
 	    			$("#cmbPeriodoRep").html(" ");
 					$("#cmbPeriodoRep").html("<option value='' disabled selected>Seleccione el Periodo</option>");
 					$('select').material_select();
@@ -1247,6 +1356,7 @@ var inicioMaestro = function ()
 			},
 			error: function(xhr, ajaxOptions,x)
 			{
+				$("#loaderImage").hide();
 				console.log("Error de conexión reportes");
 				console.log(xhr);	
 			}
@@ -1269,6 +1379,7 @@ var inicioMaestro = function ()
 		$("#tbListaAsistencia").html(" ");
 		if($("#cmbPeriodoRep").val()!= " " && $("#cmbMateriaRep").val() != " " && $("#cmbHoraMatRep").val() != " " && $("#cmbPracticaRep").val() != " " && $("#cmbHoraPracticaRep").val() != " " && $("#txtFechaPracticaRep").val() != " ")
 		{
+			$("#loaderImage").show();
 			//contenido dinamico
 			var periodo 	= $("#cmbPeriodoRep").val();
 			var materia 	= $("#cmbMateriaRep").val();
@@ -1300,6 +1411,7 @@ var inicioMaestro = function ()
 	    		{
 	    			if (response.respuesta==true) 
 	    			{
+	    				$("#loaderImage").hide();
 	    				//llenar datos	
 	    				$("#txtClaveMaestroRep2").val($("#txtClaveMaestroRep").val());
 	    				$("#txtNombreMaestroRep2").val($("#txtNombreMaestroRep").val());
@@ -1318,6 +1430,7 @@ var inicioMaestro = function ()
 		    		}
 		    		else
 		    		{
+		    			$("#loaderImage").hide();
 		    			//limpiar datos
 		    			$("#txtCarreraRep").val("");
 						$("#txtClaveMaestroRep2").val(" ");
@@ -1335,6 +1448,7 @@ var inicioMaestro = function ()
 				},
 				error: function(xhr, ajaxOptions,x)
 				{
+					$("#loaderImage").hide();
 					console.log("Error de conexión datos Maestro");
 					console.log(xhr);	
 				}
@@ -1342,6 +1456,7 @@ var inicioMaestro = function ()
 		}
 		else
 		{
+			$("#loaderImage").hide();
 			sweetAlert("Error", "No ha seleccionado todos los campos necesarios", "error");
 		}
 	}
@@ -1355,6 +1470,7 @@ var inicioMaestro = function ()
 	var comboMatRep = function()
 	{
 		//limpiar combos
+		$("#loaderImage").show();
 		//Combo hora materia
 		$("#cmbHoraMatRep").html(" ");
 		$("#cmbHoraMatRep").html("<option value='' disabled selected>Seleccione la hora</option>");
@@ -1381,6 +1497,7 @@ var inicioMaestro = function ()
 			{
 				if(response.respuesta == true)
 				{
+					$("#loaderImage").hide();
 					$("#cmbMateriaRep").html(" ");
 					$("#cmbMateriaRep").html("<option value='' disabled selected>Seleccione la materia</option>");
 					for (var i = 0; i < response.contador; i++) 
@@ -1401,13 +1518,16 @@ var inicioMaestro = function ()
 				}
 				else
 				{
+					$("#loaderImage").hide();
 					$("#cmbMateria").html(" ");
 					$("#cmbMateria").html("<option value='' disabled selected>Seleccione la materia</option>");
 					$('select').material_select();
 					sweetAlert("No tiene materias", "Es posible que no tenga materias asignadas!", "error");
 				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImage").hide();
 				console.log("Error de conexión combomat");	
 			}
 		});
@@ -1415,6 +1535,7 @@ var inicioMaestro = function ()
 	var comboHrMatRep = function()
 	{
 		//limpiar combos
+		$("#loaderImage").show();
 		//combo de practica
 		$("#cmbPracticaRep").html(" ");
 		$("#cmbPracticaRep").html("<option value='' disabled selected>Seleccione la práctica</option>");
@@ -1439,6 +1560,7 @@ var inicioMaestro = function ()
     		success: function(response){
     			if(response.respuesta == true)
     			{
+    				$("#loaderImage").hide();
     				$("#cmbHoraMatRep").html(" ");
     				$("#cmbHoraMatRep").html("<option value='' disabled selected>Seleccione la hora</option>");	
     				for (var i = 0; i < response.cont; i++) 
@@ -1452,19 +1574,23 @@ var inicioMaestro = function ()
 				}
 				else
 				{
+					$("#loaderImage").hide();
 					$("#cmbHoraMatRep").html(" ");
 					$("#cmbHoraMatRep").html("<option value='' disabled selected>Seleccione la hora</option>");
 					$('select').material_select();
 					sweetAlert("No existen horas", "Es posible que no existan horas para la materia seleccionada", "error");
 				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImage").hide();
 				console.log("Error de conexión combomatRep");	
 			}
 		});
 	}
 	var comboPractRep = function()
     {
+    	$("#loaderImage").show();
     	var materia 	= $("#cmbMateriaRep").val();
     	var periodo 	= $("#cmbPeriodoRep").val();
     	var parametros 	= "opc=comboPract1"+
@@ -1476,9 +1602,11 @@ var inicioMaestro = function ()
     		dataType: "json",
     		url:"../data/funciones.php",
     		data: parametros,
-    		success: function(response){
+    		success: function(response)
+    		{
     			if(response.respuesta == true)
     			{
+    				$("#loaderImage").hide();
     				$("#cmbPracticaRep").html(" ");
     				$("#cmbPracticaRep").html("<option value='' disabled selected>Seleccione la práctica</option>");	
     				for (var i = 0; i < response.con; i++) 
@@ -1491,6 +1619,7 @@ var inicioMaestro = function ()
     			}
     			else
     			{
+    				$("#loaderImage").hide();
     				$("#cmbPracticaRep").html(" ");
     				$("#cmbPracticaRep").html("<option value='' disabled selected>Seleccione la práctica</option>");	
     				$('select').material_select();
@@ -1499,6 +1628,7 @@ var inicioMaestro = function ()
     		},
     		error: function(xhr, ajaxOptions,x)
     		{
+    			$("#loaderImage").hide();
     			console.log("Error de conexión comboPrac");
     			console.log(xhr);	
     		}
@@ -1506,6 +1636,7 @@ var inicioMaestro = function ()
     }
     var comboHoraPracRep = function()
     {
+    	$("#loaderImage").show();
     	var practica   		= $("#cmbPracticaRep").val();
     	var parametros 	  	= "opc=comboHoraPracRep1"+
     							"&practica="+practica+
@@ -1523,6 +1654,7 @@ var inicioMaestro = function ()
     		success: function(response){
     			if(response.respuesta == true)
     			{
+    				$("#loaderImage").hide();
     				$("#cmbHoraPracticaRep").html(" ");
     				$("#cmbHoraPracticaRep").html("<option value='' disabled selected>Seleccione la hora</option>");	
     				(((response.horaApertura).length)<4) ? (hi=(response.horaApertura).substring(0,1)) : (hi=(response.horaApertura).substring(0,2));
@@ -1545,6 +1677,7 @@ var inicioMaestro = function ()
 				}
 				else
 				{
+					$("#loaderImage").hide();
 					$("#cmbHoraPracticaRep").html(" ");
 					$("#cmbHoraPracticaRep").html("<option value='' disabled selected>Seleccione la hora</option>");
 					$('select').material_select();
@@ -1553,6 +1686,7 @@ var inicioMaestro = function ()
 			},
 			error: function(xhr, ajaxOptions,x)
 			{
+				$("#loaderImage").hide();
 				console.log("Error de conexión comboPrac");
 				console.log(xhr);	
 			}
@@ -1562,6 +1696,7 @@ var inicioMaestro = function ()
     //Inicia función para mostrar el catalago de las prácticas
     var practicasMaestro = function()
     {
+    	$("#loaderImage").show();
     	$("#tabCatPracticas").html(" ");
 		//ocultar los div
 		$("#NuevaPracticaM").hide();
@@ -1578,17 +1713,20 @@ var inicioMaestro = function ()
 			{
 				if(response.respuesta == true)
 				{
+					$("#loaderImage").hide();
 					$("#tabCatPracticas").html(" ");
 					$("#tabCatPracticas").append(response.renglones);
 				}
 				else
 				{
+					$("#loaderImage").hide();
 					sweetAlert("No hay Prácticas..!", "Ninguna de las materias asignadas, cuenta con una práctica", "error");
 				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImage").hide();
 				console.log("Error de conexión catalogo prácticas");
-				console.log(xhr);
 			}
 		});
     	$("#catalagoPracticas").show("slow");
@@ -1601,6 +1739,7 @@ var inicioMaestro = function ()
     	$("#catalagoPracticas").hide();
     	$("#NuevaPracticaM").show("slow");
     	//contenido dinamico
+    	$("#loaderImage").show();
     	//limpiar datos
 		$("#txtTituloPractica").val("");
     	$("#txtDuracionPract").val("1");
@@ -1624,6 +1763,7 @@ var inicioMaestro = function ()
 			{
 				if(response.respuesta == true)
 				{
+					$("#loaderImage").hide();
 					$("#cmbMatPractica").html(" ");
 					$("#cmbMatPractica").html("<option value='' disabled selected>Seleccione la materia</option>");
 					for (var i = 0; i < response.contador; i++) 
@@ -1635,13 +1775,16 @@ var inicioMaestro = function ()
 				}
 				else
 				{
+					$("#loaderImage").hide();
 					$("#cmbMatPractica").html(" ");
 					$("#cmbMatPractica").html("<option value='' disabled selected>Seleccione la materia</option>");
 					$('select').material_select();
 					sweetAlert("No tiene materias", "Es posible que no tenga materias asignadas!", "error");
 				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImage").hide();
 				console.log("Error de conexión combomat nueva practica");	
 			}
 		});
@@ -1651,6 +1794,7 @@ var inicioMaestro = function ()
     var comboLaboratorios = function()
     {
     	//contenido dinamico
+    	$("#loaderImage").show();
     	//limpiando combos
 		$("#cmbLabPractica").html(" ");
 		$("#cmbLabPractica").html("<option value='' disabled selected>Seleccione el laboratorio</option>");
@@ -1667,6 +1811,7 @@ var inicioMaestro = function ()
 			{
 				if(response.respuesta == true)
 				{
+					$("#loaderImage").hide();
 					$("#cmbLabPractica").html(" ");
 					$("#cmbLabPractica").html("<option value='' disabled selected>Seleccione el laboratorio</option>");
 					for (var i = 0; i < response.contador; i++) 
@@ -1678,13 +1823,16 @@ var inicioMaestro = function ()
 				}
 				else
 				{
+					$("#loaderImage").hide();
 					$("#cmbLabPractica").html(" ");
 					$("#cmbLabPractica").html("<option value='' disabled selected>Seleccione el laboratorio</option>");
 					$('select').material_select();
 					console.log("no trajo laboratorios");
 				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImage").hide();
 				console.log("Error de conexión combomat nueva practica");	
 			}
 		});
@@ -1696,6 +1844,7 @@ var inicioMaestro = function ()
     	if($("#txtTituloPractica").val()!=""&& $("#cmbMatPractica option:selected").val()!="" && $("#cmbLabPractica option:selected").val() != "" && $("#textareaDesPrac").val() != "")
     	{
     		//contenido dinamico
+    		$("#loaderImage").show();
     		var titulo 		= $("#txtTituloPractica").val();
     		var materia 	= $("#cmbMatPractica").val();
     		var laboratorio = $("#cmbLabPractica").val();
@@ -1718,23 +1867,26 @@ var inicioMaestro = function ()
 				        {
 				        		if(response.respuesta == true)
 				        		{
+				        			$("#loaderImage").hide();
 				                    //limpiar datos
 				                    nPracticaMaestro();
 									swal("La práctica fue creada con éxito!", "Da clic en el botón OK!", "success");				
 								}
 								else
-								{						
-										sweetAlert("Error", "No se pudo crear la práctica!", "error");
+								{	$("#loaderImage").hide();					
+									sweetAlert("Error", "No se pudo crear la práctica!", "error");
 								}
 							},
 							error: function(xhr, ajaxOptions,x)
 							{
+								$("#loaderImage").hide();
 								console.log("Error de conexión Nueva Practica alta");
 							}
 				});
     	}
     	else
     	{
+    		$("#loaderImage").hide();
     		sweetAlert("Error", "Llene todos los campos!", "error");
     	}
     }//Termina función para insertar una nueva práctica

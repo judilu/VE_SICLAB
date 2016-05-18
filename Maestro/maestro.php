@@ -55,6 +55,9 @@
 		<div id="reportes">
 			<?php include 'seleccionListaAsistencia.php';?>
 		</div>
+		<div id="loaderImage">
+			<img src="../img/159.gif" alt="">
+		</div>
 		<div id="salir">
 			<?php include '../Genericos/salirSistema.php';?>
 		</div>
