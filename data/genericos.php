@@ -483,7 +483,7 @@ function listaArticulos()
 			$consulta	= sprintf("select B.claveArticulo,B.nombreArticulo,COUNT(A.claveArticulo) as cantidad 
 								FROM lbarticulos as A 
 								INNER JOIN lbarticuloscat as B ON A.claveArticulo=B.claveArticulo 
-								INNER JOIN lbasignaarticulos C ON A.identificadorArticulo=C.indentificadorArticulo 
+								INNER JOIN lbasignaarticulos C ON A.identificadorArticulo=C.identificadorArticulo 
 								WHERE C.claveLaboratorio=%s and A.estatus='V' GROUP BY A.claveArticulo",$claveLab);
 			
 		}
@@ -1104,7 +1104,6 @@ function prestamosProceso()
 								inner join lbprestamosarticulos pa ON pa.clavePrestamo=p.clavePrestamo
 								where estatus='P' GROUP BY p.clavePrestamo");
 		$res 		= mysql_query($consulta);
-
 		$renglones	.= "<thead>";
 		$renglones	.= "<tr>";
 		$renglones	.= "<th data-field='numeroControl'>No. de control</th>";
