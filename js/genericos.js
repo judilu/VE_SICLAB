@@ -2485,6 +2485,7 @@ var inicioG = function()
 				}
 				else
 				{
+					$("#loaderImageG").hide();
 					sweetAlert("Sin prácticas", "No hay prácticas pendientes actualmente.", "error");
 				}
 			},

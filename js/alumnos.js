@@ -247,6 +247,7 @@ var inicio = function()
 	//FUNCIONES PHP
 	var consultaAlumno = function(str)
 	{
+		$("#loaderImageA").show();
 		var parametros = "opc=consultaAlumno"+
 		"&nControl="+str+
 		"&id="+Math.random();
@@ -260,23 +261,27 @@ var inicio = function()
 			{
 				if(response.respuesta)
 				{
+					$("#loaderImageA").hide();
 					document.getElementById('txtNombre').focus();
 					$("#txtNombre").val(response.ALUAPP+" "+ response.ALUAPM+" "+response.ALUNOM);	
 					consultaCarrera(str);
 				}
 				else
 				{
+					$("#loaderImageA").hide();
 					sweetAlert("NO ENCONTRADO", "", "error");
 				}
 			},
 			error: function(xhr, ajaxOptions,x)
 			{
+				$("#loaderImageA").hide();
 				console.log("Error de conexión");
 			}
 		});
 	}
 	var consultaExterno = function(str)
 	{
+		$("#loaderImageA").show();
 		var parametros = "opc=consultaExterno"+
 		"&nControl="+str+
 		"&id="+Math.random();
@@ -290,23 +295,27 @@ var inicio = function()
 			{
 				if(response.respuesta)
 				{
+					$("#loaderImageA").hide();
 					document.getElementById('txtNombre').focus();
 					$("#txtNombre").val(response.encargado);
 					$("#txtCarrera").val(response.dependencia);	
 				}
 				else
 				{
+					$("#loaderImageA").hide();
 					sweetAlert("NO ENCONTRADO", "", "error");
 				}
 			},
 			error: function(xhr, ajaxOptions,x)
 			{
+				$("#loaderImageA").hide();
 				console.log("Error de conexión");
 			}
 		});
 	}
 	var consultaCarrera = function(str)
 	{
+		$("#loaderImageA").show();
 		var parametros = "opc=consultaCarrera"+
 		"&nControl="+str+
 		"&id="+Math.random();
@@ -320,6 +329,7 @@ var inicio = function()
 			{
 				if(response.respuesta)
 				{
+					$("#loaderImageA").hide();
 					document.getElementById('txtCarrera').focus();
 					$("#txtCarrera").val(response.CARNOM);
 					document.getElementById('txtSemestre').focus();	
@@ -328,11 +338,13 @@ var inicio = function()
 				}
 				else
 				{
+					$("#loaderImageA").hide();
 					sweetAlert("No tienes materias", "", "error");
 				}
 			},
 			error: function(xhr, ajaxOptions,x)
 			{
+				$("#loaderImageA").hide();
 				console.log("Error de conexión");
 			}
 		});
@@ -350,6 +362,7 @@ var inicio = function()
 				$("#txtNControlAlu").val(numeroControl.substr(0,8));
 				var numCtrl 	= $("#txtNControlAlu").val();
 				$("#txtNombreAlu").val($("#txtNombre").val());
+				$("#loaderImageA").show();
 				var parametros = "opc=consultaMatAlumno"+
 								"&numeroControl="+numCtrl+
 								"&id="+Math.random();
@@ -363,6 +376,7 @@ var inicio = function()
 					{
 						if(response.respuesta)
 						{
+		       				$("#loaderImageA").hide();
 		       				$("#cmbMateriasAlumnos").html(" ");
 		       				$("#cmbMaestrosMat").html(" ");
 		       				$("#cmbMaestrosMat").html("<option value='' disabled selected>Selecciona el maestro</option>");
@@ -380,6 +394,7 @@ var inicio = function()
 		   				}
 		   				else
 		   				{
+		   					$("#loaderImageA").hide();
 		   					$("#cmbMateriasAlumnos").html(" ");
 		       				$("#cmbMateriasAlumnos").html("<option value='' disabled selected>Selecciona la materia</option>");
 		   					$('select').material_select();
@@ -388,6 +403,7 @@ var inicio = function()
 		   			},
 		   			error: function(xhr, ajaxOptions,x)
 		   			{
+		   				$("#loaderImageA").hide();
 		   				console.log("Error de conexión datos practica");
 		   				console.log(xhr);
 		   			}
@@ -395,6 +411,7 @@ var inicio = function()
 		   	}
 			else
 			{
+				$("#loaderImageA").hide();
 				$("#accesoAlumno").hide();
 				$("#datosPracticas").hide();
 				$("#materialExterno").show("slow");
@@ -403,6 +420,7 @@ var inicio = function()
 		}
 		else
 		{
+			$("#loaderImageA").hide();
 			sweetAlert("Número de contro incorrecto", "", "error");
 		}
 	}
@@ -415,6 +433,7 @@ var inicio = function()
 		(mm<10) ? (mm="0"+mm) : mm;
 		var fe  = (dd+"/"+mm+"/"+f.getFullYear());
 		var ncExterno 	= $("#txtNControl").val();
+		$("#loaderImageA").show();
 		var parametros = "opc=consultaCalExt"+
 							"&fecha="+fe+
 							"&ncExterno="+ncExterno+
@@ -429,17 +448,20 @@ var inicio = function()
 			{
 				if(response.respuesta)
 				{
+					$("#loaderImageA").hide();
 					$("#txtCveCalExt").val(response.calendarizacion);
 					$("#txtFechaActualEM").val(fe);
 					materialPracticaExt(response.calendarizacion,ncExterno);
 				}
 				else
 				{
+					$("#loaderImageA").hide();
 					sweetAlert("No practicas calendarizadas en esta fecha", "", "error");
 				}
 			},
 			error: function(xhr, ajaxOptions,x)
 			{
+				$("#loaderImageA").hide();
 				console.log("Error de conexión");
 			}
 		});
@@ -466,6 +488,7 @@ var inicio = function()
 		$("#bodyArtExterno").html("");
 		$("#txtNumeroControlDep").val(ncExterno);
 		$("#txtNombreEncargadoDep").val(nombreDep);
+		$("#loaderImageA").show();
 		var parametros 			= "opc=consultaMaterialExterno"+
 									"&fecha="+fe+
 									"&hora="+hora+
@@ -482,6 +505,7 @@ var inicio = function()
 			{
 				if(response.respuesta)
 				{
+					$("#loaderImageA").hide();
 					articulosSolicitadosAlumnos = (response.materiales).split(",");
 					numeroArticulos = (response.cantidad).split(",");
 					nombreArticulos = (response.nombre).split(",");
@@ -496,12 +520,14 @@ var inicio = function()
 				}
 				else
 				{
+					$("#loaderImageA").hide();
 					$("#bodyArtExterno").html("");
 					sweetAlert("No hay material asignado para la práctica", "", "error");
 				}
 			},
 			error: function(xhr, ajaxOptions,x)
 			{
+				$("#loaderImageA").hide();
 				console.log("Error de conexión");
 			}
 		});
@@ -532,6 +558,7 @@ var inicio = function()
 		var minutos 				=horaActual.getMinutes();
 		(minutos<10) ? (minutos="0"+minutos) : minutos;
 		var hora					= hora + ":" + minutos;
+		$("#loaderImageA").show();
 		var parametros = "opc=consultaMaterialPractica1"+
 							"&clave="+claveCal+
 							"&fecha="+fe+
@@ -548,6 +575,7 @@ var inicio = function()
 			{
 				if(response.respuesta)
 				{
+					$("#loaderImageA").hide();
 					//hacer arreglos
 					articulosSolicitadosAlumnos = (response.materiales).split(",");
 					numeroArticulos = (response.cantidad).split(",");
@@ -557,12 +585,14 @@ var inicio = function()
 				}
 				else
 				{
+					$("#loaderImageA").hide();
 					$("#bodyArtAlumno").html("");
 					//sweetAlert("No hay material asignado para la práctica", "", "error");
 				}
 			},
 			error: function(xhr, ajaxOptions,x)
 			{
+				$("#loaderImageA").hide();
 				console.log("Error de conexión");
 				console.log(xhr);
 			}
@@ -571,6 +601,7 @@ var inicio = function()
 	}
 	var maestroPractica = function()
 	{
+		$("#loaderImageA").show();
 		var claveMateria = $("#cmbMateriasAlumnos").val();
 		var parametros = "opc=consultaMaestro"+
 		"&claveMateria="+claveMateria+
@@ -585,6 +616,7 @@ var inicio = function()
 			{
 				if(response.respuesta)
 				{
+   					$("#loaderImageA").hide();
    					$("#cmbMaestrosMat").html(" ");
    					$("#cmbMaestrosMat").html("<option value='' disabled selected>Selecciona el maestro</option>");
 						for (var i = 0; i < response.contador; i++) 
@@ -596,6 +628,7 @@ var inicio = function()
    				}
    				else
    				{
+   					$("#loaderImageA").hide();
    					$("#cmbMaestrosMat").html("<option value='' disabled selected>Selecciona el maestro</option>");
    					$("#cmbMaestrosMat").trigger('contentChanged');
 					$('select').material_select();
@@ -604,12 +637,14 @@ var inicio = function()
    			},
    			error: function(xhr, ajaxOptions,x)
    			{
+   				$("#loaderImageA").hide();
    				console.log("Error de conexión");
    			}
    		});
 	}
 	var nombrePracticaMaestro = function()
 	{
+		$("#loaderImageA").show();
 		var horaPrac 	= $("#cmbHorariosPractica").val();
 		var parametros 	= "opc=consultaPracticaNombre"+
 							"&horaPrac="+horaPrac+
@@ -624,6 +659,7 @@ var inicio = function()
 			{
 				if(response.respuesta)
 				{
+   					$("#loaderImageA").hide();
    					$("#cmbNombrePracticas").html(" ");
    					$("#cmbNombrePracticas").html("<option value='' disabled selected>Selecciona la práctica</option>");
 					$("#cmbNombrePracticas").append($("<option></option>").attr("value",response.clavePractica).text(response.nombrePractica));
@@ -632,6 +668,7 @@ var inicio = function()
    				}
    				else
    				{
+   					$("#loaderImageA").hide();
    					$("#cmbNombrePracticas").html(" ");
    					$("#cmbNombrePracticas").html("<option value='' disabled selected>Selecciona la práctica</option>");
    					$("#cmbNombrePracticas").trigger('contentChanged');
@@ -641,6 +678,7 @@ var inicio = function()
    			},
    			error: function(xhr, ajaxOptions,x)
    			{
+   				$("#loaderImageA").hide();
    				console.log("Error de conexión");
    			}
    		});
@@ -655,6 +693,7 @@ var inicio = function()
 		(mm<10) ? (mm="0"+mm) : mm;
 		var fe  = (dd+"/"+mm+"/"+f.getFullYear());
 		var claveMaestro = $("#cmbMaestrosMat").val();
+		$("#loaderImageA").show();
 		var parametros 		= "opc=consultaHoraPractica"+
 								"&claveMaestro="+claveMaestro+
 								"&fecha="+fe+
@@ -671,17 +710,20 @@ var inicio = function()
 				$("#cmbHorariosPractica").html("<option value='' disabled selected>Selecciona la hora de la práctica</option>");
 				if(response.respuesta)
 				{
+   						$("#loaderImageA").hide();
    						$("#cmbHorariosPractica").append($("<option></option>").attr("value",response.clavePractica).text(response.horaPractica));
 						$("#cmbHorariosPractica").trigger('contentChanged');
 						$('select').material_select();
    				}
    				else
    				{
+   					$("#loaderImageA").hide();
    					sweetAlert("EL maestro no tiene asignadas prácticas", "", "error");
    				}
    			},
    			error: function(xhr, ajaxOptions,x)
    			{
+   				$("#loaderImageA").hide();
    				console.log("Error de conexión");
    			}
    		});
@@ -701,6 +743,7 @@ var inicio = function()
 		var minutos 				=horaActual.getMinutes();
 		(minutos<10) ? (minutos="0"+minutos) : minutos;
 		var horaEntrada			= hora + ":" + minutos;
+		$("#loaderImageA").show();
 		var parametros 	= "opc=guardaEntradaExt"+
 						"&nControl="+ncE+
 						"&calendarizacion="+cal+
@@ -717,6 +760,7 @@ var inicio = function()
 			{
 				if(response.respuesta)
 				{
+   					$("#loaderImageA").hide();
    					if($("#chbElegirMaterial").is(':checked'))
    					{
    						sweetAlert("Registro de entrada guardado con éxito!", "Da click en el botón OK", "success");
@@ -730,11 +774,13 @@ var inicio = function()
    				}
    				else
    				{
+   					$("#loaderImageA").hide();
    					sweetAlert("No se registró la entrada", "", "error");
    				}
    			},
    			error: function(xhr, ajaxOptions,x)
    			{
+   				$("#loaderImageA").hide();
    				console.log("Error de conexión registro de entrada alumnos");
    			}
    		});		
@@ -762,6 +808,7 @@ var inicio = function()
 		(hora<10) ? (hora="0"+hora) : hora;
 		(minutos<10) ? (minutos="0"+minutos) : minutos;
 		var horaEntrada			= hora + ":" + minutos;
+		$("#loaderImageA").show();
 		var parametros 	= "opc=guardaEntrada1"+
 						"&claveCal="+claveCal+
 						"&nControl="+nc+
@@ -778,6 +825,7 @@ var inicio = function()
 			{
 				if(response.respuesta)
 				{
+   					$("#loaderImageA").hide();
    					if($("#chbElegirMaterial").is(':checked'))
    					{
    						sweetAlert("Registro de entrada guardado con éxito!", "Da click en el botón OK", "success");
@@ -791,11 +839,13 @@ var inicio = function()
    				}
    				else
    				{
+   					$("#loaderImageA").hide();
    					sweetAlert("No se registró la entrada", "", "error");
    				}
    			},
    			error: function(xhr, ajaxOptions,x)
    			{
+   				$("#loaderImageA").hide();
    				console.log("Error de conexión registro de entrada alumnos");
    			}
    		});
@@ -843,6 +893,7 @@ var inicio = function()
 			$("#cmbMaterialesLab").removeAttr("disabled");
 			$("#txtNumArtMat").removeAttr("disabled");
 			$("#btnAgregarArtAlu").show();
+			$("#loaderImageA").show();
 			var parametros = "opc=materialesDisponibles1"+
 							"&claveSol="+claveSol+
     						"&id="+Math.random();
@@ -857,6 +908,7 @@ var inicio = function()
 	    		{
 	    			if(response.respuesta == true)
 	    			{
+	    				$("#loaderImageA").hide();
 	    				$("#cmbMaterialesLab").html(" ");
 						$("#cmbMaterialesLab").html("<option value='' disabled selected>Selecciona el material</option>");
 						comboclaArt = response.claveArticulo;
@@ -883,6 +935,7 @@ var inicio = function()
 					}
 					else
 					{
+						$("#loaderImageA").hide();
 						$("#cmbMaterialesLab").html(" ");
 						$("#cmbMaterialesLab").html("<option value='' disabled selected>Selecciona el material</option>");
 						sweetAlert("No hay hay mas articulos en el laboratorio s", "", "error");
@@ -890,6 +943,7 @@ var inicio = function()
 				},
 				error: function(xhr, ajaxOptions,x)
 				{
+					$("#loaderImageA").hide();
 					console.log("Error de conexión");
 					console.log(xhr);
 				}
@@ -897,6 +951,7 @@ var inicio = function()
 		}
 		else
 		{
+			$("#loaderImageA").hide();
 			$("#btnAgregarArtAlu").hide();
 			$("#txtNumArtMat").attr("disabled","disabled");
 			$(".select-dropdown").attr("disabled","disabled");
@@ -914,6 +969,7 @@ var inicio = function()
 			$("#cmbMaterialesLabDep").removeAttr("disabled");
 			$("#txtNumArtMatDep").removeAttr("disabled");
 			$("#btnAgregarArtDep").show();
+			$("#loaderImageA").show();
 			var parametros = "opc=materialesDisponibles1"+
 							"&claveSol="+claveSol+
     						"&id="+Math.random();
@@ -928,6 +984,7 @@ var inicio = function()
 	    		{
 	    			if(response.respuesta == true)
 	    			{
+	    				$("#loaderImageA").hide();
 	    				$("#cmbMaterialesLabDep").html(" ");
 						$("#cmbMaterialesLabDep").html("<option value='' disabled selected>Selecciona el material</option>");
 						comboclaArt = response.claveArticulo;
@@ -954,6 +1011,7 @@ var inicio = function()
 					}
 					else
 					{
+						$("#loaderImageA").hide();
 						$("#cmbMaterialesLabDep").html(" ");
 						$("#cmbMaterialesLabDep").html("<option value='' disabled selected>Selecciona el material</option>");
 						sweetAlert("No hay hay mas articulos en el laboratorio s", "", "error");
@@ -961,6 +1019,7 @@ var inicio = function()
 				},
 				error: function(xhr, ajaxOptions,x)
 				{
+					$("#loaderImageA").hide();
 					console.log("Error de conexión");
 					console.log(xhr);
 				}
@@ -968,6 +1027,7 @@ var inicio = function()
 		}
 		else
 		{
+			$("#loaderImageA").hide();
 			$("#btnAgregarArtDep").hide();
 			$("#txtNumArtMatDep").attr("disabled","disabled");
 			$(".select-dropdown").attr("disabled","disabled");
@@ -999,6 +1059,7 @@ var inicio = function()
 	//función para construir la tabla con los materiales
 	var construirTablaAlu = function()
 	{
+		$("#loaderImageA").show();
 		var parametros = "opc=construirTablaArt1"+
 				    	"&articulosSolicitados="+articulosSolicitadosAlumnos+
 				    	"&nombreArticulos="+nombreArticulos+
@@ -1013,6 +1074,7 @@ var inicio = function()
     		success: function(response){
     			if(response.respuesta == true)
     			{
+    				$("#loaderImageA").hide();
     				$("#bodyArtAlumno").html("");
     				$("#bodyArtAlumno").append(response.renglones);
     				//formar de nuevo el combo
@@ -1021,6 +1083,7 @@ var inicio = function()
 				}//termina if
 				else
 				{
+					$("#loaderImageA").hide();
 					$("#bodyArtAlumno").html("");
 					checkOtroArticulo();
 					//sweetAlert("No se eliminó el articulo", "", "error");
@@ -1028,6 +1091,7 @@ var inicio = function()
 			},
 			error: function(xhr, ajaxOptions,x)
 			{
+				$("#loaderImageA").hide();
 				console.log("Error de conexión articulo eliminar Alu");	
 				console.log(xhr);
 			}
@@ -1035,6 +1099,7 @@ var inicio = function()
 	}
 	var construirTablaExt = function()
 	{
+		$("#loaderImageA").show();
 		var parametros = "opc=construirTablaExt1"+
 				    	"&articulosSolicitados="+articulosSolicitadosAlumnos+
 				    	"&nombreArticulos="+nombreArticulos+
@@ -1049,6 +1114,7 @@ var inicio = function()
     		success: function(response){
     			if(response.respuesta == true)
     			{
+    				$("#loaderImageA").hide();
     				$("#bodyArtExterno").html("");
     				$("#bodyArtExterno").append(response.renglones);
     				//formar de nuevo el combo
@@ -1057,6 +1123,7 @@ var inicio = function()
 				}//termina if
 				else
 				{
+					$("#loaderImageA").hide();
 					$("#bodyArtExterno").html("");
 					checkOtroArticulo();
 					//sweetAlert("No se eliminó el articulo", "", "error");
@@ -1064,6 +1131,7 @@ var inicio = function()
 			},
 			error: function(xhr, ajaxOptions,x)
 			{
+				$("#loaderImageA").hide();
 				console.log("Error de conexión articulo eliminar Alu");	
 				console.log(xhr);
 			}
@@ -1091,6 +1159,7 @@ var inicio = function()
 		var cantArt 		= numeroArticulos;
 		var nc 				=$("#txtNumeroControlPrestamo").val();
 		var claveCal 		= $("#cmbHorariosPractica").val();
+		$("#loaderImageA").show();
 		var parametros 		= "opc=guardaSolicitudAlu"+
 							"&listaArt="+listaArt+
 							"&cantArt="+cantArt+
@@ -1106,16 +1175,19 @@ var inicio = function()
     		success: function(response){
     			if(response.respuesta == true)
     			{
+    				$("#loaderImageA").hide();
     				swal("Solicitud enviada con éxito!", "Da clic en el botón OK!", "success");
     				inicioRegistro();
 				}
 				else
 				{
+					$("#loaderImageA").hide();
 					sweetAlert("No hay hay mas articulos en el laboratorio", "", "error");
 				}
 			},
 			error: function(xhr, ajaxOptions,x)
 			{
+				$("#loaderImageA").hide();
 				console.log("Error de conexión");
 				console.log(xhr)	;
 			}
@@ -1141,6 +1213,7 @@ var inicio = function()
 		var cantArt 		= numeroArticulos;
 		var claveCal 		= $("#txtCveCalExt").val();
 		var nc 				= $("#txtNumeroControlDep").val();
+		$("#loaderImageA").show();
 		var parametros = "opc=guardaSolicitudExterno"+
 							"&listaArt="+listaArt+
 							"&cantArt="+cantArt+
@@ -1159,16 +1232,19 @@ var inicio = function()
     		{
     			if(response.respuesta && response.respuesta2)
     			{
+    				$("#loaderImageA").hide();
     				swal("Solicitud enviada con éxito!", "Da clic en el botón OK!", "success");
     				inicioRegistro();
 				}
 				else
 				{
+					$("#loaderImageA").hide();
 					sweetAlert("No se envió la solicitud de material", "", "error");
 				}
 			},
 			error: function(xhr, ajaxOptions,x)
 			{
+				$("#loaderImageA").hide();
 				console.log("Error de conexión");
 			}
 		});

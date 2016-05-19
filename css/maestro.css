@@ -1,13 +1,10 @@
-#loaderImage #loaderImageG
+#loaderImage #loaderImageG, #loaderImageA
 {
 	display: none;
 	text-align: center;
 	margin: 5% 0px;
 	width: 100%;
 	height: 100%;
-	/*z-index: 3;*/
-	/*position: absolute;*/
-	/*margin-left: 33%;*/
 }
 .bajo
 {
