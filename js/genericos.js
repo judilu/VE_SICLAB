@@ -702,6 +702,12 @@ var inicioG = function()
 	}
 	var sLaboratorioNuevas = function()
 	{
+		var f  = new Date();
+    	var dd = f.getDate();
+    	var mm = (f.getMonth())+1;
+    	(dd<10) ? (dd="0"+dd) : dd;
+    	(mm<10) ? (mm="0"+mm) : mm;
+    	var fe  = (f.getFullYear()+"-"+mm+"-"+dd);
 		$("#eleccionMaterialExt").hide();
 		$("#sAceptadasLab").hide("slow");
 		$("#sPendientesLab").hide("slow");
@@ -715,6 +721,8 @@ var inicioG = function()
 		$("#txtCantAlumnosExterno").val("1");
 		$("textarea").val("");
 		$("#chbOtraDependencia").prop('checked', false); ;
+		$("#txtFechaSolExterno").val(fe);
+		$("#txtFechaSolExterno").attr("min",fe);
 		//inicializar combo
 		//combo Lab
 		$("#cmbLaboratorioExterno").html(" ");
@@ -735,6 +743,7 @@ var inicioG = function()
 				{
 					if(response.respuesta)
 					{
+						$("#txtFechaSolExterno").attr("max",response.fecha);
 						$("#loaderImageG").hide();
 						$("#cmbNombreDependencias").html(" ");
 						$("#cmbNombreDependencias").html("<option value='' disabled selected>Selecciona la dependencia</option>");

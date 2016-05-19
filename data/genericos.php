@@ -1616,6 +1616,7 @@ function listaDependencias()
 	$respuesta 	 		= false;
 	session_start();
 	$responsable 		= $_SESSION['nombre'];
+	$fecha 				= fechaPeriodo();
 	$claveDependencia 	= "";
 	$nombreDependencia 	= "";
 	$contador 			= 0;
@@ -1641,7 +1642,8 @@ function listaDependencias()
 						'clavePractica' 	=> $practicas['clavePract'],
 						'nombrePractica'	=> $practicas['tituloPract'],
 						'contador' 			=> $contador,
-						'contador2' 		=> $contador2);
+						'contador2' 		=> $contador2,
+						'fecha' 			=> $fecha);
 	print json_encode($arrayJSON);
 }
 function llenarComboPracticasExt()

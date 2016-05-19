@@ -18,6 +18,19 @@ function periodoActual ()
 		return $row["PARFOL1"];
 	}
 }
+function fechaPeriodo ()
+{
+	$conexion 		= conectaBDSIE();
+	$fecha 			= "";
+	$periodo 		= periodoActual();
+	$consulta 		= sprintf("select PDOINI,PDOTER from DPERIO where PDOCVE =%s",$periodo);
+	$res			= mysql_query($consulta);
+	if($row = mysql_fetch_array($res))
+	{
+		$fecha = $row["PDOTER"];
+	}
+	return $fecha;
+}
 function claveLab($clave)
 {
 	$cveResp 		= $clave;
@@ -359,6 +372,7 @@ function comboMat ()
 	session_start();
 	$clave  		= GetSQLValueString(($_SESSION['nombre']),"int");
 	$maestro 		= claveMaestro($clave);
+	$fecha 			= fechaPeriodo();
 	$respuesta 		= false;
 	$periodo 		= periodoActual();
 	$con 			= 0;
@@ -385,7 +399,8 @@ function comboMat ()
 	$arrayJSON = array('respuesta' => $respuesta,
 						 'claveMat' => $claveMat, 
 						'nombreMat' => $nombreMat, 
-						'contador' => $con);
+						'contador' => $con,
+						'fecha' => $fecha);
 	print json_encode($arrayJSON);
 
 }
