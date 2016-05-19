@@ -315,7 +315,7 @@ function eliminaSolicitudLab()
 //funcion para sacar la lista de las solicitudes calendarizadas
 function aceptadasLaboratorio()
 {
-	$respuesta 	= true;
+	$respuesta 	= false;
 	session_start();
 		$responsable 		= $_SESSION['nombre'];
 		$claveLab 			= GetSQLValueString(obtieneCveLab($responsable),"text");
@@ -1494,7 +1494,7 @@ function listaArticulosAlta()
 }
 function comboArtPeticiones()
 {
-	$resp 	 		= false;
+	$respuesta 	 		= false;
 	session_start();
 		$responsable= $_SESSION['nombre'];
 		$claveLab 	= GetSQLValueString(obtieneCveLab($responsable),"text");

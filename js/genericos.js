@@ -93,7 +93,7 @@ var inicioG = function()
 				error: function(xhr, ajaxOptions,x)
 				{
 					$("#loaderImageG").hide();
-					alert("Error de conexión prestamos pendientes");
+					console.log("Error de conexión prestamos pendientes");
 				}
 			});
 		}
@@ -133,7 +133,7 @@ var inicioG = function()
 			error: function(xhr, ajaxOptions,x)
 			{
 				$("#loaderImageG").hide();
-				alert("Error de conexión atender prestamo material");
+				console.log("Error de conexión atender prestamo material");
 			}
 		});
 		$("#atenderSolicitud").show("slow");
@@ -174,7 +174,7 @@ var inicioG = function()
 				error: function(xhr, ajaxOptions,x)
 				{
 					$("#loaderImageG").hide();
-					sweetAlert("Error", "Error de conexión al buscar el articulo para agregarlo", "error");
+					console.log("Error de conexión al buscar el articulo para agregarlo");
 				}
 			});
 		}
@@ -210,7 +210,7 @@ var inicioG = function()
 			error: function(xhr, ajaxOptions,x)
 			{
 				$("#loaderImageG").hide();
-				sweetAlert("Error", "Error de conexión guarda prestamo pendiente", "error");
+				console.log("Error de conexión guarda prestamo pendiente");
 			}
 		});
 		$("#txtclavePrestamo").val("");
@@ -246,7 +246,7 @@ var inicioG = function()
 				error: function(xhr, ajaxOptions,x)
 				{
 					$("#loaderImageG").hide();
-					sweetAlert("Error", "Error de conexión elimina prestamo pendiente", "error");
+					console.log("Error de conexión elimina prestamo pendiente");
 				}
 			});
 		}
@@ -289,7 +289,7 @@ var inicioG = function()
 			error: function(xhr, ajaxOptions,x)
 			{
 				$("#loaderImageG").hide();
-				alert("Error de conexión prestamos en proceso");
+				console.log("Error de conexión prestamos en proceso");
 			}
 		});
 		$("#solicitudesEnProceso").show("slow");
@@ -326,7 +326,7 @@ var inicioG = function()
 			error: function(xhr, ajaxOptions,x)
 			{
 				$("#loaderImageG").hide();
-				alert("Error de conexión lista de sanciones");
+				console.log("Error de conexión lista de sanciones");
 			}
 		});
 		$("#alumnosSancionados").show("slow");
@@ -370,7 +370,7 @@ var inicioG = function()
 				error: function(xhr, ajaxOptions,x)
 				{
 					$("#loaderImageG").hide();
-					alert("Error de conexión quitar sanción");
+					console.log("Error de conexión quitar sanción");
 				}
 			});
 		}
@@ -421,13 +421,13 @@ var inicioG = function()
 				else
 				{
 					$("#loaderImageG").hide();
-					console.log("no se aplico la sanción");
+					console.log("Error de botón aplicar sanción");
 				}
 			},
 			error: function(xhr, ajaxOptions,x)
 			{
 				$("#loaderImageG").hide();
-				alert("Error de conexión aplica sanción");
+				console.log("Error de conexión aplica sanción");
 			}
 		});
 		$("#aplicaSanciones").show("slow");
@@ -477,7 +477,7 @@ var inicioG = function()
 			error: function(xhr, ajaxOptions,x)
 			{
 				$("#loaderImageG").hide();
-				alert("Error de conexión al guardar la sanción");
+				console.log("Error de conexión al guardar la sanción");
 			}
 		});
 	}
@@ -515,7 +515,7 @@ var inicioG = function()
 			error: function(xhr, ajaxOptions,x)
 			{
 				$("#loaderImageG").hide();
-				alert("Error de conexión devolución prestamo");
+				console.log("Error de conexión devolución prestamo");
 			}
 		});
 		$("#devolucionMaterial").show("slow");
@@ -566,7 +566,7 @@ var inicioG = function()
 			error: function(xhr, ajaxOptions,x)
 			{
 				$("#loaderImageG").hide();
-				sweetAlert("Error", "Error de conexión guarda prestamo devolución", "error");
+				console.log("Error de conexión guarda prestamo devolución");
 			}
 		});
 	}
@@ -611,7 +611,7 @@ var inicioG = function()
 				error: function(xhr, ajaxOptions,x)
 				{
 					$("#loaderImageG").hide();
-					alert("Error de conexión aceptar solicitud de laboratorio");
+					console.log("Error de conexión aceptar solicitud de laboratorio");
 				}
 			});
 		}
@@ -658,7 +658,7 @@ var inicioG = function()
 					error: function(xhr, ajaxOptions,x)
 					{
 						$("#loaderImageG").hide();
-						alert("Error de conexión guarda solicitud laboratorio");
+						console.log("Error de conexión guarda solicitud laboratorio");
 					}
 				});
 			}
@@ -695,7 +695,7 @@ var inicioG = function()
 				error: function(xhr, ajaxOptions,x)
 				{
 					$("#loaderImageG").hide();
-					alert("Error de conexión elimina solicitud de laboratorio");
+					console.log("Error de conexión elimina solicitud de laboratorio");
 				}
 			});
 		}
@@ -931,8 +931,7 @@ var inicioG = function()
 			error: function(xhr, ajaxOptions,x)
 			{
 				$("#loaderImageG").hide();
-				console.log("Error de conexión combomat");
-				console.log(xhr);	
+				console.log("Error de conexión combomat");	
 			}
 		});
 	}
@@ -1120,7 +1119,7 @@ var inicioG = function()
 				error: function(xhr, ajaxOptions,x)
 				{
 					$("#loaderImageG").hide();
-					alert("Error de conexión solicitudes pendientes de laboratorio");
+					console.log("Error de conexión solicitudes pendientes de laboratorio");
 				}
 			});
 	}
@@ -1184,7 +1183,7 @@ var inicioG = function()
 				error: function(xhr, ajaxOptions,x)
 				{
 					$("#loaderImageG").hide();
-					alert("Error de conexión solicitudes pendientes de laboratorio");
+					console.log("Error de conexión solicitudes pendientes de laboratorio");
 				}
 			});
 			$("#sPendientesLab").show("slow");
@@ -1207,7 +1206,8 @@ var inicioG = function()
 			dataType: "json",
 			url:"../data/genericos.php",
 			data: parametros,
-			success: function(response){
+			success: function(response)
+			{
 				if(response.respuesta == true)
 				{
 					$("#loaderImageG").hide();
@@ -1223,7 +1223,7 @@ var inicioG = function()
 			error: function(xhr, ajaxOptions,x)
 			{
 				$("#loaderImageG").hide();
-				alert("Error de conexión solicitudes aceptadas de laboratorio");
+				console.log("Error de conexión solicitudes aceptadas de laboratorio");
 			}
 		});
 		$("#sAceptadasLab").show("slow");
@@ -1264,7 +1264,7 @@ var inicioG = function()
 			error: function(xhr, ajaxOptions,x)
 			{
 				$("#loaderImageG").hide();
-				alert("Error de conexión realizadas");
+				console.log("Error de conexión realizadas");
 			}
 		});
 		$("#verMasSolicitud").show("slow");
@@ -1305,7 +1305,7 @@ var inicioG = function()
 			error: function(xhr, ajaxOptions,x)
 			{
 				$("#loaderImageG").hide();
-				alert("Error de conexión realizadas");
+				console.log("Error de conexión realizadas");
 			}
 		});	
 		$("#verMasSolicitud2").show("slow");
@@ -1343,7 +1343,7 @@ var inicioG = function()
 			error: function(xhr, ajaxOptions,x)
 			{
 				$("#loaderImageG").hide();
-				alert("Error de conexión lista de artículos");
+				console.log("Error de conexión lista de artículos");
 			}
 		});
 	}
@@ -1387,7 +1387,7 @@ var inicioG = function()
 			error: function(xhr, ajaxOptions,x)
 			{
 				$("#loaderImageG").hide();
-				alert("Error de conexión lista de artículos");
+				console.log("Error de conexión lista de artículos");
 			}
 		});
 		$("#listaArt").show("slow");
@@ -1510,7 +1510,7 @@ var inicioG = function()
 					error: function(xhr, ajaxOptions,x)
 					{
 						$("#loaderImageG").hide();
-						sweetAlert("Error", "Error de conexión alta inventario", "error");
+						console.log("Error de conexión alta inventario");
 					}
 				});
 			}
@@ -1570,7 +1570,7 @@ var inicioG = function()
 					error: function(xhr, ajaxOptions,x)
 					{
 						$("#loaderImageG").hide();
-						sweetAlert("Error", "Error de conexión baja de artículos", "error");
+						console.log("Error de conexión baja de artículos");
 					}
 				});
 			}
@@ -1621,7 +1621,7 @@ var inicioG = function()
 				error: function(xhr, ajaxOptions,x)
 				{
 					$("#loaderImageG").hide();
-					sweetAlert("Error", "Error de conexión al buscar el articulo para darlo de baja", "error");
+					console.log("Error de conexión al buscar el articulo para darlo de baja");
 				}
 			});
 		}
@@ -1658,6 +1658,7 @@ var inicioG = function()
 	//Pantalla para visualizar que articulos fueron enviados a mantenimiento
 	var listaArtMtto = function()
 	{
+		$("#btnImprimirArtMtto").hide();
 		if(tipoUsu == 1 || tipoUsu ==2)
 		{
 			$("#sEnvioMtto").hide("slow");
@@ -1675,6 +1676,7 @@ var inicioG = function()
 					if(response.respuesta == true)
 					{
 						$("#loaderImageG").hide();
+						$("#btnImprimirArtMtto").show();
 						$("#tbArticulosMtto").html("");
 						$("#tbArticulosMtto").append(response.renglones);
 						$("#tbArticulosMtto #btnRegresaDelMtto").on("click",regresaMtto);
@@ -1688,7 +1690,7 @@ var inicioG = function()
 				error: function(xhr, ajaxOptions,x)
 				{
 					$("#loaderImageG").hide();
-					alert("Error de conexión lista de articulos en mantenimiento");
+					console.log("Error de conexión lista de articulos en mantenimiento");
 				}
 			});
 			$("#listaArtMtto").show("slow");
@@ -1744,7 +1746,7 @@ var inicioG = function()
 				error: function(xhr, ajaxOptions,x)
 				{
 					$("#loaderImageG").hide();
-					sweetAlert("Error", "Error de conexión regreso de mantenimiento", "error");
+					console.log("Error de conexión regreso de mantenimiento");
 				}
 			});
 		}
@@ -1784,7 +1786,7 @@ var inicioG = function()
 				error: function(xhr, ajaxOptions,x)
 				{
 					$("#loaderImageG").hide();
-					sweetAlert("Error", "Error de conexión al buscar el artículo para registrar el mantenimiento", "error");
+					console.log("Error de conexión al buscar el artículo para registrar el mantenimiento");
 				}
 			});
 		}
@@ -1841,7 +1843,7 @@ var inicioG = function()
 					error: function(xhr, ajaxOptions,x)
 					{
 						$("#loaderImageG").hide();
-						sweetAlert("Error", "Error de conexión al registrar el mantenimiento del artículo", "error");
+						console.log("Error de conexión al registrar el mantenimiento del artículo");
 					}
 				});
 			}
@@ -1889,7 +1891,7 @@ var inicioG = function()
 				error: function(xhr, ajaxOptions,x)
 				{
 					$("#loaderImageG").hide();
-					alert("Error de conexión peticiones pendientes");
+					console.log("Error de conexión peticiones pendientes");
 				}
 			});
 			$("#peticionesPendientes").show("slow");
@@ -1926,7 +1928,7 @@ var inicioG = function()
 				error: function(xhr, ajaxOptions,x)
 				{
 					$("#loaderImageG").hide();
-					sweetAlert("Error", "Error de conexión aceptar petición artículo", "error");
+					console.log("Error de conexión aceptar petición artículo");
 				}
 			});
 		}
@@ -1969,7 +1971,7 @@ var inicioG = function()
 				error: function(xhr, ajaxOptions,x)
 				{
 					$("#loaderImageG").hide();
-					sweetAlert("Error", "Error de conexión enviar petición artículo", "error");
+					console.log("Error de conexión enviar petición artículo");
 				}
 			});
 			$("#peticionesArticulos").show("slow");
@@ -2047,7 +2049,7 @@ var inicioG = function()
 				error: function(xhr, ajaxOptions,x)
 				{
 					$("#loaderImageG").hide();
-					sweetAlert("Error", "Error de conexión enviar petición artículo", "error");
+					console.log("Error de conexión enviar petición artículo");
 				}
 			});
 		}
@@ -2304,7 +2306,7 @@ var inicioG = function()
 			error: function(xhr, ajaxOptions,x)
 			{
 				$("#loaderImageG").hide();
-				console.log("Error de conexión sol aceptadas");
+				console.log("Error de conexión resumen inventario");
 			}
 		});
 	}
@@ -2584,7 +2586,7 @@ var inicioG = function()
 			error: function(xhr, ajaxOptions,x)
 			{
 				$("#loaderImageG").hide();	
-				console.log(xhr);
+				console.log("Error de conexión");
 			}
 		});
 		//FIN AGREGUE
