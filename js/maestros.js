@@ -235,6 +235,14 @@ var inicioMaestro = function ()
 		$("#loaderImage").show();
 		$("#sNuevaMaestro").show("slow");
 		$("#nuevaMaestro").show("slow");
+		var f  = new Date();
+    	var dd = f.getDate();
+    	var mm = (f.getMonth())+1;
+    	(dd<10) ? (dd="0"+dd) : dd;
+    	(mm<10) ? (mm="0"+mm) : mm;
+    	var fe  = (f.getFullYear()+"-"+mm+"-"+dd);
+		$("#txtFechaS").val(fe);
+		$("#txtFechaS").attr("min",fe);
 		//modificación combo
 		var parametros = "opc=comboMat1"+
 		"&id="+Math.random();
@@ -247,6 +255,7 @@ var inicioMaestro = function ()
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#txtFechaS").attr("max",response.fecha);
 					$("#loaderImage").hide();
 					$("#cmbMateria").html(" ");
 					//$("#cmbMateria").append(response.combo);
@@ -275,7 +284,7 @@ var inicioMaestro = function ()
 					$("#cmbHoraPract").html("<option value='' disabled selected>Seleccione la hora</option>");
 					$('select').material_select();
 					//txt
-					$("#txtFechaS").val("dd/mm/aaaa");									
+					$("#txtFechaS").val(fe);									
 					$("#txtCantAlumnos").val("1");
 					$("#textarea1").val("");
 					$("#txtNumArt").val("1");
@@ -824,6 +833,7 @@ var inicioMaestro = function ()
     	{
     		var res=parseInt($("#txtCantAlumnos").attr("max"));
     		var cantalu = parseInt($("#txtCantAlumnos").val());
+    		
     		if(cantalu <= res)
     		{
     			$("#loaderImage").show();
@@ -874,7 +884,7 @@ var inicioMaestro = function ()
 				        		{
 				        			$("#loaderImage").hide();
 				                    //limpiar datos
-				                    $("#txtFechaS").val("dd/mm/aaaa");									
+				                    $("#txtFechaS").val((f.getFullYear()+"-"+mm+"-"+dd));									
 				                    $("#txtCantAlumnos").val("1");
 				                    $("#textarea1").val("");
 				                    $("#txtNumArt").val("1");
