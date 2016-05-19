@@ -116,6 +116,9 @@
 					</div>
 				</div>
 			</form>
+		<div id="loaderImageA">
+			<img src="../img/159.gif" alt="">
+		</div>
 		</div>
 		<div id="materialExterno">
 			<?php include 'eleccionMaterialE.php';?>
