@@ -577,6 +577,12 @@ var inicioG = function()
 	{
 		if (tipoUsu == 1 || tipoUsu == 2 )
 		{
+			var f  = new Date();
+			var dd = f.getDate();
+			var mm = (f.getMonth())+1;
+			(dd<10) ? (dd="0"+dd) : dd;
+			(mm<10) ? (mm="0"+mm) : mm;
+			var fe  = (f.getFullYear()+"-"+mm+"-"+dd);
 			$("#verPrincipal").hide("slow");
 			$("#solicitudesPendientesLab2").hide("slow");
 			$("#aceptarSolLab").show("slow");
@@ -597,8 +603,14 @@ var inicioG = function()
 				success: function(response){
 					if(response.respuesta == true)
 					{
+						d 		 = (response.fecha).substring(0,2);
+       					m 		 = (response.fecha).substring(3,5);
+       					a 		 = (response.fecha).substring(6,10);
+       					fechaSol = (a+"-"+m+"-"+d);
 						$("#loaderImageG").hide();
-						$("#txtFechaAsignada").val(response.fecha);
+						$("#txtFechaAsignada").val(fechaSol);
+						$("#txtFechaAsignada").attr("max",response.fechaP);
+						$("#txtFechaAsignada").attr("min",fe);
 						$("#txtHoraAsignada").val(response.hora);
 						$("#txtClaveSol").val(claveSol);
 					}

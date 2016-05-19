@@ -3,8 +3,8 @@
 			<h5 class="centrado">Aceptar solicitud de laboratorio</h5>
 		<div class="row">
 			<div class="input-field col s3">
-				<input placeholder=" " id="txtFechaAsignada" type="text" class="validate">
-				<label for="txtFecha">Fecha solicitada</label>
+				<input placeholder=" " id="txtFechaAsignada" type="date" class="validate">
+				<label class="active" for="txtFecha"></label>
 			</div>
 			<div class="input-field col s3">
 				<input placeholder=" " id="txtHoraAsignada" type="text" class="validate">

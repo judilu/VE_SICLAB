@@ -217,6 +217,7 @@ function obtenerDatosSolLab()
 {
 	$respuesta 		= false;
 	session_start();
+		$fechaPer 		= fechaPeriodo();
 		$clave 			= GetSQLValueString($_POST["clave"],"int");
 		$fecha 			= "";
 		$hora 			= "";
@@ -232,7 +233,10 @@ function obtenerDatosSolLab()
 				$hora	= $row["horaSolicitud"];
 			}
 		}
-	$arrayJSON = array('respuesta' => $respuesta, 'fecha' => $fecha, 'hora' => $hora);
+	$arrayJSON = array('respuesta' => $respuesta, 
+						'fecha' => $fecha, 
+						'hora' => $hora,
+						'fechaP' => $fechaPer);
 		print json_encode($arrayJSON);
 }
 //consulta si la fecha de la solicitud de laboratorio esta disponible
