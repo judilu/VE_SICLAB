@@ -1,5 +1,4 @@
-
- var inicioG = function()
+var inicioG = function()
  {
  	$('ul.tabs').tabs();
 	$('select').material_select(); //agregado
@@ -68,6 +67,7 @@
 			$("#solicitudesPendientes").show("slow");
 			$("#solicitudesPendientes2").show("slow");
 			$("#tabSolPendientesAlumnos").html(" ");
+			$("#loaderImageG").show();
 			var parametros 	= "opc=prestamosPendientes1"+"&id="+Math.random();
 			$.ajax({
 				cache:false,
@@ -78,7 +78,7 @@
 				success: function(response){
 					if(response.respuesta == true)
 					{
-
+						$("#loaderImageG").hide();
 						$("#txtnombreAlumnoPrestamo").val(response.nombre);
 						$("#tabSolPendientesAlumnos").html(" ");
 						$("#tabSolPendientesAlumnos").append(response.renglones);
@@ -86,10 +86,13 @@
 					}
 					else
 					{
+						$("#loaderImageG").hide();
 						sweetAlert("No hay prestamos pendientes!", " ", "error");
 					}
 				},
-				error: function(xhr, ajaxOptions,x){
+				error: function(xhr, ajaxOptions,x)
+				{
+					$("#loaderImageG").hide();
 					alert("Error de conexión prestamos pendientes");
 				}
 			});
@@ -102,6 +105,7 @@
 		$("#solicitudesPendientes2").hide("slow");
 		$("#tbListaMaterialPrestamo").html("");
 		$("#bodyArtSolicitados").html("");
+		$("#loaderImageG").show();
 		var clavePrestamo= $(this).attr('name');
 		var parametros 	= "opc=atenderPrestamo1"
 						+"&clavePrestamo="+clavePrestamo
@@ -115,16 +119,20 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#loaderImageG").hide();
 					$("#txtclavePrestamo").val(response.clavePrestamo);
 					$("#txtcodigoBarrasPrestamo").val("");
 					$("#tbListaMaterialPrestamo").append(response.renglones);
 				}
 				else
 				{
+					$("#loaderImageG").hide();
 					sweetAlert("No se pudo atender la solicitud!", " ", "error");
 				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImageG").hide();
 				alert("Error de conexión atender prestamo material");
 			}
 		});
@@ -136,6 +144,7 @@
 	{
 		if(($("#txtcodigoBarrasPrestamo").val())!="")
 		{
+			$("#loaderImageG").show();
 			var identificadorArticulo 	= $("#txtcodigoBarrasPrestamo").val();
 			var clavePrestamo 			= $("#txtclavePrestamo").val();
 			var parametros 				= "opc=agregaArticulos1"
@@ -151,16 +160,20 @@
 				success: function(response){
 					if(response.respuesta == true)
 					{
+						$("#loaderImageG").hide();
 						$("#txtcodigoBarrasPrestamo").val("");
 						$("#tbArticulosSolicitados > tbody").append("<tr><td>"+response.idu+"</td><td>"+response.nomArt+"</td></tr>");
 						articulosPrestados.push(response.idu);
 					}
 					else
 					{
+						$("#loaderImageG").hide();
 						sweetAlert("Error", "El artículo no existe", "error");
 					}
 				},
-				error: function(xhr, ajaxOptions,x){
+				error: function(xhr, ajaxOptions,x)
+				{
+					$("#loaderImageG").hide();
 					sweetAlert("Error", "Error de conexión al buscar el articulo para agregarlo", "error");
 				}
 			});
@@ -168,6 +181,7 @@
 	}
 	var guardarPrestamoPendiente = function()
 	{
+		$("#loaderImageG").show();
 		var listaArt 		= articulosPrestados;
 		var clavePrestamo 	= $("#txtclavePrestamo").val();
 		var parametros 		= "opc=guardaPrestamoPendiente1"
@@ -183,15 +197,19 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#loaderImageG").hide();
 					swal("Prestamo finalizado con éxito!", "Da clic en el botón OK!", "success");
 					prestamosPendientes();
 				}
 				else
 				{
+					$("#loaderImageG").hide();
 					sweetAlert("Error", "No se pudo finalizar el prestamo!", "error");
 				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImageG").hide();
 				sweetAlert("Error", "Error de conexión guarda prestamo pendiente", "error");
 			}
 		});
@@ -203,6 +221,7 @@
 		{
 			var clavePrestamo 	= $("#btnEliminarPrestamo").attr('name');
 			$(this).closest("tr").remove();
+			$("#loaderImageG").show();
 			var parametros 		= "opc=eliminaPrestamoPendiente1"
 								+"&clavePrestamo="+clavePrestamo
 								+"&id="+Math.random();
@@ -215,26 +234,32 @@
 				success: function(response){
 					if(response.respuesta)
 					{
+						$("#loaderImageG").hide();
 						swal("Prestamo eliminado con éxito!", "Da clic en el botón OK!", "success");
 					}
 					else
 					{
+						$("#loaderImageG").hide();
 						sweetAlert("Error", "No se pudo eliminar el prestamo!", "error");
 					}
 				},
-				error: function(xhr, ajaxOptions,x){
+				error: function(xhr, ajaxOptions,x)
+				{
+					$("#loaderImageG").hide();
 					sweetAlert("Error", "Error de conexión elimina prestamo pendiente", "error");
 				}
 			});
 		}
 		else
 		{
+			$("#loaderImageG").hide();
 			$("#btnEliminarPrestamo").hide();
 			sweetAlert("Error", "No tienes permisos para eliminar el préstamo", "error");
 		}
 	}
 	var prestamosProceso = function()
 	{
+		$("#loaderImageG").show();
 		$("#tabSolProcesoAlumnos").html("");
 		$("#solicitudesPendientes").hide("slow");
 		$("#devolucionMaterial").hide("slow");
@@ -250,16 +275,20 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#loaderImageG").hide();
 					$("#tabSolProcesoAlumnos").html("");
 					$("#tabSolProcesoAlumnos").append(response.renglones);
 					$("#tabSolProcesoAlumnos #btnDevolucionMaterial").on("click",devolucionPrestamo);
 				}
 				else
 				{
+					$("#loaderImageG").hide();
 					sweetAlert("No hay prestamos en proceso!", " ", "error");
 				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImageG").hide();
 				alert("Error de conexión prestamos en proceso");
 			}
 		});
@@ -268,6 +297,7 @@
 	}
 	var listaSanciones = function()
 	{	
+		$("#loaderImageG").show();
 		$("#solicitudesPendientes").hide("slow");
 		$("#devolucionMaterial").hide("slow");
 		$("#solicitudesEnProceso").hide("slow");
@@ -282,16 +312,20 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#loaderImageG").hide();
 					$("#tabListaSanciones").html("");
 					$("#tabListaSanciones").append(response.renglones);
 					$("#tabListaSanciones #btnQuitaSancion").on("click",quitaSancion);
 				}
 				else
 				{
+					$("#loaderImageG").hide();
 					sweetAlert("No hay personas sancionadas!", " ", "error");
 				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImageG").hide();
 				alert("Error de conexión lista de sanciones");
 			}
 		});
@@ -308,6 +342,7 @@
 		var fe  = (dd+"/"+mm+"/"+f.getFullYear());	
 		if (tipoUsu == 1 || tipoUsu == 2 )
 		{
+			$("#loaderImageG").show();
 			$(this).closest("tr").remove();
 			var claveSancion = $(this).attr('name');
 			var parametros 	= "opc=quitaSanciones1"+
@@ -323,14 +358,18 @@
 				success: function(response){
 					if(response.respuesta == true)
 					{
+						$("#loaderImageG").hide();
 						swal("Sanción eliminada con éxito!", "Da clic en el botón OK!", "success");
 					}
 					else
 					{
+						$("#loaderImageG").hide();
 						sweetAlert("La sanción no se pudo eliminar!", " ", "error");
 					}
 				},
-				error: function(xhr, ajaxOptions,x){
+				error: function(xhr, ajaxOptions,x)
+				{
+					$("#loaderImageG").hide();
 					alert("Error de conexión quitar sanción");
 				}
 			});
@@ -351,7 +390,7 @@
 		$("#txtNombreAlumnoSancion").val($("#txtNombreAluDev").val());
 		$("#txtIdentificadorArtSancion").val(idu);
 		$("#txtFechaSancion").val(fe);
-
+		$("#loaderImageG").show();
 		var nc 				= $("#txtNumeroControlSancion").val();
 		var nom 			= $("#txtNombreAlumnoSancion").val();
 		var parametros 		= "opc=aplicaSancion1"
@@ -369,6 +408,7 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#loaderImageG").hide();
 					$("#cmbSanciones").html(" ");
 					$("#txtClavePrestamoSancion").val(response.prestamo);
 					for (var i = 0; i < response.contador; i++) 
@@ -378,8 +418,15 @@
 					$("#cmbSanciones").trigger('contentChanged');
 					$('select').material_select();
 				}
+				else
+				{
+					$("#loaderImageG").hide();
+					console.log("no se aplico la sanción");
+				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImageG").hide();
 				alert("Error de conexión aplica sanción");
 			}
 		});
@@ -399,7 +446,7 @@
 		var claveSancion 	= $("#cmbSanciones").val();
 		var fecha 			= $("#txtFechaSancion").val();
 		var comentario 		= $("#txtComentariosSanciones").val();
-
+		$("#loaderImageG").show();
 		var parametros 	= "opc=guardaSancion1"
 							+"&clavePrestamo="+clavePrestamo
 							+"&idu="+idu
@@ -417,21 +464,26 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#loaderImageG").hide();
 					swal("Sanción aplicada con éxito!", "Da clic en el botón OK!", "success");
 					listaSanciones();
 				}
 				else
 				{
+					$("#loaderImageG").hide();
 					sweetAlert("No se pudo aplicar la sanción!", " ", "error");
 				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImageG").hide();
 				alert("Error de conexión al guardar la sanción");
 			}
 		});
 	}
 	var devolucionPrestamo = function()
 	{
+		$("#loaderImageG").show();
 		$("#solicitudesEnProceso2").hide("slow");
 		$("#aplicaSanciones").hide("slow");
 		$("#tbListaArticulosDevolucion").html("");
@@ -448,6 +500,7 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#loaderImageG").hide();
 					$("#txtNControlAluDev").val(response.numeroControl);
 					$("#txtNombreAluDev").val(response.nombreAlumno);
 					$("#tbListaArticulosDevolucion").append(response.renglones);
@@ -455,10 +508,13 @@
 				}
 				else
 				{
+					$("#loaderImageG").hide();
 					sweetAlert("No existe el prestamo!", " ", "error");
 				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImageG").hide();
 				alert("Error de conexión devolución prestamo");
 			}
 		});
@@ -482,6 +538,7 @@
 		var identificadorArticulo 	= $(this).attr('name');
 		var clavePrestamo 			= $("#txtClavePrestamoDevolucion").val();
 		$(this).closest("tr").remove();
+		$("#loaderImageG").show();
 		var parametros 		= "opc=guardaDevolucion1"
 							+"&clavePrestamo="+clavePrestamo
 							+"&identificadorArticulo="+identificadorArticulo
@@ -497,14 +554,18 @@
 			success: function(response){
 				if(response.respuesta)
 				{
+					$("#loaderImageG").hide();
 					swal("Devolución guardada con éxito!", "Da clic en el botón OK!", "success");
 				}
 				else
 				{
+					$("#loaderImageG").hide();
 					sweetAlert("Error", "No se pudo guardar la devolución!", "error");
 				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImageG").hide();
 				sweetAlert("Error", "Error de conexión guarda prestamo devolución", "error");
 			}
 		});
@@ -522,6 +583,7 @@
 			$("#guardarSolicitud").show("slow");
 			$("#verMasSolicitud").show("slow");
 			$("#txtComentariosSol").val("");
+			$("#loaderImageG").show();
 			var claveSol= $(this).attr('name');
 			var parametros 	= "opc=obtenerDatosSolLab1"+
 								"&clave="+claveSol+
@@ -535,16 +597,20 @@
 				success: function(response){
 					if(response.respuesta == true)
 					{
+						$("#loaderImageG").hide();
 						$("#txtFechaAsignada").val(response.fecha);
 						$("#txtHoraAsignada").val(response.hora);
 						$("#txtClaveSol").val(claveSol);
 					}
 					else
 					{
+						$("#loaderImageG").hide();
 						sweetAlert("La solicitud no existe!", " ", "error");
 					}
 				},
-				error: function(xhr, ajaxOptions,x){
+				error: function(xhr, ajaxOptions,x)
+				{
+					$("#loaderImageG").hide();
 					alert("Error de conexión aceptar solicitud de laboratorio");
 				}
 			});
@@ -562,6 +628,7 @@
 			var comentarios  = $("#txtComentariosSol").val();
 			if (($("#txtClaveSol").val())!="" && ($("#txtComentariosSol").val())!="" && ($("#txtFechaAsignada").val())!="" && ($("#txtHoraAsignada").val())!="") 
 			{
+				$("#loaderImageG").show();
 				var parametros 	= "opc=guardaSolicitudLab1"
 								+"&clave="+claveSol
 								+"&fecha="+fechaAsignada
@@ -578,13 +645,19 @@
 					success: function(response){
 						if(response.respuesta == true)
 						{
+							$("#loaderImageG").hide();
 							sweetAlert("La solicitud fue calendarizada con éxito!", "Da click en el botón OK", "success");
 							sLaboratorioPendientes();
 						}
 						else
+						{
+							$("#loaderImageG").hide();
 							sweetAlert("La solicitud no se calendarizó elige otra fecha u hora!", " ", "error");
+						}
 					},
-					error: function(xhr, ajaxOptions,x){
+					error: function(xhr, ajaxOptions,x)
+					{
+						$("#loaderImageG").hide();
 						alert("Error de conexión guarda solicitud laboratorio");
 					}
 				});
@@ -597,6 +670,7 @@
 		{
 			var claveSol= $(this).attr('name');
 			$(this).closest('tr').remove();
+			$("#loaderImageG").show();
 			var parametros 	= "opc=eliminaSolicitudLab1"
 							+"&clave="+claveSol
 							+"&id="+Math.random();
@@ -609,12 +683,18 @@
 				success: function(response){
 					if(response.respuesta == true)
 					{
+						$("#loaderImageG").hide();
 						sweetAlert("La solicitud fue eliminada con éxito!", "Da click en el botón OK", "success");
 					}
 					else
+					{
+						$("#loaderImageG").hide();
 						sweetAlert("No se pudo eliminar la solicitud!", " ", "error");
+					}
 				},
-				error: function(xhr, ajaxOptions,x){
+				error: function(xhr, ajaxOptions,x)
+				{
+					$("#loaderImageG").hide();
 					alert("Error de conexión elimina solicitud de laboratorio");
 				}
 			});
@@ -642,6 +722,7 @@
 		//combo horaLab
 		$("#cmbHoraPractExterno").html(" ");
     	$("#cmbHoraPractExterno").html("<option value='' disabled selected>Seleccione la hora</option>");	
+		$("#loaderImageG").show();	
 			var parametros  = "opc=listaDependencias1"
 							+"&id="+Math.random();
 			$.ajax({
@@ -654,6 +735,7 @@
 				{
 					if(response.respuesta)
 					{
+						$("#loaderImageG").hide();
 						$("#cmbNombreDependencias").html(" ");
 						$("#cmbNombreDependencias").html("<option value='' disabled selected>Selecciona la dependencia</option>");
 						
@@ -666,10 +748,12 @@
 					}
 					else
 					{
+						$("#loaderImageG").hide();
 						sweetAlert("No existen dependencias", "", "error");
 					}
 					if(response.respuesta2)
 					{
+						$("#loaderImageG").hide();
 						$("#cmbPracticaExterno").html(" ");
 						$("#cmbPracticaExterno").html("<option value='' disabled selected>Selecciona la práctica</option>");
 
@@ -682,11 +766,13 @@
 					}
 					else
 					{
+						$("#loaderImageG").hide();
 						sweetAlert("No existen prácticas", "", "error");
 					}
 				},
 				error: function(xhr, ajaxOptions,x)
 				{
+					$("#loaderImageG").hide();
 					console.log("Error de conexión alta articulos");
 				}
 			});
@@ -751,6 +837,7 @@
 	}
 	var construirTablaExt = function()
 	{
+		$("#loaderImageG").show();
 		var parametros = "opc=construirTbArtExt1"+
     	"&articulosAgregadosExt="+articulosAgregadosExt+
     	"&articulosExt="+articulosExt+
@@ -765,6 +852,7 @@
     		success: function(response){
     			if(response.respuesta == true)
     			{
+    				$("#loaderImageG").hide();
     				$("#bodyArtExt").html("");
     				$("#bodyArtExt").append(response.renglones);
     				llenarcomboEleArtExt();
@@ -774,6 +862,7 @@
 				}//termina if
 				else
 				{
+					$("#loaderImageG").hide();
 					console.log("no elimino");
 					$("#bodyArtExt").html("");
 					llenarcomboEleArtExt();
@@ -781,12 +870,14 @@
 			},
 			error: function(xhr, ajaxOptions,x)
 			{
+				$("#loaderImageG").hide();
 				console.log("Error de conexión construir tabla");	
 			}
 		});
 	}
 	var llenarcomboEleArtExt = function()
 	{
+		$("#loaderImageG").show();
 		var comboArt 	= Array();
     	var comboclaArt = Array();
     	var c 			= articulosAgregadosExt.length;
@@ -806,6 +897,7 @@
     		{
     			if(response.respuesta == true)
     			{
+    				$("#loaderImageG").hide();
     				comboclaArt = response.comboCveArt;
     				comboArt 	= response.comboNomArt;
 					//eliminar elementos repetidos
@@ -829,6 +921,7 @@
 				}
 				else
 				{
+					$("#loaderImageG").hide();
 					$("#cmbMaterialCatExt").html(" ");
 					$("#cmbMaterialCatExt").html("<option value='' disabled selected>Seleccione el material</option>");
 					$('select').material_select();
@@ -837,6 +930,7 @@
 			},
 			error: function(xhr, ajaxOptions,x)
 			{
+				$("#loaderImageG").hide();
 				console.log("Error de conexión combomat");
 				console.log(xhr);	
 			}
@@ -844,6 +938,7 @@
 	}
 	var comboLaboratoriosExt = function()
 	{
+		$("#loaderImageG").show();
 		practica  = $("#cmbPracticaExterno").val();
 		var parametros  = "opc=llenarcomboLabExt1"
 							+"&practica="+practica
@@ -858,6 +953,7 @@
 				{
 					if(response.respuesta)
 					{
+						$("#loaderImageG").hide();
 						$("#cmbLaboratorioExterno").html(" ");
 						$("#cmbLaboratorioExterno").html("<option value='' disabled selected>Selecciona el laboratorio</option>");
 						for (var i = 0; i < response.contador; i++) 
@@ -869,6 +965,7 @@
 					}
 					else
 					{
+						$("#loaderImageG").hide();
 						$("#cmbLaboratorioExterno").html(" ");
 						$("#cmbLaboratorioExterno").html("<option value='' disabled selected>Selecciona el laboratorio</option>");
 						sweetAlert("No existen laboratorios", "la practica seleccionada no tiene asignado ningun laboratorio", "error");
@@ -876,12 +973,14 @@
 				},
 				error: function(xhr, ajaxOptions,x)
 				{
+					$("#loaderImageG").hide();
 					console.log("Error de conexión alta articulos");
 				}
 			});
 	}
 	var comboHoraExt = function()
 	{
+		$("#loaderImageG").show();
 		var laboratorio   = $("#cmbLaboratorioExterno").val();
     	var parametros 	  = "opc=llenarcomboHrLabExt1"
     						+"&laboratorio="+laboratorio
@@ -899,6 +998,7 @@
     		success: function(response){
     			if(response.respuesta == true)
     			{
+    				$("#loaderImageG").hide();
     				$("#cmbHoraPractExterno").html(" ");
     				$("#cmbHoraPractExterno").html("<option value='' disabled selected>Seleccione la hora</option>");	
     				(((response.horaApertura).length)<4) ? (hi=(response.horaApertura).substring(0,1)) : (hi=(response.horaApertura).substring(0,2));
@@ -923,13 +1023,16 @@
 				}
 				else
 				{
+					$("#loaderImageG").hide();
 					$("#cmbHoraPractExterno").html(" ");
 					$("#cmbHoraPractExterno").html("<option value='' disabled selected>Seleccione la hora</option>");
 					$('select').material_select();
 					sweetAlert("No existen horas", "Es posible que no existan horas asociados a dicha práctica!", "error");
 				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImageG").hide();
 				console.log("Error de conexión comboPrac");	
 			}
 		});
@@ -946,6 +1049,7 @@
 			var dependencia 	= $("#cmbNombreDependencias").val();
 			var otra 			= 0;
 		}
+		$("#loaderImageG").show();
 		var f  = new Date();
 		var dd = f.getDate();
 		var mm = (f.getMonth())+1;
@@ -994,6 +1098,7 @@
 				success: function(response){
 					if(response.respuesta == true)
 					{
+						$("#loaderImageG").hide();
 						if (response.otra == 1) 
 						{
 							swal("La solicitud fue enviada con éxito! El numero de control de la dependencia es: "+response.dependenciaN, "Da clic en el botón OK!", "success");
@@ -1008,10 +1113,13 @@
 					}
 					else
 					{
+						$("#loaderImageG").hide();
 						sweetAlert("No se envió la solicitud!", " ", "error");
 					}
 				},
-				error: function(xhr, ajaxOptions,x){
+				error: function(xhr, ajaxOptions,x)
+				{
+					$("#loaderImageG").hide();
 					alert("Error de conexión solicitudes pendientes de laboratorio");
 				}
 			});
@@ -1049,6 +1157,7 @@
 			$("#aceptarSolLab").hide("slow");
 			$("#guardarSolicitud").hide("slow");
 			$("#tbPendientesLab").html("");
+			$("#loaderImageG").show();
 			var parametros 	= "opc=pendientesLab1"
 							+"&id="+Math.random();
 			$.ajax({
@@ -1060,6 +1169,7 @@
 				success: function(response){
 					if(response.respuesta == true)
 					{
+						$("#loaderImageG").hide();
 						$("#tbPendientesLab").append(response.renglones);
 						$("#tbPendientesLab #btnCalendarizado").on("click",aceptarSolicitudLab);
 						$("#tbPendientesLab #btnVerMas").on("click",verMas);
@@ -1067,10 +1177,13 @@
 					}
 					else
 					{
+						$("#loaderImageG").hide();
 						sweetAlert("No hay solicitudes de laboratorio pendientes!", " ", "error");
 					}
 				},
-				error: function(xhr, ajaxOptions,x){
+				error: function(xhr, ajaxOptions,x)
+				{
+					$("#loaderImageG").hide();
 					alert("Error de conexión solicitudes pendientes de laboratorio");
 				}
 			});
@@ -1080,6 +1193,7 @@
 	}
 	var sLaboratorioAceptadas = function()
 	{
+		$("#loaderImageG").show();
 		$("#sPendientesLab").hide("slow");
 		$("#sNuevaLabExternos").hide("slow");
 		$("#verMasSolicitud2").hide("slow");
@@ -1096,13 +1210,19 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#loaderImageG").hide();
 					$("#tbAceptadasLab").append(response.renglones);
 					$("#tbAceptadasLab a").on("click",verMas2);
 				}
 				else
+				{
+					$("#loaderImageG").hide();
 					sweetAlert("No hay solicitudes de laboratorio aceptadas!", " ", "error");
+				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImageG").hide();
 				alert("Error de conexión solicitudes aceptadas de laboratorio");
 			}
 		});
@@ -1111,6 +1231,7 @@
 	}
 	var verMas = function()
 	{		
+		$("#loaderImageG").show();
 		$("#solicitudesPendientesLab2").hide("slow");
 		//contenido dinamico
 		var clave = $(this).attr("name");
@@ -1127,6 +1248,7 @@
 			success: function(response){
 				if(response.respuesta)
 				{
+					$("#loaderImageG").hide();
 					$("#txtFechaVM1").val(response.fecha);
 					$("#txtHoraVM1").val(response.hora);
 					$("#txtMaestroVM1").val(response.maestro);
@@ -1135,11 +1257,13 @@
 				}
 				else
 				{
+					$("#loaderImageG").hide();
 					sweetAlert("No existe esa solicitud..!", "", "error");
 				}
 			},
 			error: function(xhr, ajaxOptions,x)
 			{
+				$("#loaderImageG").hide();
 				alert("Error de conexión realizadas");
 			}
 		});
@@ -1149,6 +1273,7 @@
 	var verMas2 = function()
 	{		
 		$("#solicitudesAceptadasLab2").hide("slow");
+		$("#loaderImageG").show();
 		//contenido dinamico
 		var claveCal = $(this).attr("name");
 		$("#tbMaterialesAceptadasLab").html("");
@@ -1164,6 +1289,7 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#loaderImageG").hide();
 					$("#txtFecha2").val(response.fechaAsignada);
 					$("#txtHora2").val(response.horaAsignada);
 					$("#txtMaestro2").val(response.maestro);
@@ -1172,11 +1298,13 @@
 				}
 				else
 				{
+					$("#loaderImageG").hide();
 					sweetAlert("No existe esa solicitud..!", "", "error");
 				}
 			},
 			error: function(xhr, ajaxOptions,x)
 			{
+				$("#loaderImageG").hide();
 				alert("Error de conexión realizadas");
 			}
 		});	
@@ -1187,6 +1315,7 @@
 	//Busca un articulo en la lista de artículos del laboratorio
 	var buscaArtInventario = function()
 	{
+		$("#loaderImageG").show();
 		var articulo = $("#txtArticuloLista").val();
 		var parametros 	= "opc=buscaArtLista1"
 						+"&articulo="+articulo
@@ -1197,16 +1326,23 @@
 			dataType: "json",
 			url:"../data/genericos.php",
 			data: parametros,
-			success: function(response){
+			success: function(response)
+			{
 				if(response.respuesta == true)
 				{
+					$("#loaderImageG").hide();
 					$("#tbInventario").html("");
 					$("#tbInventario").append(response.renglones);
 				}
 				else
+				{
+					$("#loaderImageG").hide();
 					sweetAlert("No existe ese artículo..!", " ", "error");
+				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImageG").hide();
 				alert("Error de conexión lista de artículos");
 			}
 		});
@@ -1214,6 +1350,7 @@
 	//Muestra la lista de artículos pertenecientes al laboratorio del usuario
 	var listaArticulos = function()
 	{
+		$("#loaderImageG").show();
 		$("#txtArticuloLista").val("");
 		$("#altaArticulos").hide("slow");
 		$("#bajaArticulos").hide("slow");
@@ -1232,19 +1369,24 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#loaderImageG").hide();
 					$("#tbInventario").html("");
 					$("#tbInventario").append(response.renglones);
 				}
 				else if (tipoUsu == 5) 
 				{
+					$("#loaderImageG").hide();
 					sweetAlert("No hay artículos pertenecientes al departamento..!", " ", "error");
 				}
 				else
 				{
+					$("#loaderImageG").hide();
 					sweetAlert("No hay artículos pertenecientes al laboratorio..!", " ", "error");
 				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImageG").hide();
 				alert("Error de conexión lista de artículos");
 			}
 		});
@@ -1256,6 +1398,7 @@
 	{
 		if (tipoUsu == 1 || tipoUsu == 2) 
 		{
+			$("#loaderImageG").show();
 			$("#pantallaInventario").hide("slow");
 			$("#bajaArticulos").hide("slow");
 			$("#menuMtto").hide("slow");
@@ -1275,6 +1418,7 @@
 				{
 					if(response.respuesta)
 					{
+						$("#loaderImageG").hide();
 						$("#cmbNombreArtAlta").html(" ");
 						for (var i = 0; i < response.contador; i++) 
 						{
@@ -1285,11 +1429,13 @@
 					}
 					else
 					{
+						$("#loaderImageG").hide();
 						sweetAlert("No hay articulos disponibles", "", "error");
 					}
 				},
 				error: function(xhr, ajaxOptions,x)
 				{
+					$("#loaderImageG").hide();
 					console.log("Error de conexión alta articulos");
 				}
 			});
@@ -1314,6 +1460,7 @@
 					var claveKit 		= $("#txtClaveKitAlta").val();
 					var fechaCaducidad	= $("#txtFechaCaducidadAlta").val();
 				}
+	       		$("#loaderImageG").show();
 	       		var imagen						= " ";
 	       		var modelo 						= $("#txtModeloArtAlta").val();
 	       		var numeroSerie 				= $("#txtNumSerieAlta").val();
@@ -1349,17 +1496,20 @@
 					{
 						if(response.respuesta == true)
 						{
+							$("#loaderImageG").hide();
 							swal("El articulo fue dado de alta con éxito! El identificador del artículo es: "+response.idu, "Da clic en el botón OK!", "success");
 							$("input").val("");
 							$("textarea").val("");
 						}
 						else
 						{
+							$("#loaderImageG").hide();
 							sweetAlert("Error", "No se pudo insertar el articulo!", "error");
 						}
 					},
 					error: function(xhr, ajaxOptions,x)
 					{
+						$("#loaderImageG").hide();
 						sweetAlert("Error", "Error de conexión alta inventario", "error");
 					}
 				});
@@ -1388,6 +1538,7 @@
 		{
 			if($("#cmbTipoBaja").val()!= null && $("#txtMotivoDeBaja").val()!="" && $("#txtModeloArtBaja").val()!="")
 			{
+				$("#loaderImageG").show();
 				var identificadorArticulo	= $("#txtCodigoBarrasBaja").val();//obtener el articulo a dar de baja
 				var estatus 				= $("#cmbTipoBaja").val();
 				var observaciones 			= $("#txtMotivoDeBaja").val()
@@ -1405,23 +1556,27 @@
 					success: function(response){
 						if(response.respuesta == true)
 						{
+							$("#loaderImageG").hide();
 							swal("El articulo fue dado de baja con éxito!", "Da clic en el botón OK!", "success");
 							$("input").val("");
 							$("textarea").val("");
 						}
 						else
 						{
+							$("#loaderImageG").hide();
 							sweetAlert("Error", "No se pudo dar de baja el articulo!", "error");
 						}
 					},
 					error: function(xhr, ajaxOptions,x)
 					{
+						$("#loaderImageG").hide();
 						sweetAlert("Error", "Error de conexión baja de artículos", "error");
 					}
 				});
 			}
 			else
 			{
+				$("#loaderImageG").hide();
 				sweetAlert("Error", "Por favor llena todos los campos!", "error");
 			}
 		}
@@ -1432,6 +1587,7 @@
 	{
 		if(($("#txtCodigoBarrasBaja").val())!="")
 		{
+			$("#loaderImageG").show();
 			var identificadorArticulo= $("#txtCodigoBarrasBaja").val();
 			var parametros  = "opc=buscaArticulos1"
 							+"&identificadorArticulo="+identificadorArticulo
@@ -1445,6 +1601,7 @@
 				success: function(response){
 					if(response.respuesta == true)
 					{
+						$("#loaderImageG").hide();
 						$("#txtModeloArtBaja").val(response.modelo);
 						$("#txtNumSerieBaja").val(response.numeroSerie);
 						$("#txtNombreArtBaja").val(response.nombreArticulo);
@@ -1457,10 +1614,13 @@
 					}
 					else
 					{
+						$("#loaderImageG").hide();
 						sweetAlert("Error", "El artículo no existe", "error");
 					}
 				},
-				error: function(xhr, ajaxOptions,x){
+				error: function(xhr, ajaxOptions,x)
+				{
+					$("#loaderImageG").hide();
 					sweetAlert("Error", "Error de conexión al buscar el articulo para darlo de baja", "error");
 				}
 			});
@@ -1501,6 +1661,7 @@
 		if(tipoUsu == 1 || tipoUsu ==2)
 		{
 			$("#sEnvioMtto").hide("slow");
+			$("#loaderImageG").show();
 			var parametros 	= "opc=listaMantenimiento1"+
 								"&id="+Math.random();
 			$.ajax({
@@ -1509,19 +1670,24 @@
 				dataType: "json",
 				url:"../data/genericos.php",
 				data: parametros,
-				success: function(response){
+				success: function(response)
+				{
 					if(response.respuesta == true)
 					{
+						$("#loaderImageG").hide();
 						$("#tbArticulosMtto").html("");
 						$("#tbArticulosMtto").append(response.renglones);
 						$("#tbArticulosMtto #btnRegresaDelMtto").on("click",regresaMtto);
 					}
 					else
 					{
+						$("#loaderImageG").hide();
 						sweetAlert("No hay articulos en mantenimiento!", " ", "error");
 					}
 				},
-				error: function(xhr, ajaxOptions,x){
+				error: function(xhr, ajaxOptions,x)
+				{
+					$("#loaderImageG").hide();
 					alert("Error de conexión lista de articulos en mantenimiento");
 				}
 			});
@@ -1535,6 +1701,7 @@
 	{
 		if(tipoUsu == 1 || tipoUsu ==2)
 		{
+			$("#loaderImageG").show();
 			var iduArt = $(this).attr('name');
 			$(this).closest('tr').remove();
 			//fecha del sistema
@@ -1565,14 +1732,18 @@
 				success: function(response){
 					if(response.respuesta == true)
 					{
+						$("#loaderImageG").hide();
 						swal("El artículo se regresó de mantenimiento con éxito!", "Da clic en el botón OK!", "success");
 					}
 					else
 					{
+						$("#loaderImageG").hide();
 						sweetAlert("Error", "No se pudo registrar el regreso de mantenimiento!", "error");
 					}
 				},
-				error: function(xhr, ajaxOptions,x){
+				error: function(xhr, ajaxOptions,x)
+				{
+					$("#loaderImageG").hide();
 					sweetAlert("Error", "Error de conexión regreso de mantenimiento", "error");
 				}
 			});
@@ -1583,6 +1754,7 @@
 	{
 		if(($("#txtCodigoBarrasMtto").val())!="")
 		{
+			$("#loaderImageG").show();
 			var identificadorArticulo= $("#txtCodigoBarrasMtto").val();
 			var parametros= "opc=buscaArticulos2"
 			+"&identificadorArticulo="+identificadorArticulo
@@ -1596,6 +1768,7 @@
 				success: function(response){
 					if(response.respuesta == true)
 					{
+						$("#loaderImageG").hide();
 						$("#txtModeloArtMtto").val(response.modelo);
 						$("#txtNumSerieMtto").val(response.numeroSerie);
 						$("#txtNombreArtMtto").val(response.nombreArticulo);
@@ -1604,10 +1777,13 @@
 					}
 					else
 					{
+						$("#loaderImageG").hide();
 						sweetAlert("Error", "El artículo no existe", "error");
 					}
 				},
-				error: function(xhr, ajaxOptions,x){
+				error: function(xhr, ajaxOptions,x)
+				{
+					$("#loaderImageG").hide();
 					sweetAlert("Error", "Error de conexión al buscar el artículo para registrar el mantenimiento", "error");
 				}
 			});
@@ -1621,6 +1797,7 @@
 			if(($("#txtCodigoBarrasMtto").val())!="" && ($("#txtLugarReparacionMtto").val())!=""
 				&& ($("#txtMotivoMtto").val())!="")
 			{
+				$("#loaderImageG").show();
 				var f  = new Date();
 				var dd = f.getDate();
 				var mm = (f.getMonth())+1;
@@ -1650,22 +1827,27 @@
 					success: function(response){
 						if(response.respuesta == true)
 						{
+							$("#loaderImageG").hide();
 							swal("El envío a mantenimiento quedó registrado!", "Da clic en el botón OK!", "success");
 							$("input").val("");
 							$("textarea").val("");
 						}
 						else
 						{
+							$("#loaderImageG").hide();
 							sweetAlert("Error", "No se pudo registrar el envío a mentenimiento!", "error");
 						}
 					},
-					error: function(xhr, ajaxOptions,x){
+					error: function(xhr, ajaxOptions,x)
+					{
+						$("#loaderImageG").hide();
 						sweetAlert("Error", "Error de conexión al registrar el mantenimiento del artículo", "error");
 					}
 				});
 			}
 			else
 			{
+				$("#loaderImageG").hide();
 				sweetAlert("Error", "Llene todos los campos", "error");
 			}
 		}
@@ -1676,6 +1858,7 @@
 	{
 		if(tipoUsu == 1 || tipoUsu == 2 || tipoUsu == 5)
 		{
+			$("#loaderImageG").show();
 			$("#altaArticulos").hide("slow");
 			$("#bajaArticulos").hide("slow");
 			$("#menuMtto").hide("slow");
@@ -1692,16 +1875,20 @@
 				success: function(response){
 					if(response.respuesta == true)
 					{
+						$("#loaderImageG").hide();
 						$("#tbPeticionArticulos").html("");
 						$("#tbPeticionArticulos").append(response.renglones);
 						$("#tbPeticionArticulos #btnAceptaPeticionArt").on("click",aceptarPeticionArt);
 					}
 					else
 					{
+						$("#loaderImageG").hide();
 						sweetAlert("No hay pedidos de artículos..!", " ", "error");
 					}
 				},
-				error: function(xhr, ajaxOptions,x){
+				error: function(xhr, ajaxOptions,x)
+				{
+					$("#loaderImageG").hide();
 					alert("Error de conexión peticiones pendientes");
 				}
 			});
@@ -1712,6 +1899,7 @@
 	{
 		if(tipoUsu == 5)
 		{
+			$("#loaderImageG").show();
 			var clavePedido = $(this).attr('name');
 			$(this).closest('tr').remove();
 			var parametros  = "opc=aceptaPeticionArticulos1"
@@ -1726,14 +1914,18 @@
 				success: function(response){
 					if(response.respuesta == true)
 					{
+						$("#loaderImageG").hide();
 						swal("Solicitud aceptada!", "Da clic en el botón OK!", "success");
 					}
 					else
 					{
+						$("#loaderImageG").hide();
 						sweetAlert("Error", "No se pudo aceptar la solicitud!", "error");
 					}
 				},
-				error: function(xhr, ajaxOptions,x){
+				error: function(xhr, ajaxOptions,x)
+				{
+					$("#loaderImageG").hide();
 					sweetAlert("Error", "Error de conexión aceptar petición artículo", "error");
 				}
 			});
@@ -1743,6 +1935,7 @@
 	{
 		if(tipoUsu == 1 || tipoUsu == 2)
 		{
+			$("#loaderImageG").show();
 			$("#altaArticulos").hide("slow");
 			$("#bajaArticulos").hide("slow");
 			$("#menuMtto").hide("slow");
@@ -1759,6 +1952,7 @@
 				success: function(response){
 					if(response.respuesta == true)
 					{
+						$("#loaderImageG").hide();
 						for (var i = 0; i < response.contador; i++) 
 						{
 							$("#cmbNombreArtPeticiones").append($("<option></option>").attr("value",response.nombreArt[i]).text(response.nombreArt[i]));
@@ -1768,10 +1962,13 @@
 					}
 					else
 					{
+						$("#loaderImageG").hide();
 						sweetAlert("Error", "No se pudo enviar la solicitud!", "error");
 					}
 				},
-				error: function(xhr, ajaxOptions,x){
+				error: function(xhr, ajaxOptions,x)
+				{
+					$("#loaderImageG").hide();
 					sweetAlert("Error", "Error de conexión enviar petición artículo", "error");
 				}
 			});
@@ -1806,6 +2003,7 @@
 			{
 				nombreArticulo = $("#cmbNombreArtPeticiones").val();
 			}
+			$("#loaderImageG").show();
 			var f  = new Date();
 			var dd = f.getDate();
 			var mm = (f.getMonth())+1;
@@ -1835,16 +2033,20 @@
 				success: function(response){
 					if(response.respuesta == true)
 					{
+						$("#loaderImageG").hide();
 						swal("La solicitud fue enviada con éxito!", "Da clic en el botón OK!", "success");
 						$("input").val("");
 						$("textarea").val("");
 					}
 					else
 					{
+						$("#loaderImageG").hide();
 						sweetAlert("Error", "No se pudo enviar la solicitud!", "error");
 					}
 				},
-				error: function(xhr, ajaxOptions,x){
+				error: function(xhr, ajaxOptions,x)
+				{
+					$("#loaderImageG").hide();
 					sweetAlert("Error", "Error de conexión enviar petición artículo", "error");
 				}
 			});
@@ -1996,6 +2198,7 @@
 	}
 	var alumnosActuales = function()	
 	{
+		$("#loaderImageG").show();
 		var parametros = "opc=alumnosActuales1"+
 							"&id="+Math.random();
 		$.ajax({
@@ -2007,18 +2210,21 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#loaderImageG").hide();
 					$("#alumnosActuales").html("");
 					$("#alumnosActuales").append(response.renglones);
 				}
 			},
-			error: function(xhr, ajaxOptions,x){
-				
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImageG").hide();		
 				console.log("Error de conexión");
 			}
 		});
 	}
 	var articuloMasPrestado = function()	
 	{
+		$("#loaderImageG").show();
 		var parametros = "opc=articuloMasPrestado1"+
 		"&id="+Math.random();
 		$.ajax({
@@ -2030,18 +2236,21 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#loaderImageG").hide();
 					$("#masSolicitado").html(" ");
 					$("#masSolicitado").append(response.renglones);
 				}
 			},
-			error: function(xhr, ajaxOptions,x){
-				
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImageG").hide();	
 				console.log("Error de conexión");
 			}
 		});
 	}
 	var proximosApartados = function()	
 	{
+		$("#loaderImageG").show();
 		var parametros = "opc=proximosApartados1"+
 		"&id="+Math.random();
 		$.ajax({
@@ -2050,21 +2259,25 @@
 			dataType: "json",
 			url:"../data/genericos.php",
 			data: parametros,
-			success: function(response){
+			success: function(response)
+			{
 				if(response.respuesta == true)
 				{
+					$("#loaderImageG").hide();
 					$("#tbProximosApartados").html(" ");
 					$("#tbProximosApartados").append(response.renglones);
 				}
 			},
-			error: function(xhr, ajaxOptions,x){
-				
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImageG").hide();
 				console.log("Error de conexión");
 			}
 		});
 	}
 	var resumenInventarioActual = function()
 	{
+		$("#loaderImageG").show();
 		var parametros = "opc=resumenInventarioActual1"+
 		"&id="+Math.random();
 		$.ajax({
@@ -2073,23 +2286,31 @@
 			dataType: "json",
 			url:"../data/genericos.php",
 			data: parametros,
-			success: function(response){
+			success: function(response)
+			{
 				if(response.respuesta == true)
 				{
+					$("#loaderImageG").hide();
 					$("#btnImprimirInventario").show();
 					$("#tbInventarioActual").html(" ");
 					$("#tbInventarioActual").append(response.renglones);
 				}
 				else
+				{
+					$("#loaderImageG").hide();
 					sweetAlert("Sin inventario", "", "error");
+				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImageG").hide();
 				console.log("Error de conexión sol aceptadas");
 			}
 		});
 	}
 	var articulosDeBaja = function()
 	{
+		$("#loaderImageG").show();
 		var parametros = "opc=enBaja1"+
 						"&id="+Math.random();
 		$.ajax({
@@ -2101,20 +2322,27 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#loaderImageG").hide();
 					$("#btnImprimirBajoInventario").show();
 					$("#tbBajoInventario").html(" ");
 					$("#tbBajoInventario").append(response.renglones);
 				}
 				else
+				{
+					$("#loaderImageG").hide();
 					sweetAlert("Sin articulos dados de baja", "No hay articulos en reparación actualmente.", "error");
+				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImageG").hide();
 				console.log("Error de conexión");
 			}
 		});
 	}
 	var articulosEnReparacion = function()
 	{
+		$("#loaderImageG").show();
 		var parametros = "opc=enReparacion1"+
 		"&id="+Math.random();
 		$.ajax({
@@ -2126,20 +2354,27 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#loaderImageG").hide();
 					$("#btnImprimirEnReparacion").show();
 					$("#tbEnReparacion").html(" ");
 					$("#tbEnReparacion").append(response.renglones);
 				}
 				else
+				{
+					$("#loaderImageG").hide();
 					sweetAlert("Sin articulos en reparación", "No hay articulos en reparación actualmente.", "error");
+				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImageG").hide();
 				console.log("Error de conexión");
 			}
 		});
 	}
 	var articulosEnPrestamo= function()
 	{
+		$("#loaderImageG").show();
 		var parametros = "opc=enPrestamo1"+
 		"&id="+Math.random();
 		$.ajax({
@@ -2151,20 +2386,27 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#loaderImageG").hide();
 					$("#btnImprimirEnPrestamo").show();
 					$("#tbArticulosEnPrestamo").html(" ");
 					$("#tbArticulosEnPrestamo").append(response.renglones);
 				}
 				else
+				{
+					$("#loaderImageG").hide();
 					sweetAlert("Sin articulos en préstamo", "No hay articulos en préstamo actualmente.", "error");
+				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImageG").hide();
 				console.log("Error de conexión");
 			}
 		});
 	}
 	var articulosPedidos= function()
 	{
+		$("#loaderImageG").show();
 		var parametros = "opc=enPedido1"+
 		"&id="+Math.random();
 		$.ajax({
@@ -2176,20 +2418,27 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#loaderImageG").hide();
 					$("#btnImprimirPedidoMaterial").show();
 					$("#tbPedidoMaterialReporte").html(" ");
 					$("#tbPedidoMaterialReporte").append(response.renglones);
 				}
 				else
+				{
+					$("#loaderImageG").hide();
 					sweetAlert("Sin articulos pedidos", "No hay articulos en con solicitud de peticion sin aceptar.", "error");
+				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImageG").hide();
 				console.log("Error de conexión");
 			}
 		});
 	}
 	var articulosSinExistencia = function()
 	{
+		$("#loaderImageG").hide();
 		var parametros = "opc=articulosSinExistencia1"+
 		"&id="+Math.random();
 		$.ajax({
@@ -2201,11 +2450,14 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#loaderImageG").hide();
 					$("#tbMaterialesSinStock").html(" ");
 					$("#tbMaterialesSinStock").append(response.renglones);
 				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImageG").hide();
 				console.log("Error de conexión");
 			}
 		});
@@ -2213,6 +2465,7 @@
 
 	var noRealizadas = function()
 	{
+		$("#loaderImageG").show();
 		var parametros = "opc=practicasNoRealizadas1"+
 		"&id="+Math.random();
 		$.ajax({
@@ -2221,23 +2474,30 @@
 			dataType: "json",
 			url:"../data/genericos.php",
 			data: parametros,
-			success: function(response){
+			success: function(response)
+			{
 				if(response.respuesta == true)
 				{
+					$("#loaderImageG").hide();
 					$("#btnImpPracticasNoRealizadas").show();
 					$("#tbpracticasNoRealizadas").html(" ");
 					$("#tbpracticasNoRealizadas").append(response.renglones);
 				}
 				else
+				{
 					sweetAlert("Sin prácticas", "No hay prácticas pendientes actualmente.", "error");
+				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImageG").hide();
 				console.log("Error de conexión");
 			}
 		});
 	}
 	var Realizadas = function()
 	{
+		$("#loaderImageG").show();
 		var parametros = "opc=practicasRealizadas1"+
 		"&id="+Math.random();
 		$.ajax({
@@ -2246,23 +2506,31 @@
 			dataType: "json",
 			url:"../data/genericos.php",
 			data: parametros,
-			success: function(response){
+			success: function(response)
+			{
 				if(response.respuesta == true)
 				{
+					$("#loaderImageG").hide();
 					$("#btnImpPracticasRealizadas").show();
 					$("#tbpracticasRealizadas").html(" ");
 					$("#tbpracticasRealizadas").append(response.renglones);
 				}
 				else
+				{
+					$("#loaderImageG").hide();
 					sweetAlert("Sin prácticas", "No hay prácticas realizadas actualmente.", "error");
+				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImageG").hide();
 				console.log("Error de conexión");
 			}
 		});
 	}
 	var Canceladas = function()
 	{
+		$("#loaderImageG").show();
 		var parametros = "opc=practicasCanceladas1"+
 		"&id="+Math.random();
 		$.ajax({
@@ -2274,14 +2542,20 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#loaderImageG").hide();
 					$("#btnImpPracticasCanceladas").show();
 					$("#tbpracticasCanceladas").html(" ");
 					$("#tbpracticasCanceladas").append(response.renglones);
 				}
 				else
+				{
+					$("#loaderImageG").hide();
 					sweetAlert("Sin prácticas", "No hay prácticas canceladas actualmente.", "error");
+				}
 			},
-			error: function(xhr, ajaxOptions,x){
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImageG").hide();
 				console.log("Error de conexión");
 			}
 		});
@@ -2289,6 +2563,7 @@
 	//AGREGUE
 	var practicasNR = function()	
 	{
+		$("#loaderImageG").show();
 		var parametros = "opc=practicasNR1"+
 		"&id="+Math.random();
 		$.ajax({
@@ -2300,12 +2575,14 @@
 			success: function(response){
 				if(response.respuesta == true)
 				{
+					$("#loaderImageG").hide();
 					$("#practicasNR").html(" ");
 					$("#practicasNR").append(response.renglones);
 				}
 			},
-			error: function(xhr, ajaxOptions,x){
-				
+			error: function(xhr, ajaxOptions,x)
+			{
+				$("#loaderImageG").hide();	
 				console.log(xhr);
 			}
 		});

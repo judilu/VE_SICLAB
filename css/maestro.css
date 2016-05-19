@@ -1,4 +1,4 @@
-#loaderImage
+#loaderImage #loaderImageG
 {
 	display: none;
 	text-align: center;
@@ -8,10 +8,6 @@
 	/*z-index: 3;*/
 	/*position: absolute;*/
 	/*margin-left: 33%;*/
-}
-#loaderFondo:hover,#loaderImage:hover
-{
-	cursor: wait;
 }
 .bajo
 {

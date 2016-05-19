@@ -484,7 +484,7 @@ function listaArticulos()
 			$consulta	= sprintf("select B.claveArticulo,B.nombreArticulo,COUNT(A.claveArticulo) as cantidad 
 									FROM lbarticulos as A 
 									INNER JOIN lbarticuloscat as B ON A.claveArticulo=B.claveArticulo 
-									INNER JOIN lbasignaarticulos C ON A.identificadorArticulo=C.indentificadorArticulo 
+									INNER JOIN lbasignaarticulos C ON A.identificadorArticulo=C.identificadorArticulo 
 									WHERE C.claveLaboratorio =%s and A.estatus='V' GROUP BY A.claveArticulo",$claveLab);
 			$res 		= mysql_query($consulta);
 		}
@@ -866,7 +866,7 @@ function prestamosPendientes()
 		$renglones	= "";
 		$nombreAlu 	= "";
 		$tipoUsuario= tipoUsuario($responsable);
-		$claveLab 	= obtieneCveLab($responsable);
+		$claveLab 	= GetSQLValueString(obtieneCveLab($responsable),"text");
 		$conexion 	= conectaBDSICLAB();
 		$consulta	= sprintf("select ea.ALUCTR,ea.horaEntrada,ea.fechaEntrada,p.clavePrestamo 
 								from lbentradasalumnos ea 
@@ -874,7 +874,6 @@ function prestamosPendientes()
 								inner join lbsolicitudarticulos sa on p.clavePrestamo=sa.clavePrestamo
 								where sa.estatus='S' and ea.claveLaboratorio=%s GROUP BY p.clavePrestamo",$claveLab);
 		$res 		= mysql_query($consulta);
-
 		$renglones	.= "<thead>";
 		$renglones	.= "<tr>";
 		$renglones	.= "<th data-field='numeroControl'>No. de control</th>";
@@ -1428,7 +1427,7 @@ function obtieneCveLab($clave)
 	}
 	else
 	{
-		return "";
+		return "''";
 	}
 }
 function obtieneDepto($claveLab)

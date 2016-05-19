@@ -143,6 +143,9 @@
 				<?php include 'practicasCanceladas.php';?>
 			</div>
 		</div>
+		<div id="loaderImageG">
+			<img src="../img/159.gif" alt="">
+		</div>
 		<div id="salir">
 			<?php include 'salirSistema.php';?>
 		</div>
