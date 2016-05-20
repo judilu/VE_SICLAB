@@ -18,19 +18,6 @@ function periodoActual ()
 		return $row["PARFOL1"];
 	}
 }
-function fechaPeriodo ()
-{
-	$conexion 		= conectaBDSIE();
-	$fecha 			= "";
-	$periodo 		= periodoActual();
-	$consulta 		= sprintf("select PDOINI,PDOTER from DPERIO where PDOCVE =%s",$periodo);
-	$res			= mysql_query($consulta);
-	if($row = mysql_fetch_array($res))
-	{
-		$fecha = $row["PDOTER"];
-	}
-	return $fecha;
-}
 function claveLab($clave)
 {
 	$cveResp 		= $clave;
@@ -264,31 +251,32 @@ function grupo($mat,$per,$pdo,$hor)
 	$clave   = $per;
 	$maestro = claveMaestro($clave);
 	$periodo = $pdo;
-	$n 	 	 = (string)$hor;
+	$n 	 	 = $hor;
 	$n2 	 = (string)($n+1);
+	$n 		 = (string)($n);
 	$hora 	 = "";
-	if (strlen($n)==1) 
+	if (count($n)==1) 
 	{
 		$hora 		.= "0".$n."00";
-		if (strlen($n2)==1)
+		if (count($n2)==1)
 		{
 			$hora 		.= "0".$n2."00"; 
 		}
 		else
 		{
-			$hora 		.= $n2."00";
+			$hora 		.= "0".$n2."00";
 		} 
 	}
 	else
 	{
 		$hora 		.= $n."00";
-		if (strlen($n2)==1)
+		if (count($n2)==1)
 		{
 			$hora 		.= "0".$n2."00"; 
 		}
 		else
 		{
-			$hora 		.= $n2."00";
+			$hora 		.= "0".$n2."00";
 		} 
 	}
 	$conexion 		= conectaBDSIE();
@@ -372,7 +360,6 @@ function comboMat ()
 	session_start();
 	$clave  		= GetSQLValueString(($_SESSION['nombre']),"int");
 	$maestro 		= claveMaestro($clave);
-	$fecha 			= fechaPeriodo();
 	$respuesta 		= false;
 	$periodo 		= periodoActual();
 	$con 			= 0;
@@ -399,8 +386,7 @@ function comboMat ()
 	$arrayJSON = array('respuesta' => $respuesta,
 						 'claveMat' => $claveMat, 
 						'nombreMat' => $nombreMat, 
-						'contador' => $con,
-						'fecha' => $fecha);
+						'contador' => $con);
 	print json_encode($arrayJSON);
 
 }
@@ -548,7 +534,7 @@ function comboEleArt()
 	$comboNomArt 	= "";
 	$con 			= 0;
 	$conexion		= conectaBDSICLAB();
-	$consulta		= sprintf("select DISTINCT (c.nombreArticulo), c.claveArticulo from lbarticuloscat c inner join lbarticulos a on a.claveArticulo = c.claveArticulo inner join lbasignaarticulos aa on aa.identificadorArticulo = a.identificadorArticulo where aa.claveLaboratorio =%s and a.estatus = 'V' order by c.nombreArticulo",$laboratorio);
+	$consulta		= sprintf("select DISTINCT (c.nombreArticulo), c.claveArticulo from lbarticuloscat c inner join lbarticulos a on a.claveArticulo = c.claveArticulo inner join lbasignaarticulos aa on aa.indentificadorArticulo = a.identificadorArticulo where aa.claveLaboratorio =%s and a.estatus = 'V' order by c.nombreArticulo",$laboratorio);
 	$res 			= mysql_query($consulta);
 	while($row = mysql_fetch_array($res))
 	{
@@ -701,7 +687,9 @@ function comboHoraPracRep()
 	print json_encode($arrayJSON);
 }
 //Menú principal
-$opc = $_POST["opc"];
+if (isset($_POST["opc"]))
+{
+  $opc = $_POST["opc"];
 switch ($opc)
 {
 	case 'salir1':
@@ -740,5 +728,6 @@ switch ($opc)
 	case 'comboHoraPracRep1':
 		comboHoraPracRep();
 		break;
+	}
 }	 
 ?>
