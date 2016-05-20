@@ -4,6 +4,12 @@
 	<link rel="stylesheet" href="../css/genericos.css">
 	<script src="../js/usuarios.js"></script>
 	<script src="../js/genericos.js"></script>
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<!--
+
+	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+-->
 
 </head>
 <body>
@@ -115,7 +121,7 @@
 				</ul>
 			</div>
 			<div id="resumenReportes">
-				<h5>Resumen de reportes</h5>
+				<h5>Dashboard</h5>
 				<?php include 'resumenReportes.php';?>
 			</div>
 			<div id="bajoInventario">
@@ -142,9 +148,6 @@
 			<div id="practicasCanceladas">
 				<?php include 'practicasCanceladas.php';?>
 			</div>
-		</div>
-		<div id="loaderImageG">
-			<img src="../img/159.gif" alt="">
 		</div>
 		<div id="salir">
 			<?php include 'salirSistema.php';?>

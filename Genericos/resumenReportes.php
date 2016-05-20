@@ -26,23 +26,40 @@
 	            </div>
 	          </div>
 	        </div>
+	        <script type="text/javascript">
+	    		var datos = $.ajax({
+	    		url:'../data/datosgrafica.php',
+	    		type:'post',
+	    		dataType:'json',
+	    		async:false    		
+	    	}).responseText;
+	    	
+	    	datos = JSON.parse(datos);
+	    	google.charts.load("visualization", "1", {packages:["corechart"]});
+	      	google.charts.setOnLoadCallback(dibujarGrafico);
+	      
+	      	function dibujarGrafico() {
+	        	var data = google.visualization.arrayToDataTable(datos);
+
+	        	var options = {
+	          	title: 'GRAFICA USO MENSUAL DEL LABORATORIO',
+	          	hAxis: {title: 'MESES', titleTextStyle: {color: 'black'}},
+	          	vAxis: {title: 'VISITAS', titleTextStyle: {color: 'black'}},
+	          	backgroundColor:'grey ligthten-3',
+	          	legend:{position: 'bottom', textStyle: {color: 'blue', fontSize: 12}},
+	          	width:620,
+	            height:370
+	        	};
+
+	        	var grafico = new google.visualization.ColumnChart(document.getElementById('grafica'));
+	        	grafico.draw(data, options);
+      		}
+      	</script>
 	        <div class="col s8 m8">
 	          <div class="card grey lighten-3">
-	            <div class="card-content black-text">
+	            <div class="card-content black-text" id="grafica">
 	              <span class="card-title">Grafica Uso Por Mes</span>
-	              <p><br></p>
-	              <p><br></p>
-	              <p><br></p>
-	              <p><br></p>
-	              <p><br></p>
-	              <p><br></p>
-	              <p><br></p>
-	              <p><br></p>
-	              <p><br></p>
-	              <p><br></p>
-	              <p><br></p>
-	              <p><br></p>
-	              <p><br></p>
+	              
 	            </div>
 	          </div>
 	        </div>
